@@ -1,0 +1,10 @@
+user/RochelleKnight/confirmed-hospitalised-covid-19/1f0d2526
+opensafely/ethnicity/2020-04-27
+primis-covid19-vacc-uptake/eth2001/v1
+user/RochelleKnight/dvt_dvt_icd10/24dab358
+user/elsie_horne/dvt_icvt_icd10/30a4dcad
+user/elsie_horne/dvt_pregnancy_icd10/6576830d
+user/RochelleKnight/pe_icd10/59ac59b8
+user/elsie_horne/other_dvt_icd10/547f4fba
+user/elsie_horne/icvt_pregnancy_icd10/3b6fdc85
+user/elsie_horne/portal_vein_thrombosis_icd10/22606950
