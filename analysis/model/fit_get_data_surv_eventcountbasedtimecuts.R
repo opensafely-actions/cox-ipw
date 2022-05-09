@@ -3,7 +3,7 @@
 ## 2. Calculate pre/post exposure event counts
 ## =============================================================================
 
-fit_get_data_surv <- function(event,subgroup, stratify_by_subgroup, stratify_by,mdl, survival_data,cuts_days_since_expo){
+fit_get_data_surv <- function(event,subgroup, stratify_by_subgroup, stratify_by, mdl, survival_data, cuts_days_since_expo){
   print(paste0("Starting survival data"))
   #------------------ RANDOM SAMPLE NON-CASES for IP WEIGHING ------------------
   set.seed(137)

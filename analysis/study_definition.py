@@ -101,7 +101,7 @@ study = StudyDefinition(
         return_expectations={
             "date": {"earliest": "index_date", "latest" : "today"},
             "rate": "uniform",
-            "incidence": 0.05,
+            "incidence": 0.5,
         },
     ),
     
@@ -139,14 +139,21 @@ study = StudyDefinition(
     
     # index_date
 
-    pat_index_date=patients.with_gp_consultations(
-        returning="date", 
-        between=["index_date", "index_date + 6 months"]
+    pat_index_date=patients.with_tpp_vaccination_record(
+        target_disease_matches="SARS-2 CORONAVIRUS",
+        on_or_after="index_date",
+        find_first_match_in_period=True,
+        returning="date",
+        date_format="YYYY-MM-DD",
+        return_expectations={
+            "date": {"earliest": "2020-01-01", "latest": "today"},
+            "incidence": 1
+        },
     ),
 
     # cov_cat_ethnicity 
 
-    ov_cat_ethnicity=patients.categorised_as(
+    cov_cat_ethnicity=patients.categorised_as(
         helpers.generate_ethnicity_dictionary(6),
         cov_ethnicity_sus=patients.with_ethnicity_from_sus(
             returning="group_6", use_most_frequent_code=True
@@ -180,7 +187,7 @@ study = StudyDefinition(
     
     # sub_bin_covid19_confirmed_history
 
-    sub_bin_covid19_confirmed_history_sgss=patients.with_test_result_in_sgss(
+    sub_bin_covid19_confirmed_history=patients.with_test_result_in_sgss(
         pathogen="SARS-CoV-2",
         test_result="positive",
         returning='binary_flag',
@@ -213,7 +220,7 @@ study = StudyDefinition(
         return_expectations={
             "date": {"earliest": "index_date", "latest" : "today"},
             "rate": "uniform",
-            "incidence": 0.1,
+            "incidence": 0.05,
         },
     ),
 
