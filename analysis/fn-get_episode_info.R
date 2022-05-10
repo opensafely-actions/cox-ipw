@@ -1,10 +1,4 @@
-get_episode_info <- function(df, cut_points) {
-  
-  # Determine episode labels ---------------------------------------------------
-  
-  episode_info <- data.frame(episode = 0:max(df$episode),
-                           time_period = c("pre_exposure",paste0("days",c("0",cut_points[1:(length(cut_points)-1)]),"_",cut_points))[1:length(0:max(df$episode))],
-                           stringsAsFactors = FALSE) 
+get_episode_info <- function(df, cut_points, episode_labels) {
 
   # Calculate number of events per episode -------------------------------------
 
@@ -19,7 +13,7 @@ get_episode_info <- function(df, cut_points) {
   
   # Add number of events to episode info table ---------------------------------
   
-  episode_info <- merge(episode_info, events, by = "episode", all.x = TRUE)
+  episode_info <- merge(episode_labels, events, by = "episode", all.x = TRUE)
   episode_info$N_events <- ifelse(is.na(episode_info$N_events),0,episode_info$N_events)
   
   # Calculate person-time in each episode --------------------------------------
