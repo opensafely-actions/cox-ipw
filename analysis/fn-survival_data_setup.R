@@ -80,19 +80,15 @@ survival_data_setup <- function(df, cut_points, episode_labels) {
   
   # Add indicators for episode -------------------------------------------------
   
-  tmp <- df[,c("patient_id","episode")]
-  
-  tmp <- merge(tmp, episode_labels, by = "episode")
-  tmp$episode <- NULL
-  
-  tmp$value <- 1
-  
-  tmp <- tidyr::pivot_wider(tmp, id_cols = "patient_id",
-                            names_from = "time_period",
-                            values_from = "value",
-                            values_fill = 0)
-  
-  df <- merge(df, tmp, by = "patient_id")
+  for (i in 1:max(episode_labels$episode)) {
+    
+    preserve_cols <- colnames(df) 
+    
+    df$tmp <- as.numeric(df$episode==i)
+    
+    colnames(df) <- c(preserve_cols,episode_labels[episode_labels$episode==i,]$time_period)
+    
+  }
   
   # Return dataset -------------------------------------------------------------
   

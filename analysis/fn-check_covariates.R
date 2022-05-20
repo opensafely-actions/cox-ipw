@@ -2,7 +2,7 @@ check_covariates <- function(df, covariate_threshold) {
   
   # Idenfify non-numeric covariates to remove ----------------------------------
   
-  covariates_removed <- NULL
+  covariate_removed <- NULL
   
   for (i in colnames(df)[grepl("cov_",colnames(df))]) {
     
@@ -18,7 +18,7 @@ check_covariates <- function(df, covariate_threshold) {
       # Add covariates to removal list -----------------------------------------  
       
       if (nrow(freq[freq$Freq<=covariate_threshold,])>0) {
-        covariates_removed <- c(covariates_removed,i)
+        covariate_removed <- c(covariate_removed,i)
       }
       
     }
@@ -27,11 +27,11 @@ check_covariates <- function(df, covariate_threshold) {
   
   # Collapse special case covariates -------------------------------------------
   
-  covariates_collapsed <- NULL
+  covariate_collapsed <- NULL
   
   ## Deprivation  
   
-  if ("cov_cat_deprivation" %in% covariates_removed) {
+  if ("cov_cat_deprivation" %in% covariate_removed) {
     
     df <- df %>% 
       dplyr::mutate(cov_cat_deprivation = 
@@ -44,14 +44,14 @@ check_covariates <- function(df, covariate_threshold) {
     df$cov_cat_deprivation <- ordered(df$cov_cat_deprivation, 
                                              levels = c("1-4","5-6","7-10"))
     
-    covariates_removed <- setdiff(covariates_removed,"cov_cat_deprivation")
-    covariates_collapsed <- c(covariates_collapsed, "cov_cat_deprivation")
+    covariate_removed <- setdiff(covariate_removed,"cov_cat_deprivation")
+    covariate_collapsed <- c(covariate_collapsed, "cov_cat_deprivation")
     
   }
   
   # Smoking status -------------------------------------------------------------
   
-  if ("cov_cat_smoking_status" %in% covariates_removed) {
+  if ("cov_cat_smoking_status" %in% covariate_removed) {
     
     df <- df %>% 
       dplyr::mutate(cov_cat_smoking_status = 
@@ -63,19 +63,19 @@ check_covariates <- function(df, covariate_threshold) {
     df$cov_cat_smoking_status <- ordered(df$cov_cat_smoking_status, 
                                                 levels = c("Never smoker","Ever smoker","Missing"))
     
-    covariates_removed <- setdiff(covariates_removed,"cov_cat_smoking_status")
+    covariate_removed <- setdiff(covariate_removed,"cov_cat_smoking_status")
     
   }
   
   # Remove covariates ----------------------------------------------------------
   
-  df <- df[,!(colnames(df) %in% covariates_removed)]
+  df <- df[,!(colnames(df) %in% covariate_removed)]
   
   # Return data and list of removed covariates ---------------------------------
   
   output <- list(df = df, 
-                 covariates_removed = covariates_removed, 
-                 ovariates_collapsed = covariates_collapsed)
+                 covariate_removed = covariate_removed, 
+                 covariate_collapsed = covariate_collapsed)
   
   return(output)
   

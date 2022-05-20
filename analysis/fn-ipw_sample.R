@@ -12,7 +12,7 @@ ipw_sample <- function(df, controls_per_case) {
   # Sample controls if more than enough, otherwise retain all controls ---------
   
   if (nrow(cases)*controls_per_case<nrow(controls)) {
-    controls <- controls[sample(nrow(controls),nrow(cases)*controls_per_case),]
+    controls <- controls[sample(1:nrow(controls), nrow(cases)*controls_per_case, replace = FALSE),]
     controls$cox_weight  <- controls_per_case
   } else {
     controls$cox_weight <- 1
