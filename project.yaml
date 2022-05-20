@@ -10,3 +10,11 @@ actions:
     outputs:
       highly_sensitive:
         cohort: output/input.csv
+
+  cox_ipw:
+    run: r:latest analysis/cox-ipw.R input.csv TRUE exp_date_covid19_confirmed out_date_vte cov_cat_region cov_cat_sex cov_num_age cov_cat_ethnicity;cov_bin_vte;cov_num_consulation_rate;cov_bin_healthcare_worker;cov_bin_carehome_status pat_index_date death_date;out_date_vte;vax_date_covid_1 2021-06-01 2021-12-14 28;197 28;197 10 50 5 2 TRUE results.csv
+    needs:
+    - generate_study_population
+    outputs:
+        moderately_sensitive:
+          cohort: output/results.csv

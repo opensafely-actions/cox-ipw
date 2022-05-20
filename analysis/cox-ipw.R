@@ -33,7 +33,7 @@
 args <- commandArgs(trailingOnly=TRUE)
 
 if(length(args)==0) {
-  df_input <- "output/input.csv"
+  df_input <- "input.csv"
   ipw <- "TRUE"
   exposure <- "exp_date_covid19_confirmed"
   outcome <- "out_date_vte"
@@ -52,7 +52,7 @@ if(length(args)==0) {
   episode_event_threshold <- "5"
   covariate_threshold <- "2"
   age_spline <- "TRUE"
-  df_output <- "output/results.csv"
+  df_output <- "results.csv"
 } else {
   df_input <- args[[1]]
   ipw <- args[[2]]
@@ -76,11 +76,64 @@ if(length(args)==0) {
   df_output <- args[[20]]
 }
 
+# Record input arguments --------------------------------------------------------
+print("Record input arguments")
+
+record_args <- data.frame(argument = c("df_input",
+                                       "ipw",
+                                       "exposure",
+                                       "outcome",
+                                       "strata",
+                                       "covariate_sex",
+                                       "covariate_age",
+                                       "covariate_other",
+                                       "cox_start",
+                                       "cox_stop",
+                                       "study_start",
+                                       "study_stop",
+                                       "cut_points",
+                                       "cut_points_reduced",
+                                       "controls_per_case",
+                                       "total_event_threshold",
+                                       "episode_event_threshold",
+                                       "covariate_threshold",
+                                       "age_spline",
+                                       "df_output"),
+                          value = c(df_input,
+                                    ipw,
+                                    exposure,
+                                    outcome,
+                                    strata,
+                                    covariate_sex,
+                                    covariate_age,
+                                    covariate_other,
+                                    cox_start,
+                                    cox_stop,
+                                    study_start,
+                                    study_stop,
+                                    cut_points,
+                                    cut_points_reduced,
+                                    controls_per_case,
+                                    total_event_threshold,
+                                    episode_event_threshold,
+                                    covariate_threshold,
+                                    age_spline,
+                                    df_output),
+                          stringsAsFactors = FALSE) 
+
+print(record_args)
+
+write.csv(record_args, 
+          file = paste0("output/args-",df_output), 
+          row.names = FALSE)
+
 # Import libraries -------------------------------------------------------------
+print("Import libraries")
 
 library(survival)
 
 # Import functions -------------------------------------------------------------
+print("Import functions")
 
 source("analysis/fn-ipw_sample.R")
 source("analysis/fn-survival_data_setup.R")
@@ -111,26 +164,26 @@ total_event_threshold <- as.numeric(total_event_threshold)
 episode_event_threshold <- as.numeric(episode_event_threshold)
 covariate_threshold <- as.numeric(covariate_threshold)
 
-# Identify core variables ------------------------------------------------------
-print("Identify core variables")
-
-core <- colnames(readr::read_csv(df_input, show_col_types = FALSE))
-core <- core[!grepl("cov_",core)]
-core <- core[!grepl("sub_",core)]
-
 # Load data --------------------------------------------------------------------
 print("Load data")
 
-input <- readr::read_csv(df_input,
-                         col_select = c(core),
-                         show_col_types = FALSE)
+data <- readr::read_csv(paste0("output/",df_input))
+
+# Restrict to core variables ---------------------------------------------------
+print("Restrict to core variables")
+
+core <- colnames(data)
+core <- core[!grepl("cov_",core)]
+core <- core[!grepl("sub_",core)]
+
+input <- data[,core]
 
 # Give generic names to variables ----------------------------------------------
 print("Give generic names to variables")
 
 input <- dplyr::rename(input, 
-                       "outcome" = outcome,
-                       "exposure" = exposure)
+                       "outcome" = tidyselect::all_of(outcome),
+                       "exposure" = tidyselect::all_of(exposure))
 
 cox_start <- gsub(outcome,"outcome",cox_start)
 cox_start <- gsub(exposure,"exposure",cox_start)
@@ -230,18 +283,13 @@ if (nrow(episode_info[which(episode_info$N_events==0),])>episode_event_threshold
 # Add strata information to data -----------------------------------------------
 print("Add strata information to data")
 
-data_strata <- readr::read_csv(df_input,
-                               col_select = c("patient_id",strata),
-                               show_col_types = FALSE)
-
+data_strata <- data[,c("patient_id", strata)]
 data_surv <- merge(data_surv, data_strata, by = "patient_id", all.x = TRUE)
 
 # Add standard covariates (age and sex) ----------------------------------------
 print("Add standard covariates (age and sex)")
 
-data_covar <- readr::read_csv(df_input,
-                              col_select = c("patient_id", covariate_age, covariate_sex),
-                              show_col_types = FALSE)
+data_covar <- data[,c("patient_id", covariate_age, covariate_sex)]
 
 data_covar <- dplyr::rename(data_covar,
                             "cov_num_age" = covariate_age,
@@ -259,9 +307,7 @@ if (!is.null(covariate_other)) {
   # Add covariate information to data ----------------------------------------
   print("Additional covariates specified: Add covariate information to data")
   
-  data_covar <- readr::read_csv(df_input,
-                                col_select = c("patient_id",covariate_other),
-                                show_col_types = FALSE)
+  data_covar <- data[,c("patient_id",covariate_other)]
   
   data_surv <- merge(data_surv, data_covar, by = "patient_id", all.x = TRUE)
   
@@ -335,5 +381,5 @@ results <- results[order(results$model),
 print("Save output")
 
 write.csv(results, 
-          file = df_output, 
+          file = paste0("output/",df_output), 
           row.names = FALSE)
