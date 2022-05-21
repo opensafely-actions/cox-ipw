@@ -292,8 +292,8 @@ print("Add standard covariates (age and sex)")
 data_covar <- data[,c("patient_id", covariate_age, covariate_sex)]
 
 data_covar <- dplyr::rename(data_covar,
-                            "cov_num_age" = covariate_age,
-                            "cov_cat_sex" = covariate_sex)
+                            "cov_num_age" = all_of(covariate_age),
+                            "cov_cat_sex" = all_of(covariate_sex))
 
 data_surv <- merge(data_surv, data_covar, by = "patient_id", all.x = TRUE)
 
