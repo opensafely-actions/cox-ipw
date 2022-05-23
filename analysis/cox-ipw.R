@@ -1,31 +1,5 @@
 # # # # # # # # # # # # # # # # # # # # #
 # This script:
-# samples data and applies inverse probability weights
-# performs survival data setup
-# checks covariate variation
-# fits Cox model
-#
-# The script must be accompanied by the following arguments
-# `df_input` - path for input data
-# `ipw` - specify as "TRUE" if sampling and IPW are to be applied
-# `exposure` - exposure variable in the regression model
-# `outcome` - outcome variable in the regression model
-# `strata` - semicolon separated list of variables to be included as strata in the regression model
-# `covariate_sex` - variable name for the sex covariate
-# `covariate_age` - variable name for the age covariate
-# `covariate_other` - semicolon separated list of other covariates to be included in the regression model; specify argument as "NULL" to run age, sex adjusted model only
-# `cox_start` - semicolon separated list of variable used to define start of patient follow-up or single variable if already defined
-# `cox_stop` -  semicolon separated list of variable used to define end of patient follow-up or single variable if already defined
-# `study_start` - study start date; this is used to remove events outside study dates
-# `study_stop` - study end date; this is used to remove events outside study dates
-# `cut_points` - cut points to be used to define time post exposure
-# `cut_points_reduced` - cut points to be used to define time post exposure if insufficient events prevent first choice
-# `controls_per_case` - number of controls to retain per case in the analysis
-# `total_event_threshold` - number of events that must be present for any model to run
-# `episode_event_threshold` - number of events that must be present in a time period; if threshold is not met, time periods are collapsed
-# `covariate_threshold` - minimum number of individuals per covariate level for covariate to be retained
-# `age_spline` - specify as "TRUE" if age should be included in the model as a spline with knots at 0.1, 0.5, 0.9
-# `df_output` - path for output data
 # # # # # # # # # # # # # # # # # # # # #
 
 # Import command line arguments ------------------------------------------------
