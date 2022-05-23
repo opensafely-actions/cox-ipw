@@ -215,57 +215,57 @@ if (opt$ipw == TRUE) {
 print("Define episode labels")
 
 episode_labels <- data.frame(episode = 0:length(cut_points),
-                             time_period = c("days_pre",paste0("days",c("0",cut_points[1:(length(cut_points)-1)]),"_",cut_points)),
-                             stringsAsFactors = FALSE) 
+                             time_period = c("days_pre",paste0("days", c("0", cut_points[1:(length(cut_points)-1)]),"_", cut_points)),
+                             stringsAsFactors = FALSE)
 
 # Survival data setup ----------------------------------------------------------
 print("Survival data setup")
 
-data_surv <- survival_data_setup(df = input, 
-                                 cut_points = cut_points, 
+data_surv <- survival_data_setup(df = input,
+                                 cut_points = cut_points,
                                  episode_labels = episode_labels)
 
 # Calculate events in each time period -----------------------------------------
 print("Calculate events in each time period")
 
-episode_info <- get_episode_info(df = data_surv, 
-                                 cut_points = cut_points, 
+episode_info <- get_episode_info(df = data_surv,
+                                 cut_points = cut_points,
                                  episode_labels = episode_labels)
 
 # STOP if the total number of events is insufficient ---------------------------
 
-if (sum(episode_info[episode_info$time_period!="days_pre",]$N_events)<total_event_threshold) {
-  stop(paste0("The total number of post-exposure events is less than the prespecified limit (", total_event_threshold,")."))
+if (sum(episode_info[episode_info$time_period != "days_pre", ]$N_events) < total_event_threshold) {
+  stop(paste0("The total number of post-exposure events is less than the prespecified limit (", total_event_threshold, ")."))
 }
 
 # Collapse time periods if needed ----------------------------------------------
 
-if (nrow(episode_info[which(episode_info$N_events==0),])>episode_event_threshold) {
-  
+if (nrow(episode_info[which(episode_info$N_events == 0), ]) > episode_event_threshold) {
+
   ## Update survival data setup ------------------------------------------------
   print("Collapsed time periods: Update survival data setup to use")
-  
-  data_surv <- survival_data_setup(df = input, 
+
+  data_surv <- survival_data_setup(df = input,
                                    cut_points = cut_points_reduced)
-  
+
   ## Update episode info -------------------------------------------------------
   print("Collapsed time periods: Update episode info")
-  
-  episode_info <- get_episode_info(df = data_surv, 
+
+  episode_info <- get_episode_info(df = data_surv,
                                    cut_points = cut_points_reduced)
-  
-} 
+
+}
 
 # STOP if collapsing time periods still does not meet criteria -----------------
 
-if (nrow(episode_info[which(episode_info$N_events==0),])>episode_event_threshold) {
-  stop(paste0("Despite collapsing time periods, there remains time periods with fewer events than the prespecified limit (", episode_event_threshold,")."))
+if (nrow(episode_info[which(episode_info$N_events == 0), ]) > episode_event_threshold) {
+  stop(paste0("Despite collapsing time periods, there remains time periods with fewer events than the prespecified limit (", episode_event_threshold, ")."))
 }
 
 # Add strata information to data -----------------------------------------------
 print("Add strata information to data")
 
-data_strata <- data[,c("patient_id", strata)]
+data_strata <- data[, c("patient_id", strata)]
 data_surv <- merge(data_surv, data_strata, by = "patient_id", all.x = TRUE)
 
 # Add standard covariates (age and sex) ----------------------------------------
