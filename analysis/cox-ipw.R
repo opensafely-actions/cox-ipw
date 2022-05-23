@@ -285,31 +285,31 @@ covariate_collapsed <- NULL
 # If additional covariates are specified, add covariate data -------------------
 
 if (!is.null(covariate_other)) {
-  
+
   # Add covariate information to data ----------------------------------------
   print("Additional covariates specified: Add covariate information to data")
-  
-  data_covar <- data[,c("patient_id",covariate_other)]
-  
+
+  data_covar <- data[, c("patient_id", covariate_other)]
+
   data_surv <- merge(data_surv, data_covar, by = "patient_id", all.x = TRUE)
-  
+
   # Remove covariates with insufficient variation ----------------------------
   print("Additional covariates specified: Remove covariates with insufficient variation")
-  
-  tmp <- check_covariates(df = data_surv, 
+
+  tmp <- check_covariates(df = data_surv,
                           covariate_threshold = covariate_threshold)
-  
+
   data_surv <- tmp$df
   covariate_removed <- tmp$covariate_removed
   covariate_collapsed <- tmp$covariate_collapsed
   rm(tmp)
-  
+
 }
 
 # Perform Cox modelling --------------------------------------------------------
 print("Perform Cox modelling")
 
-data_surv[,c("study_start","study_stop")] <- NULL
+data_surv[, c("study_start", "study_stop")] <- NULL
 
 results <- fit_model(df = data_surv, 
                      time_periods = episode_info[episode_info$time_period!="days_pre",]$time_period,
