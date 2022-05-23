@@ -206,7 +206,7 @@ input$outcome_status <- input$outcome==input$fup_stop & !is.na(input$outcome) & 
 
 # Sample control population ----------------------------------------------------
 
-if (ipw==TRUE) {
+if (opt$ipw == TRUE) {
   print("Sample control population")
   input <- ipw_sample(df = input, controls_per_case = controls_per_case)
 }
