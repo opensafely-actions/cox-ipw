@@ -1,5 +1,10 @@
 # # # # # # # # # # # # # # # # # # # # #
 # This script:
+# - defines its arguments
+# - samples data and applies inverse probability weights
+# - performs survival data setup
+# - checks covariate variation
+# - fits Cox model
 # # # # # # # # # # # # # # # # # # # # #
 
 # Import command line arguments ------------------------------------------------
