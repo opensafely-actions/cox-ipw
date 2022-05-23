@@ -311,11 +311,11 @@ print("Perform Cox modelling")
 
 data_surv[, c("study_start", "study_stop")] <- NULL
 
-results <- fit_model(df = data_surv, 
-                     time_periods = episode_info[episode_info$time_period!="days_pre",]$time_period,
-                     covariates = covariate_other, 
-                     strata = strata, 
-                     age_spline = age_spline,
+results <- fit_model(df = data_surv,
+                     time_periods = episode_info[episode_info$time_period != "days_pre", ]$time_period,
+                     covariates = covariate_other,
+                     strata = strata,
+                     age_spline = opt$age_spline,
                      covariate_removed = covariate_removed,
                      covariate_collapsed = covariate_collapsed)
 
