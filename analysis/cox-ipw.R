@@ -361,6 +361,6 @@ results <- results[order(results$model),
 # Save output ------------------------------------------------------------------
 print("Save output")
 
-write.csv(results, 
           file = paste0("output/",df_output), 
+write.csv(results,
           row.names = FALSE)
