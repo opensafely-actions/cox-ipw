@@ -149,7 +149,7 @@ covariate_threshold <- opt$covariate_threshold
 # Load data --------------------------------------------------------------------
 print("Load data")
 
-data <- readr::read_csv(paste0("output/",df_input))
+data <- readr::read_csv(paste0("output/", opt$df_input))
 
 # Restrict to core variables ---------------------------------------------------
 print("Restrict to core variables")
