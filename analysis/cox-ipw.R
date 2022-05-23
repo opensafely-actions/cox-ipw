@@ -182,13 +182,13 @@ input$study_stop <- as.Date(opt$study_stop)
 # Specify follow-up dates ------------------------------------------------------
 print("Specify follow-up dates")
 
-input$fup_start <- do.call(pmax, 
-                           c(input[,c("study_start",cox_start)], list(na.rm=TRUE)))
+input$fup_start <- do.call(pmax,
+                           c(input[, c("study_start", cox_start)], list(na.rm = TRUE)))
 
-input$fup_stop <- do.call(pmin, 
-                          c(input[,c("study_stop",cox_stop)], list(na.rm=TRUE)))
+input$fup_stop <- do.call(pmin,
+                          c(input[, c("study_stop", cox_stop)], list(na.rm = TRUE)))
 
-input <- input[input$fup_stop>=input$fup_start,]
+input <- input[input$fup_stop >= input$fup_start, ]
 
 # Remove exposures and outcomes outside follow-up ------------------------------
 print("Remove exposures and outcomes outside follow-up")
