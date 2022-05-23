@@ -103,8 +103,8 @@ record_args <- data.frame(argument = c("df_input",
 
 print(record_args)
 
-write.csv(record_args, 
           file = paste0("output/args-",df_output), 
+write.csv(record_args,
           row.names = FALSE)
 
 # Import libraries -------------------------------------------------------------
