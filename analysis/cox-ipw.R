@@ -163,9 +163,9 @@ input <- data[, core]
 # Give generic names to variables ----------------------------------------------
 print("Give generic names to variables")
 
-input <- dplyr::rename(input, 
-                       "outcome" = tidyselect::all_of(outcome),
-                       "exposure" = tidyselect::all_of(exposure))
+input <- dplyr::rename(input,
+                       "outcome" = tidyselect::all_of(opt$outcome),
+                       "exposure" = tidyselect::all_of(opt$exposure))
 
 cox_start <- gsub(outcome,"outcome",cox_start)
 cox_start <- gsub(exposure,"exposure",cox_start)
