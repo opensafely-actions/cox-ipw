@@ -134,6 +134,7 @@ for (i in 1:length(optlistargs)) {
     assign(optlistargs[i], tmp)
   }
 }
+rm(tmp)
 
 # Make numeric arguments numeric -----------------------------------------------
 print("Make numeric arguments numeric")
