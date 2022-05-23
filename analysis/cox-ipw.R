@@ -350,8 +350,8 @@ print("Tidy variables for outputting")
 results$N_total <- sum(input$cox_weight)
 results$N_exposed <- sum(input[!is.na(input$exposure), ]$cox_weight)
 
-results$exposure <- exposure
-results$outcome <- outcome
+results$exposure <- opt$exposure
+results$outcome <- opt$outcome
 
 results <- results[order(results$model),
                    c("model", "exposure", "outcome", "term",
