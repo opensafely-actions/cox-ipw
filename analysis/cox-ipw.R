@@ -176,8 +176,8 @@ cox_stop <- gsub(opt$exposure, "exposure", cox_stop)
 # Specify study dates ----------------------------------------------------------
 print("Specify study dates")
 
-input$study_start <- as.Date(study_start)
-input$study_stop <- as.Date(study_stop)
+input$study_start <- as.Date(opt$study_start)
+input$study_stop <- as.Date(opt$study_stop)
 
 # Specify follow-up dates ------------------------------------------------------
 print("Specify follow-up dates")
