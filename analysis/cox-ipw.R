@@ -7,6 +7,54 @@
 # - fits Cox model
 # # # # # # # # # # # # # # # # # # # # #
 
+# Define long flag style arguments using the optparse package ----
+library(optparse)
+option_list <- list(
+  make_option("--df_input", type = "character", default = "input.csv",
+              help = "Input dataset filename, including filepath [default %default]"),
+  make_option("--ipw", type = "logical", default = TRUE,
+              help = "Logical, indicating whether sampling and IPW are to be applied [default %default]"),
+  make_option("--exposure", type = "character",
+              default = "exp_date_covid19_confirmed",
+              help = "Exposure variable name [default %default]"),
+  make_option("--outcome", type = "character", default = "out_date_vte",
+              help = "Outcome variable name [default %default]"),
+  make_option("--strata", type = "character", default = "cov_cat_region",
+              help = "Semi-colon separated list of variable names to be included as strata in the regression model [default %default]"),
+  make_option("--covariate_sex", type = "character", default = "cov_cat_sex",
+              help = "Variable name for the sex covariate [default %default]"),
+  make_option("--covariate_age", type = "character", default = "cov_num_age",
+              help = "Variable name for the age covariate [default %default]"),
+  make_option("--covariate_other", type = "character",
+              default = "cov_cat_ethnicity;cov_bin_vte;cov_num_consulation_rate;cov_bin_healthcare_worker;cov_bin_carehome_status",
+              help = "Semi-colon separated list of other covariates to be included in the regression model; specify argument as NULL to run age, sex adjusted model only [default %default]"),
+  make_option("--cox_start", type = "character", default = "pat_index_date",
+              help = "Semi-colon separated list of variable used to define start of patient follow-up or single variable if already defined [default %default]"),
+  make_option("--cox_stop", type = "character", default = "death_date;out_date_vte;vax_date_covid_1",
+              help = "semicolon separated list of variable used to define end of patient follow-up or single variable if already defined [default %default]"),
+  make_option("--study_start", type = "character", default = "2021-06-01",
+              help = "Study start date; this is used to remove events outside study dates [default %default]"),
+  make_option("--study_stop", type = "character", default = "2021-12-14",
+              help = "Study end date; this is used to remove events outside study dates [default %default]"),
+  make_option("--cut_points", type = "character", default = "28;197",
+              help = "Semi-colon separated list of cut points to be used to define time post exposure [default %default]"),
+  make_option("--cut_points_reduced", type = "character", default = "28;197",
+              help = "Semi-colon separated list of cut points to be used to define time post exposure if insufficient events prevent first choice [default %default]"),
+  make_option("--controls_per_case", type = "integer", default = 10L,
+              help = "Number of controls to retain per case in the analysis [default %default]"),
+  make_option("--total_event_threshold", type = "integer", default = 50L,
+              help = "Number of events that must be present for any model to run [default %default]"),
+  make_option("--episode_event_threshold", type = "integer", default = 5L,
+              help = "Number of events that must be present in a time period; if threshold is not met, time periods are collapsed [default %default]"),
+  make_option("--covariate_threshold", type = "integer", default = 2L,
+              help = "Minimum number of individuals per covariate level for covariate to be retained [default %default]"),
+  make_option("--age_spline", type = "logical", default = TRUE,
+              help = "Logical, if age should be included in the model as a spline with knots at 0.1, 0.5, 0.9 [default %default]"),
+  make_option("--df_output", type = "character", default = "results.csv",
+              help = "Filename with filepath for output data [default %default]")
+)
+opt_parser <- OptionParser(usage = "cox-ipw: [options]", option_list = option_list)
+opt <- parse_args(opt_parser)
 
 # Record input arguments --------------------------------------------------------
 print("Record input arguments")
