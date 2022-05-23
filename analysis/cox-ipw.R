@@ -319,14 +319,13 @@ results <- fit_model(df = data_surv,
                      covariate_removed = covariate_removed,
                      covariate_collapsed = covariate_collapsed)
 
-
 # Merge results with number of events and person time --------------------------
 print("Merge results with number of events and person time")
 
-results <- merge(results, 
-                 episode_info[,c("time_period","N_events","person_time")], 
+results <- merge(results,
+                 episode_info[, c("time_period", "N_events", "person_time")],
                  by.x = "term",
-                 by.y = "time_period", 
+                 by.y = "time_period",
                  all.x = TRUE)
 
 tmp <- data.frame(term = "days_pre",
@@ -335,12 +334,12 @@ tmp <- data.frame(term = "days_pre",
                   robust.conf.low = NA,
                   robust.conf.high = NA,
                   se = NA,
-                  model = c("mdl_age_sex","mdl_max_adj"),
+                  model = c("mdl_age_sex", "mdl_max_adj"),
                   surv_formula = "",
                   covariate_removed = "",
                   covariate_collapsed = "",
-                  N_events = episode_info[episode_info$time_period=="days_pre",]$N_events,
-                  person_time = episode_info[episode_info$time_period=="days_pre",]$person_time,
+                  N_events = episode_info[episode_info$time_period == "days_pre", ]$N_events,
+                  person_time = episode_info[episode_info$time_period == "days_pre",]$person_time,
                   stringsAsFactors = FALSE)
 
 results <- rbind(results, tmp)
@@ -349,7 +348,7 @@ results <- rbind(results, tmp)
 print("Tidy variables for outputting")
 
 results$N_total <- sum(input$cox_weight)
-results$N_exposed <- sum(input[!is.na(input$exposure),]$cox_weight)
+results$N_exposed <- sum(input[!is.na(input$exposure), ]$cox_weight)
 
 results$exposure <- exposure
 results$outcome <- outcome
