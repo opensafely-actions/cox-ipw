@@ -7,53 +7,6 @@
 # - fits Cox model
 # # # # # # # # # # # # # # # # # # # # #
 
-# Import command line arguments ------------------------------------------------
-
-args <- commandArgs(trailingOnly=TRUE)
-
-if(length(args)==0) {
-  df_input <- "input.csv"
-  ipw <- "TRUE"
-  exposure <- "exp_date_covid19_confirmed"
-  outcome <- "out_date_vte"
-  strata <- "cov_cat_region"
-  covariate_sex <- "cov_cat_sex"
-  covariate_age <- "cov_num_age"
-  covariate_other <- "cov_cat_ethnicity;cov_bin_vte;cov_num_consulation_rate;cov_bin_healthcare_worker;cov_bin_carehome_status"
-  cox_start <- "pat_index_date"
-  cox_stop <-  "death_date;out_date_vte;vax_date_covid_1"
-  study_start <- "2021-06-01"
-  study_stop <- "2021-12-14"
-  cut_points <- "28;197"
-  cut_points_reduced <- "28;197"
-  controls_per_case <- "10"
-  total_event_threshold <- "50"
-  episode_event_threshold <- "5"
-  covariate_threshold <- "2"
-  age_spline <- "TRUE"
-  df_output <- "results.csv"
-} else {
-  df_input <- args[[1]]
-  ipw <- args[[2]]
-  exposure <- args[[3]]
-  outcome <- args[[4]]
-  strata <- args[[5]]
-  covariate_sex <- args[[6]]
-  covariate_age <- args[[7]]
-  covariate_other <- args[[8]]
-  cox_start <- args[[9]]
-  cox_stop <- args[[10]]
-  study_start <- args[[11]]
-  study_stop <- args[[12]]
-  cut_points <- args[[13]]
-  cut_points_reduced <- args[[14]]
-  controls_per_case <- args[[15]]
-  total_event_threshold <- args[[16]]
-  episode_event_threshold <- args[[17]]
-  covariate_threshold <- args[[18]]
-  age_spline <- args[[19]]
-  df_output <- args[[20]]
-}
 
 # Record input arguments --------------------------------------------------------
 print("Record input arguments")
