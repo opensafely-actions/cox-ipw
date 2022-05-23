@@ -155,10 +155,10 @@ data <- readr::read_csv(paste0("output/", opt$df_input))
 print("Restrict to core variables")
 
 core <- colnames(data)
-core <- core[!grepl("cov_",core)]
-core <- core[!grepl("sub_",core)]
+core <- core[!grepl("cov_", core)]
+core <- core[!grepl("sub_", core)]
 
-input <- data[,core]
+input <- data[, core]
 
 # Give generic names to variables ----------------------------------------------
 print("Give generic names to variables")
