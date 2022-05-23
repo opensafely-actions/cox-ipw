@@ -141,10 +141,10 @@ print("Make numeric arguments numeric")
 
 cut_points <- as.numeric(cut_points)
 cut_points_reduced <- as.numeric(cut_points_reduced)
-controls_per_case <- as.numeric(controls_per_case)
-total_event_threshold <- as.numeric(total_event_threshold)
-episode_event_threshold <- as.numeric(episode_event_threshold)
-covariate_threshold <- as.numeric(covariate_threshold)
+controls_per_case <- opt$controls_per_case
+total_event_threshold <- opt$total_event_threshold
+episode_event_threshold <- opt$episode_event_threshold
+covariate_threshold <- opt$covariate_threshold
 
 # Load data --------------------------------------------------------------------
 print("Load data")
