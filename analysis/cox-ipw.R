@@ -167,11 +167,11 @@ input <- dplyr::rename(input,
                        "outcome" = tidyselect::all_of(opt$outcome),
                        "exposure" = tidyselect::all_of(opt$exposure))
 
-cox_start <- gsub(outcome,"outcome",cox_start)
-cox_start <- gsub(exposure,"exposure",cox_start)
+cox_start <- gsub(opt$outcome, "outcome", cox_start)
+cox_start <- gsub(opt$exposure, "exposure", cox_start)
 
-cox_stop <- gsub(outcome,"outcome",cox_stop)
-cox_stop <- gsub(exposure,"exposure",cox_stop)
+cox_stop <- gsub(opt$outcome, "outcome", cox_stop)
+cox_stop <- gsub(opt$exposure, "exposure", cox_stop)
 
 # Specify study dates ----------------------------------------------------------
 print("Specify study dates")
