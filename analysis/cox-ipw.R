@@ -124,13 +124,14 @@ source("analysis/fn-fit_model.R")
 # Separate list arguments ------------------------------------------------------
 print("Separate list arguments")
 
-for (i in c("strata","covariate_other","cut_points","cut_points_reduced","cox_start","cox_stop")){
-  tmp <- get(i)
-  if (tmp[1]=="NULL") {
-    assign(i, NULL)
+optlistargs <- c("strata", "covariate_other", "cut_points", "cut_points_reduced", "cox_start", "cox_stop")
+for (i in 1:length(optlistargs)) {
+  tmp <- opt[optlistargs[i]]
+  if (tmp[1] == "NULL") {
+    assign(optlistargs[i], NULL)
   } else {
     tmp <- stringr::str_split(as.vector(tmp), ";")[[1]]
-    assign(i, tmp)
+    assign(optlistargs[i], tmp)
   }
 }
 
