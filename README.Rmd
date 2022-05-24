@@ -36,7 +36,7 @@ knit_hooks$set(output = function(x, options) {
   hook_output(x, options)
 })
 ```
-```{r, echo = FALSE, comment = '', linewidth=80}
+```{r, echo=FALSE, comment = '', linewidth=80}
 source_lines <- function(file, lines){
     source(textConnection(readLines(file)[lines]))
 }
