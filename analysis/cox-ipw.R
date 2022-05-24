@@ -257,7 +257,7 @@ if (sum(episode_info[episode_info$time_period!="days_pre",]$N_events)<total_even
 
 # Collapse time periods if needed ----------------------------------------------
 
-if (nrow(episode_info[which(episode_info$N_events==0),])>episode_event_threshold) {
+if (nrow(episode_info[which(episode_info$N_events<=episode_event_threshold & episode_info$time_period!="days_pre"),])>0) {
   
   ## Update survival data setup ------------------------------------------------
   print("Collapsed time periods: Update survival data setup to use")
