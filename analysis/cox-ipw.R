@@ -131,6 +131,7 @@ write.csv(record_args,
 print("Import libraries")
 
 library(survival)
+library(magrittr)
 
 # Import functions -------------------------------------------------------------
 print("Import functions")
@@ -211,11 +212,9 @@ input <- input[input$fup_stop>=input$fup_start,]
 # Remove exposures and outcomes outside follow-up ------------------------------
 print("Remove exposures and outcomes outside follow-up")
 
-input$exposure <- as.Date(ifelse(input$exposure<input$fup_start, NA, input$exposure), origin = "1970-01-01")
-input$exposure <- as.Date(ifelse(input$exposure>input$fup_stop, NA, input$exposure), origin = "1970-01-01")
-
-input$outcome <- as.Date(ifelse(input$outcome<input$fup_start,NA, input$outcome), origin = "1970-01-01")
-input$outcome <- as.Date(ifelse(input$outcome>input$fup_stop,NA, input$outcome), origin = "1970-01-01")
+input <- input %>% 
+  dplyr::mutate(exposure = replace(exposure, which(exposure>fup_stop | exposure<fup_start), NA),
+                outcome = replace(outcome, which(outcome>fup_stop | outcome<fup_start), NA))
 
 # Make indicator variable for outcome status -----------------------------------
 print("Make indicator variable for outcome status")
