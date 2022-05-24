@@ -51,7 +51,9 @@ option_list <- list(
   make_option("--age_spline", type = "logical", default = TRUE,
               help = "Logical, if age should be included in the model as a spline with knots at 0.1, 0.5, 0.9 [default %default]"),
   make_option("--df_output", type = "character", default = "results.csv",
-              help = "Filename with filepath for output data [default %default]")
+              help = "Filename with filepath for output data [default %default]"),
+  make_option("--seed", type = "integer", default = 137L,
+              help = "Random number generator seed passed to IPW sampling [default %default]")
 )
 opt_parser <- OptionParser(usage = "cox-ipw: [options]", option_list = option_list)
 opt <- parse_args(opt_parser)
@@ -208,7 +210,7 @@ input$outcome_status <- input$outcome==input$fup_stop & !is.na(input$outcome) & 
 
 if (opt$ipw == TRUE) {
   print("Sample control population")
-  input <- ipw_sample(df = input, controls_per_case = controls_per_case)
+  input <- ipw_sample(df = input, controls_per_case = controls_per_case, seed = opt$seed)
 }
 
 # Define episode labels --------------------------------------------------------

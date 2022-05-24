@@ -42,7 +42,7 @@ source_lines <- function(file, lines){
 }
 # Note: in the following command the last line, 56, should be the line that
 # creates the opt_parser object using OptionParser(...)
-source_lines("analysis/cox-ipw.R", 1:56)
+source_lines("analysis/cox-ipw.R", 1:58)
 optparse::print_help(opt_parser)
 ```
 
