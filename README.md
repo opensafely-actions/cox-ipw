@@ -4,8 +4,8 @@ Please edit that file and rerun in R `rmarkdown::render('README.Rmd')` -->
 
 # cox-ipw
 
-This is the code and configuration for cox-ipw, which is an R action for
-the OpenSAFELY framework.
+This is the code and configuration for `cox-ipw`, which is an R reusable
+action for the OpenSAFELY framework.
 
 The action:
 
@@ -16,8 +16,8 @@ The action:
 
 ## Usage
 
-The arguments to the action are specified using the long flags style
-(i.e., `--argname=argvalue`), the arguments are as follows.
+The arguments to the action are specified using the flags style (i.e.,
+`--argname=argvalue`), the arguments are as follows.
 
     Usage: cox-ipw: [options]
 
@@ -96,6 +96,9 @@ The arguments to the action are specified using the long flags style
     --df_output=DF_OUTPUT
     Filename with filepath for output data [default results.csv]
 
+    --seed=SEED
+    Random number generator seed passed to IPW sampling [default 137]
+
     -h, --help
     Show this help message and exit
 
@@ -107,8 +110,8 @@ my_cox_ipw:
   run: cox-ipw:
 ```
 
-This action can be run specifying arguments as follows (`>` indicates to
-treat the subsequent nested lines as a single line.)
+This action can be run specifying arguments as follows (in YAML `>`
+indicates to treat the subsequent nested lines as a single line).
 
 ``` yaml
 my_cox_ipw:
@@ -121,6 +124,9 @@ my_cox_ipw:
 ## Notes for developers
 
 Please see [*DEVELOPERS.md*](DEVELOPERS.md).
+
+For more information about reusable actions see
+[here](https://docs.opensafely.org/actions-reusable/).
 
 # About the OpenSAFELY framework
 
