@@ -7,7 +7,7 @@
 # - fits Cox model
 # # # # # # # # # # # # # # # # # # # # #
 
-# Define long flag style arguments using the optparse package ----
+# Define flag style arguments using the optparse package ----
 library(optparse)
 option_list <- list(
   make_option("--df_input", type = "character", default = "input.csv",
