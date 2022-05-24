@@ -48,7 +48,7 @@ The arguments to the action are specified using the flags style (i.e.,
     --covariate_other=VARNAME_1;VARNAME_2;...
     Semi-colon separated list of other covariates to be included in the regression
     model; specify argument as NULL to run age, sex adjusted model only [default
-    cov_cat_ethnicity;cov_bin_vte;cov_num_consulation_rate;cov_bin_healthcare_worker;cov_bin_carehome_status]
+    cov_cat_ethnicity;cov_num_consulation_rate;cov_bin_healthcare_worker;cov_bin_carehome_status]
 
     --cox_start=VARNAME_1;VARNAME_2;...
     Semi-colon separated list of variable names used to define start of patient

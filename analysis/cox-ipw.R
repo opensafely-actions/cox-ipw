@@ -33,7 +33,7 @@ option_list <- list(
               help = "Variable name for the age covariate [default %default]",
               metavar = "age_varname"),
   make_option("--covariate_other", type = "character",
-              default = "cov_cat_ethnicity;cov_bin_vte;cov_num_consulation_rate;cov_bin_healthcare_worker;cov_bin_carehome_status",
+              default = "cov_cat_ethnicity;cov_num_consulation_rate;cov_bin_healthcare_worker;cov_bin_carehome_status",
               help = "Semi-colon separated list of other covariates to be included in the regression model; specify argument as NULL to run age, sex adjusted model only [default %default]",
               metavar = "varname_1;varname_2;..."),
   make_option("--cox_start", type = "character", default = "pat_index_date",
