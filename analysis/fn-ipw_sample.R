@@ -1,8 +1,7 @@
-ipw_sample <- function(df, controls_per_case) {
+ipw_sample <- function(df, controls_per_case, seed = 137) {
   
   # Set seed -------------------------------------------------------------------
-  
-  set.seed(137)
+  set.seed(seed)
   
   # Split cases and controls ---------------------------------------------------
   
