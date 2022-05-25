@@ -38,7 +38,7 @@ option_list <- list(
               metavar = "varname_1;varname_2;..."),
   make_option("--covariate_protect", type = "character",
               default = "cov_cat_ethnicity;cov_cat_region;cov_cat_sex;cov_num_age",
-              help = "Semi-colon separated list of protected covariates - if checks indicate one of these variables is to removed from the regression model then an error is returned [default %default]",
+              help = "Semi-colon separated list of protected covariates - if checks indicate one of these variables is to be removed from the regression model then an error is returned [default %default]",
               metavar = "varname_1;varname_2;..."),
   make_option("--cox_start", type = "character", default = "pat_index_date",
               help = "Semi-colon separated list of variable names used to define start of patient follow-up or single variable if already defined [default %default]",
