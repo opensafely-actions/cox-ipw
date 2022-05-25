@@ -396,10 +396,10 @@ results$N_exposed <- sum(input[!is.na(input$exposure), ]$cox_weight)
 results$exposure <- opt$exposure
 results$outcome <- opt$outcome
 
-# results <- results[order(results$model),
-#                    c("model", "exposure", "outcome", "term",
-#                      "estimate", "robust.conf.low", "robust.conf.high", "robust.se", "se",
-#                      "N_total", "N_exposed", "N_events", "person_time")]
+results <- results[order(results$model),
+                   c("model", "exposure", "outcome", "term",
+                     "estimate", "robust.conf.low", "robust.conf.high", "robust.se", "se",
+                     "N_total", "N_exposed", "N_events", "person_time")]
 
 # Save output ------------------------------------------------------------------
 print("Save output")
