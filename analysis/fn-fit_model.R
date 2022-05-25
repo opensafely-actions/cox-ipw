@@ -1,23 +1,31 @@
 fit_model <- function(df, time_periods, covariates, strata, age_spline, covariate_removed, covariate_collapsed) {
   
-  # Define model formula ---------------------------------------------------------
+  # Define model formula -------------------------------------------------------
   
   surv_formula <- paste0("Surv(tstart, tstop, outcome_status) ~ ",
                          paste(time_periods, collapse = " + "), 
                          ifelse("cov_cat_sex" %in% colnames(df), " + cov_cat_sex", ""),
-                         ifelse("cov_num_age" %in% colnames(df), " + cov_num_age", ""),
                          " + cluster(patient_id) + ",
                          paste(paste0("rms::strat(", strata, ")"), collapse = " + "))
   
-  # Specify knot placement for age spline if applicable --------------------------
+  # Add age covariate, specifying knot placement for age spline if applicable --
   
-  if ((age_spline=="TRUE")) {
+  if ("cov_num_age" %in% colnames(df)) {
     
-    knot_placement <- as.numeric(quantile(df$cov_num_age, probs=c(0.1,0.5,0.9)))
-    
-    surv_formula <- gsub("cov_num_age", "rms::rcs(cov_num_age, parms=knot_placement)", surv_formula)
+    if ((age_spline=="TRUE")) {
+      
+      knot_placement <- as.numeric(quantile(df$cov_num_age, probs=c(0.1,0.5,0.9)))
+      
+      surv_formula <- paste0(surv_formula, " + rms::rcs(cov_num_age, parms=knot_placement)")
+      
+    } else {
+      
+      surv_formula <- paste0(surv_formula, " + cov_num_age + cov_num_age_sq")
+      
+    }
     
   }
+  
   
   # Fit Cox model ----------------------------------------------------------------
   

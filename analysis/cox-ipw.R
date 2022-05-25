@@ -34,7 +34,7 @@ option_list <- list(
               metavar = "age_varname"),
   make_option("--covariate_other", type = "character",
               default = "cov_cat_ethnicity;cov_num_consulation_rate;cov_bin_healthcare_worker;cov_bin_carehome_status",
-              help = "Semi-colon separated list of other covariates to be included in the regression model; specify argument as NULL to run age, sex adjusted model only [default %default]",
+              help = "Semi-colon separated list of other covariates to be included in the regression model; specify argument as NULL to run age, age squared, sex adjusted model only [default %default]",
               metavar = "varname_1;varname_2;..."),
   make_option("--cox_start", type = "character", default = "pat_index_date",
               help = "Semi-colon separated list of variable names used to define start of patient follow-up or single variable if already defined [default %default]",
@@ -294,8 +294,8 @@ print("Add strata information to data")
 data_strata <- data[, c("patient_id", strata)]
 data_surv <- merge(data_surv, data_strata, by = "patient_id", all.x = TRUE)
 
-# Add age covariate ------------------------------------------------------------
-print("Add age covariate")
+# Add age covariates -----------------------------------------------------------
+print("Add age covariates")
 
 if (opt$covariate_age!="NULL") {
   
@@ -303,6 +303,8 @@ if (opt$covariate_age!="NULL") {
   
   data_covar <- dplyr::rename(data_covar,
                               "cov_num_age" = tidyselect::all_of(opt$covariate_age))
+  
+  data_covar$cov_num_age_sq <- data_covar$cov_num_age^2
   
   data_surv <- merge(data_surv, data_covar, by = "patient_id", all.x = TRUE)
   
