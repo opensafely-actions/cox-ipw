@@ -4,13 +4,14 @@ fit_model <- function(df, time_periods, covariates, strata, age_spline, covariat
   
   surv_formula <- paste0("Surv(tstart, tstop, outcome_status) ~ ",
                          paste(time_periods, collapse = " + "), 
-                         " + cov_cat_sex + cov_num_age  +",
+                         ifelse("cov_cat_sex" %in% colnames(df), " + cov_cat_sex", ""),
+                         ifelse("cov_num_age" %in% colnames(df), " + cov_num_age", ""),
                          " + cluster(patient_id) + ",
                          paste(paste0("rms::strat(", strata, ")"), collapse = " + "))
   
   # Specify knot placement for age spline if applicable --------------------------
   
-  if (age_spline=="TRUE") {
+  if ((age_spline=="TRUE")) {
     
     knot_placement <- as.numeric(quantile(df$cov_num_age, probs=c(0.1,0.5,0.9)))
     

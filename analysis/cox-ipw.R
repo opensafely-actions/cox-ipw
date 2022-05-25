@@ -27,10 +27,10 @@ option_list <- list(
               help = "Semi-colon separated list of variable names to be included as strata in the regression model [default %default]",
               metavar = "varname_1;varname_2;..."),
   make_option("--covariate_sex", type = "character", default = "cov_cat_sex",
-              help = "Variable name for the sex covariate [default %default]",
+              help = "Variable name for the sex covariate; specify argument as NULL to model without sex covariate [default %default]",
               metavar = "sex_varname"),
   make_option("--covariate_age", type = "character", default = "cov_num_age",
-              help = "Variable name for the age covariate [default %default]",
+              help = "Variable name for the age covariate; specify argument as NULL to model without age covariate [default %default]",
               metavar = "age_varname"),
   make_option("--covariate_other", type = "character",
               default = "cov_cat_ethnicity;cov_num_consulation_rate;cov_bin_healthcare_worker;cov_bin_carehome_status",
@@ -292,21 +292,38 @@ print("Add strata information to data")
 data_strata <- data[, c("patient_id", strata)]
 data_surv <- merge(data_surv, data_strata, by = "patient_id", all.x = TRUE)
 
-# Add standard covariates (age and sex) ----------------------------------------
-print("Add standard covariates (age and sex)")
+# Add age covariate ------------------------------------------------------------
+print("Add age covariate")
 
-data_covar <- data[, c("patient_id", opt$covariate_age, opt$covariate_sex)]
+if (opt$covariate_age!="NULL") {
+  
+  data_covar <- data[, c("patient_id", opt$covariate_age)]
+  
+  data_covar <- dplyr::rename(data_covar,
+                              "cov_num_age" = tidyselect::all_of(opt$covariate_age))
+  
+  data_surv <- merge(data_surv, data_covar, by = "patient_id", all.x = TRUE)
+  
+}
 
-data_covar <- dplyr::rename(data_covar,
-                            "cov_num_age" = tidyselect::all_of(opt$covariate_age),
-                            "cov_cat_sex" = tidyselect::all_of(opt$covariate_sex))
+# Add sex covariate ------------------------------------------------------------
+print("Add sex covariate")
 
-data_surv <- merge(data_surv, data_covar, by = "patient_id", all.x = TRUE)
+if (opt$covariate_sex!="NULL") {
+
+  data_covar <- data[, c("patient_id", opt$covariate_sex)]
+  
+  data_covar <- dplyr::rename(data_covar,
+                              "cov_cat_sex" = tidyselect::all_of(opt$covariate_sex))
+  
+  data_surv <- merge(data_surv, data_covar, by = "patient_id", all.x = TRUE)
+
+}
+
+# If additional covariates are specified, add covariate data -------------------
 
 covariate_removed <- NULL
 covariate_collapsed <- NULL
-
-# If additional covariates are specified, add covariate data -------------------
 
 if (!is.null(covariate_other)) {
 
@@ -377,10 +394,10 @@ results$N_exposed <- sum(input[!is.na(input$exposure), ]$cox_weight)
 results$exposure <- opt$exposure
 results$outcome <- opt$outcome
 
-results <- results[order(results$model),
-                   c("model", "exposure", "outcome", "term",
-                     "estimate", "robust.conf.low", "robust.conf.high", "robust.se", "se",
-                     "N_total", "N_exposed", "N_events", "person_time")]
+# results <- results[order(results$model),
+#                    c("model", "exposure", "outcome", "term",
+#                      "estimate", "robust.conf.low", "robust.conf.high", "robust.se", "se",
+#                      "N_total", "N_exposed", "N_events", "person_time")]
 
 # Save output ------------------------------------------------------------------
 print("Save output")
