@@ -236,6 +236,9 @@ input$outcome_status <- input$outcome==input$fup_stop & !is.na(input$outcome) & 
 
 # Sample control population ----------------------------------------------------
 
+N_total <- nrow(input)
+N_exposed <- nrow(input[!is.na(input$exposure),])
+
 if (opt$ipw == TRUE) {
   print("Sample control population")
   input <- ipw_sample(df = input,
@@ -404,8 +407,8 @@ results <- rbind(results, tmp)
 # Tidy variables for outputting ------------------------------------------------
 print("Tidy variables for outputting")
 
-results$N_total <- sum(input$cox_weight)
-results$N_exposed <- sum(input[!is.na(input$exposure), ]$cox_weight)
+results$N_total <- N_total
+results$N_exposed <- N_exposed
 
 results$exposure <- opt$exposure
 results$outcome <- opt$outcome
