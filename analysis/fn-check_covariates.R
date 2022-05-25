@@ -15,9 +15,15 @@ check_covariates <- function(df, covariate_threshold) {
       tmp <- unique(df[df$exposure_status==1 & df$outcome_status==1,c("patient_id",i)])
       freq <- data.frame(table(tmp[,i]))
       
-      # Add covariates to removal list -----------------------------------------  
+      # Add covariates to removal list if they fall below covariate threshold --
       
       if (nrow(freq[freq$Freq<=covariate_threshold,])>0) {
+        covariate_removed <- c(covariate_removed,i)
+      }
+      
+      # Add covariates to removal list if the covariate has a single level -----
+      
+      if (nrow(freq)==1) {
         covariate_removed <- c(covariate_removed,i)
       }
       
