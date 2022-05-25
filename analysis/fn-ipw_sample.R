@@ -1,6 +1,7 @@
 ipw_sample <- function(df, controls_per_case, seed = 137) {
   
   # Set seed -------------------------------------------------------------------
+  
   set.seed(seed)
   
   # Split cases and controls ---------------------------------------------------
@@ -12,7 +13,7 @@ ipw_sample <- function(df, controls_per_case, seed = 137) {
   
   if (nrow(cases)*controls_per_case<nrow(controls)) {
     controls <- controls[sample(1:nrow(controls), nrow(cases)*controls_per_case, replace = FALSE),]
-    controls$cox_weight  <- controls_per_case
+    controls$cox_weight <- (nrow(df)-nrow(cases))/nrow(controls)
   } else {
     controls$cox_weight <- 1
   }

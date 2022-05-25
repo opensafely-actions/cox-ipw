@@ -232,7 +232,9 @@ input$outcome_status <- input$outcome==input$fup_stop & !is.na(input$outcome) & 
 
 if (opt$ipw == TRUE) {
   print("Sample control population")
-  input <- ipw_sample(df = input, controls_per_case = controls_per_case, seed = opt$seed)
+  input <- ipw_sample(df = input,
+                      controls_per_case = controls_per_case, 
+                      seed = opt$seed)
 }
 
 # Define episode labels --------------------------------------------------------
