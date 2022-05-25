@@ -264,7 +264,6 @@ if (sum(episode_info[episode_info$time_period != "days_pre", ]$N_events) < total
 
 # Collapse time periods if needed ----------------------------------------------
 
-
 if (nrow(episode_info[which(episode_info$N_events<=episode_event_threshold & episode_info$time_period!="days_pre"),])>0) {
 
   ## Update survival data setup ------------------------------------------------
@@ -283,7 +282,7 @@ if (nrow(episode_info[which(episode_info$N_events<=episode_event_threshold & epi
 
 # STOP if collapsing time periods still does not meet criteria -----------------
 
-if (nrow(episode_info[which(episode_info$N_events == 0), ]) > episode_event_threshold) {
+if (nrow(episode_info[which(episode_info$N_events<=episode_event_threshold & episode_info$time_period!="days_pre"),])>0) {
   stop(paste0("Despite collapsing time periods, there remains time periods with fewer events than the prespecified limit (", episode_event_threshold, ")."))
 }
 
