@@ -22,8 +22,8 @@ fit_model <- function(df, time_periods, covariates, strata, age_spline, covariat
   
   dd <<- rms::datadist(df)
   
-  options(datadist = "dd", contrasts = c("contr.treatment", "contr.treatment"))
-  
+  withr::local_options(list(datadist = "dd", contrasts = c("contr.treatment", "contr.treatment")))
+
   fit_cox_model <- rms::cph(formula = as.formula(surv_formula),
                             data = df, 
                             weight = df$cox_weights,
@@ -65,8 +65,8 @@ fit_model <- function(df, time_periods, covariates, strata, age_spline, covariat
     
     dd_adj <<- rms::datadist(df)
     
-    options(datadist = "dd_adj", contrasts = c("contr.treatment", "contr.treatment"))
-    
+    withr::local_options(list(datadist = "dd_adj", contrasts = c("contr.treatment", "contr.treatment")))
+
     fit_cox_model_adj <- rms::cph(formula = as.formula(surv_formula_adj),
                                   data = df, 
                                   weight = df$cox_weights,
