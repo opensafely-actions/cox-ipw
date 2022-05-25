@@ -182,7 +182,7 @@ study = StudyDefinition(
             returning="category",
             find_last_match_in_period=True,
         ),
-        return_expectations=helpers.generate_universal_expectations(5,True),
+        return_expectations=helpers.generate_universal_expectations(5,False),
     ),
     
     # sub_bin_covid19_confirmed_history

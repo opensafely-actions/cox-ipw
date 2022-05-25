@@ -36,6 +36,10 @@ option_list <- list(
               default = "cov_cat_ethnicity;cov_num_consulation_rate;cov_bin_healthcare_worker;cov_bin_carehome_status",
               help = "Semi-colon separated list of other covariates to be included in the regression model; specify argument as NULL to run age, age squared, sex adjusted model only [default %default]",
               metavar = "varname_1;varname_2;..."),
+  make_option("--covariate_protect", type = "character",
+              default = "cov_cat_ethnicity;cov_cat_region;cov_cat_sex;cov_num_age",
+              help = "Semi-colon separated list of protected covariates - if checks indicate one of these variables is to removed from the regression model then an error is returned [default %default]",
+              metavar = "varname_1;varname_2;..."),
   make_option("--cox_start", type = "character", default = "pat_index_date",
               help = "Semi-colon separated list of variable names used to define start of patient follow-up or single variable if already defined [default %default]",
               metavar = "varname_1;varname_2;..."),
@@ -90,6 +94,7 @@ record_args <- data.frame(argument = c("df_input",
                                        "covariate_sex",
                                        "covariate_age",
                                        "covariate_other",
+                                       "covariate_protect",
                                        "cox_start",
                                        "cox_stop",
                                        "study_start",
@@ -111,6 +116,7 @@ record_args <- data.frame(argument = c("df_input",
                                     opt$covariate_sex,
                                     opt$covariate_age,
                                     opt$covariate_other,
+                                    opt$covariate_protect,
                                     opt$cox_start,
                                     opt$cox_stop,
                                     opt$study_start,
@@ -150,7 +156,7 @@ source("analysis/fn-fit_model.R")
 # Separate list arguments ------------------------------------------------------
 print("Separate list arguments")
 
-optlistargs <- c("strata", "covariate_other", "cut_points", "cut_points_reduced", "cox_start", "cox_stop")
+optlistargs <- c("strata", "covariate_other", "covariate_protect", "cut_points", "cut_points_reduced", "cox_start", "cox_stop")
 for (i in 1:length(optlistargs)) {
   tmp <- opt[optlistargs[i]]
   if (tmp[1] == "NULL") {
@@ -349,6 +355,12 @@ if (!is.null(covariate_other)) {
   covariate_collapsed <- tmp$covariate_collapsed
   rm(tmp)
 
+}
+
+# STOP if protected covariate is not in model ----------------------------------
+
+if (length(intersect(covariate_protect,covariate_removed))>0) {
+  stop(paste0("A protected covariate has been removed from the regression model. Please check input data."))
 }
 
 # Perform Cox modelling --------------------------------------------------------
