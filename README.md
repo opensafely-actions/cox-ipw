@@ -40,14 +40,17 @@ The arguments to the action are specified using the flags style (i.e.,
     regression model [default cov_cat_region]
 
     --covariate_sex=SEX_VARNAME
-    Variable name for the sex covariate [default cov_cat_sex]
+    Variable name for the sex covariate; specify argument as NULL to model without
+    sex covariate [default cov_cat_sex]
 
     --covariate_age=AGE_VARNAME
-    Variable name for the age covariate [default cov_num_age]
+    Variable name for the age covariate; specify argument as NULL to model without
+    age covariate [default cov_num_age]
 
     --covariate_other=VARNAME_1;VARNAME_2;...
     Semi-colon separated list of other covariates to be included in the regression
-    model; specify argument as NULL to run age, sex adjusted model only [default
+    model; specify argument as NULL to run age, age squared, sex adjusted model
+    only [default
     cov_cat_ethnicity;cov_num_consulation_rate;cov_bin_healthcare_worker;cov_bin_carehome_status]
 
     --cox_start=VARNAME_1;VARNAME_2;...
