@@ -392,7 +392,7 @@ tmp <- data.frame(term = "days_pre",
                   robust.conf.high = NA,
                   se = NA,
                   model = c("mdl_age_sex", "mdl_max_adj"),
-                  surv_formula = "",
+                  surv_formula = c(results[results$model=="mdl_age_sex",]$surv_formula[1], results[results$model=="mdl_max_adj",]$surv_formula[1]),
                   covariate_removed = "",
                   covariate_collapsed = "",
                   N_events = episode_info[episode_info$time_period == "days_pre", ]$N_events,
@@ -410,10 +410,13 @@ results$N_exposed <- sum(input[!is.na(input$exposure), ]$cox_weight)
 results$exposure <- opt$exposure
 results$outcome <- opt$outcome
 
+results$input <- opt$df_input
+
 results <- results[order(results$model),
                    c("model", "exposure", "outcome", "term",
                      "estimate", "robust.conf.low", "robust.conf.high", "robust.se", "se",
-                     "N_total", "N_exposed", "N_events", "person_time")]
+                     "N_total", "N_exposed", "N_events", "person_time", 
+                     "surv_formula","input")]
 
 # Save output ------------------------------------------------------------------
 print("Save output")
