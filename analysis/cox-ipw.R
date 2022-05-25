@@ -363,7 +363,7 @@ if (!is.null(covariate_other)) {
 # STOP if protected covariate is not in model ----------------------------------
 
 if (length(intersect(covariate_protect,covariate_removed))>0) {
-  stop(paste0("A protected covariate has been removed from the regression model. Please check input data."))
+  stop("A protected covariate has been removed from the regression model. Please check input data.")
 }
 
 # Perform Cox modelling --------------------------------------------------------
