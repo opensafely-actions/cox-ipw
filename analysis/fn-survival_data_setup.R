@@ -11,7 +11,7 @@ survival_data_setup <- function(df, cut_points, episode_labels) {
   exposed <- df[!is.na(df$exposure),]
   
   ## Calculate days to exposure
-  exposed$days_to_exp <- as.numeric(exposed$exposure - exposed$study_start) # PENDING CHECK BY ROCHELLE
+  exposed$days_to_exp <- as.numeric(exposed$exposure - exposed$study_start)
   
   ## Put into survival format
   d1 <- exposed[,!(colnames(exposed) %in% c("days_to_start", "days_to_exp", "days_to_end", "outcome_status"))]
