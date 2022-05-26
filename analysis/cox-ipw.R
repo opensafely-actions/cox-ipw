@@ -157,7 +157,7 @@ source("analysis/fn-fit_model.R")
 print("Separate list arguments")
 
 optlistargs <- c("strata", "covariate_other", "covariate_protect", "cut_points", "cut_points_reduced", "cox_start", "cox_stop")
-for (i in 1:length(optlistargs)) {
+for (i in seq_len(length(optlistargs))) {
   tmp <- opt[optlistargs[i]]
   if (tmp[1] == "NULL") {
     assign(optlistargs[i], NULL)
