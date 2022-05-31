@@ -53,8 +53,20 @@ where you should replace `[version]` with the latest tag from
 Note that no space is allowed between `cox-ipw:` and `[version]`.
 
 ```yaml
-my_cox_ipw:
-  run: cox-ipw:
+generate_study_population:
+  run: cohortextractor:latest generate_cohort --study-definition study_definition
+  outputs:
+    highly_sensitive:
+      cohort: output/input.csv
+
+cox_ipw:
+  run: cox-ipw:[version]
+  needs:
+  - generate_study_population
+  outputs:
+    moderately_sensitive:
+      arguments: output/args-results.csv
+      estimates: output/results.csv
 ```
 
 This action can be run specifying arguments as follows 
