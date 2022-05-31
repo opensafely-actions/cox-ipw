@@ -74,8 +74,8 @@ option_list <- list(
               help = "Logical, if age should be included in the model as a spline with knots at 0.1, 0.5, 0.9 [default %default]",
               metavar = "TRUE/FALSE"),
   make_option("--df_output", type = "character", default = "results.csv",
-              help = "Filename with filepath for output data [default %default]",
-              metavar = "filepath/filename.csv"),
+              help = "Output data csv filename (this is assumed to be within the output directory) [default %default]",
+              metavar = "filename.csv"),
   make_option("--seed", type = "integer", default = 137L,
               help = "Random number generator seed passed to IPW sampling [default %default]",
               metavar = "integer")
