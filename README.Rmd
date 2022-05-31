@@ -47,7 +47,10 @@ source_lines("analysis/cox-ipw.R", 1:83)
 optparse::print_help(opt_parser)
 ```
 
-This action can be specified in the `project.yaml` with its default values as follows.
+This action can be specified in the `project.yaml` with its options at their default values as follows, 
+where you should replace `[version]` with the latest tag from 
+[here](https://github.com/opensafely-actions/cox-ipw/tags), e.g., `v0.0.1`. 
+Note that no space is allowed between `cox-ipw:` and `[version]`.
 
 ```yaml
 my_cox_ipw:
