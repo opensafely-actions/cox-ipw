@@ -11,8 +11,8 @@
 library(optparse)
 option_list <- list(
   make_option("--df_input", type = "character", default = "input.csv",
-              help = "Input dataset filename, including filepath [default %default]",
-              metavar = "filepath/filename.csv"),
+              help = "Input dataset csv filename (this is assumed to be within the output directory) [default %default]",
+              metavar = "filename.csv"),
   make_option("--ipw", type = "logical", default = TRUE,
               help = "Logical, indicating whether sampling and IPW are to be applied [default %default]",
               metavar = "TRUE/FALSE"),
