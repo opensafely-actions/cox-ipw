@@ -16,15 +16,16 @@ The action:
 
 ## Usage
 
-The arguments to the action are specified using the flags style (i.e.,
-`--argname=argvalue`), the arguments are as follows.
+The arguments/options to the action are specified using the flags style
+(i.e., `--argname=argvalue`), the arguments are as follows.
 
-    Usage: cox-ipw: [options]
+    Usage: cox-ipw:[version] [options]
 
 
     Options:
-    --df_input=FILEPATH/FILENAME.CSV
-    Input dataset filename, including filepath [default input.csv]
+    --df_input=FILENAME.CSV
+    Input dataset csv filename (this is assumed to be within the output directory)
+    [default input.csv]
 
     --ipw=TRUE/FALSE
     Logical, indicating whether sampling and IPW are to be applied [default TRUE]
@@ -101,8 +102,9 @@ The arguments to the action are specified using the flags style (i.e.,
     Logical, if age should be included in the model as a spline with knots at 0.1,
     0.5, 0.9 [default TRUE]
 
-    --df_output=FILEPATH/FILENAME.CSV
-    Filename with filepath for output data [default results.csv]
+    --df_output=FILENAME.CSV
+    Output data csv filename (this is assumed to be within the output directory)
+    [default results.csv]
 
     --seed=INTEGER
     Random number generator seed passed to IPW sampling [default 137]
@@ -110,23 +112,55 @@ The arguments to the action are specified using the flags style (i.e.,
     -h, --help
     Show this help message and exit
 
-This action can be specified in the `project.yaml` with its default
-values as follows.
+This action can be specified in the `project.yaml` with its options at
+their default values as follows, where you should replace `[version]`
+with the latest tag from
+[here](https://github.com/opensafely-actions/cox-ipw/tags), e.g.,
+`v0.0.1`. Note that no space is allowed between `cox-ipw:` and
+`[version]`.
 
 ``` yaml
-my_cox_ipw:
-  run: cox-ipw:
+generate_study_population:
+  run: cohortextractor:latest generate_cohort --study-definition study_definition
+  outputs:
+    highly_sensitive:
+      cohort: output/input.csv
+
+cox_ipw:
+  run: cox-ipw:[version]
+  needs:
+  - generate_study_population
+  outputs:
+    moderately_sensitive:
+      arguments: output/args-results.csv
+      estimates: output/results.csv
 ```
+
+Note that the csv file of argument values is automatically named with
+`args-` prepended to the name of the output data csv file. Hence, both
+the output data file and the file of argument values should be listed as
+`moderately_sensitive` outputs as shown above.
 
 This action can be run specifying arguments as follows (in YAML `>`
 indicates to treat the subsequent nested lines as a single line).
 
 ``` yaml
-my_cox_ipw:
+generate_study_population:
+  run: cohortextractor:latest generate_cohort --study-definition study_definition
+  outputs:
+    highly_sensitive:
+      cohort: output/input.csv
+
+cox_ipw_2:
   run: >
-    cox-ipw: 
-      --df_input=other_input_file.csv
-      --df_output=other_output_file.csv
+    cox-ipw:[version]
+      --df_output=results_2.csv
+  needs:
+  - generate_study_population
+  outputs:
+    moderately_sensitive:
+      arguments: output/args-results_2.csv
+      estimates: output/results_2.csv
 ```
 
 ## Notes for developers
