@@ -12,6 +12,8 @@ actions:
         cohort: output/input.csv
 
   cox_ipw:
+    # For user-facing documentation, call:
+    # cox-ipw:[version]
     run: r:latest analysis/cox-ipw.R
     needs:
     - generate_study_population
@@ -19,3 +21,15 @@ actions:
         moderately_sensitive:
           arguments: output/args-results.csv
           estimates: output/results.csv
+
+  # Test the action works in the system and with a flag
+  cox_ipw_2:
+    run: >
+      cox-ipw:v0.0.1
+        --df_output=results_2.csv
+    needs:
+    - generate_study_population
+    outputs:
+        moderately_sensitive:
+          arguments: output/args-results_2.csv
+          estimates: output/results_2.csv
