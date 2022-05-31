@@ -12,6 +12,8 @@ actions:
         cohort: output/input.csv
 
   cox_ipw:
+    # For user-facing documentation, call:
+    # cox-ipw:[version]
     run: r:latest analysis/cox-ipw.R
     needs:
     - generate_study_population
