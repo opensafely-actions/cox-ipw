@@ -80,7 +80,7 @@ option_list <- list(
               help = "Random number generator seed passed to IPW sampling [default %default]",
               metavar = "integer")
 )
-opt_parser <- OptionParser(usage = "cox-ipw: [options]", option_list = option_list)
+opt_parser <- OptionParser(usage = "cox-ipw:[version] [options]", option_list = option_list)
 opt <- parse_args(opt_parser)
 
 # Record input arguments --------------------------------------------------------
