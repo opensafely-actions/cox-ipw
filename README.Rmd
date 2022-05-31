@@ -18,7 +18,8 @@ The action:
 
 ## Usage
 
-The arguments to the action are specified using the flags style (i.e., `--argname=argvalue`), the arguments are as follows.
+The arguments/options to the action are specified using the flags style (i.e., `--argname=argvalue`), 
+the arguments are as follows.
 
 ```{r, include=FALSE}
 # Taken from
