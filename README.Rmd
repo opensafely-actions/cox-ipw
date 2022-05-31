@@ -69,6 +69,9 @@ cox_ipw:
       estimates: output/results.csv
 ```
 
+Note that the csv file of argument values is automatically named with `args-` prepended to the name of the output data csv file. 
+Hence, both the output data file and the file of argument values should be listed as `moderately_sensitive` outputs as shown above.
+
 This action can be run specifying arguments as follows 
 (in YAML `>` indicates to treat the subsequent nested lines as a single line).
 
