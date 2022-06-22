@@ -55,9 +55,6 @@ option_list <- list(
   make_option("--cut_points", type = "character", default = "28;197",
               help = "Semi-colon separated list of cut points to be used to define time post exposure [default %default]",
               metavar = "cutpoint_1;cutpoint_2"),
-  make_option("--cut_points_reduced", type = "character", default = "28;197",
-              help = "Semi-colon separated list of cut points to be used to define time post exposure if insufficient events prevent first choice [default %default]",
-              metavar = "cutpoint_1;cutpoint_2"),
   make_option("--controls_per_case", type = "integer", default = 10L,
               help = "Number of controls to retain per case in the analysis [default %default]",
               metavar = "integer"),
@@ -100,7 +97,6 @@ record_args <- data.frame(argument = c("df_input",
                                        "study_start",
                                        "study_stop",
                                        "cut_points",
-                                       "cut_points_reduced",
                                        "controls_per_case",
                                        "total_event_threshold",
                                        "episode_event_threshold",
@@ -122,7 +118,6 @@ record_args <- data.frame(argument = c("df_input",
                                     opt$study_start,
                                     opt$study_stop,
                                     opt$cut_points,
-                                    opt$cut_points_reduced,
                                     opt$controls_per_case,
                                     opt$total_event_threshold,
                                     opt$episode_event_threshold,
@@ -156,7 +151,7 @@ source("analysis/fn-fit_model.R")
 # Separate list arguments ------------------------------------------------------
 print("Separate list arguments")
 
-optlistargs <- c("strata", "covariate_other", "covariate_protect", "cut_points", "cut_points_reduced", "cox_start", "cox_stop")
+optlistargs <- c("strata", "covariate_other", "covariate_protect", "cut_points", "cox_start", "cox_stop")
 for (i in seq_len(length(optlistargs))) {
   tmp <- opt[optlistargs[i]]
   if (tmp[1] == "NULL") {
@@ -172,7 +167,6 @@ rm(tmp)
 print("Make numeric arguments numeric")
 
 cut_points <- as.numeric(cut_points)
-cut_points_reduced <- as.numeric(cut_points_reduced)
 controls_per_case <- opt$controls_per_case
 total_event_threshold <- opt$total_event_threshold
 episode_event_threshold <- opt$episode_event_threshold
@@ -271,30 +265,6 @@ episode_info <- get_episode_info(df = data_surv,
 
 if (sum(episode_info[episode_info$time_period != "days_pre", ]$N_events) < total_event_threshold) {
   stop(paste0("The total number of post-exposure events is less than the prespecified limit (", total_event_threshold, ")."))
-}
-
-# Collapse time periods if needed ----------------------------------------------
-
-if (nrow(episode_info[which(episode_info$N_events<=episode_event_threshold & episode_info$time_period!="days_pre"),])>0) {
-
-  ## Update survival data setup ------------------------------------------------
-  print("Collapsed time periods: Update survival data setup to use")
-
-  data_surv <- survival_data_setup(df = input,
-                                   cut_points = cut_points_reduced)
-
-  ## Update episode info -------------------------------------------------------
-  print("Collapsed time periods: Update episode info")
-
-  episode_info <- get_episode_info(df = data_surv,
-                                   cut_points = cut_points_reduced)
-
-}
-
-# STOP if collapsing time periods still does not meet criteria -----------------
-
-if (nrow(episode_info[which(episode_info$N_events<=episode_event_threshold & episode_info$time_period!="days_pre"),])>0) {
-  stop(paste0("Despite collapsing time periods, there remains time periods with fewer events than the prespecified limit (", episode_event_threshold, ")."))
 }
 
 # Add strata information to data -----------------------------------------------

@@ -80,10 +80,6 @@ The arguments/options to the action are specified using the flags style
     Semi-colon separated list of cut points to be used to define time post exposure
     [default 28;197]
 
-    --cut_points_reduced=CUTPOINT_1;CUTPOINT_2
-    Semi-colon separated list of cut points to be used to define time post exposure
-    if insufficient events prevent first choice [default 28;197]
-
     --controls_per_case=INTEGER
     Number of controls to retain per case in the analysis [default 10]
 
