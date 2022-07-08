@@ -83,49 +83,11 @@ opt <- parse_args(opt_parser)
 # Record input arguments --------------------------------------------------------
 print("Record input arguments")
 
-record_args <- data.frame(argument = c("df_input",
-                                       "ipw",
-                                       "exposure",
-                                       "outcome",
-                                       "strata",
-                                       "covariate_sex",
-                                       "covariate_age",
-                                       "covariate_other",
-                                       "covariate_protect",
-                                       "cox_start",
-                                       "cox_stop",
-                                       "study_start",
-                                       "study_stop",
-                                       "cut_points",
-                                       "controls_per_case",
-                                       "total_event_threshold",
-                                       "episode_event_threshold",
-                                       "covariate_threshold",
-                                       "age_spline",
-                                       "df_output",
-                                       "seed"),
-                          value = c(opt$df_input,
-                                    opt$ipw,
-                                    opt$exposure,
-                                    opt$outcome,
-                                    opt$strata,
-                                    opt$covariate_sex,
-                                    opt$covariate_age,
-                                    opt$covariate_other,
-                                    opt$covariate_protect,
-                                    opt$cox_start,
-                                    opt$cox_stop,
-                                    opt$study_start,
-                                    opt$study_stop,
-                                    opt$cut_points,
-                                    opt$controls_per_case,
-                                    opt$total_event_threshold,
-                                    opt$episode_event_threshold,
-                                    opt$covariate_threshold,
-                                    opt$age_spline,
-                                    opt$df_output,
-                                    opt$seed),
+record_args <- data.frame(argument = names(opt),
+                          value = unlist(opt),
                           stringsAsFactors = FALSE)
+
+row.names(record_args) <- NULL
 
 print(record_args)
 
