@@ -81,7 +81,7 @@ The arguments/options to the action are specified using the flags style
     [default 28;197]
 
     --controls_per_case=INTEGER
-    Number of controls to retain per case in the analysis [default 10]
+    Number of controls to retain per case in the analysis [default 20]
 
     --total_event_threshold=INTEGER
     Number of events that must be present for any model to run [default 50]
@@ -92,7 +92,7 @@ The arguments/options to the action are specified using the flags style
 
     --covariate_threshold=INTEGER
     Minimum number of individuals per covariate level for covariate to be retained
-    [default 2]
+    [default 5]
 
     --age_spline=TRUE/FALSE
     Logical, if age should be included in the model as a spline with knots at 0.1,

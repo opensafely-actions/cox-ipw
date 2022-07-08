@@ -55,7 +55,7 @@ option_list <- list(
   make_option("--cut_points", type = "character", default = "28;197",
               help = "Semi-colon separated list of cut points to be used to define time post exposure [default %default]",
               metavar = "cutpoint_1;cutpoint_2"),
-  make_option("--controls_per_case", type = "integer", default = 10L,
+  make_option("--controls_per_case", type = "integer", default = 20L,
               help = "Number of controls to retain per case in the analysis [default %default]",
               metavar = "integer"),
   make_option("--total_event_threshold", type = "integer", default = 50L,
@@ -64,7 +64,7 @@ option_list <- list(
   make_option("--episode_event_threshold", type = "integer", default = 5L,
               help = "Number of events that must be present in a time period; if threshold is not met, time periods are collapsed [default %default]",
               metavar = "integer"),
-  make_option("--covariate_threshold", type = "integer", default = 2L,
+  make_option("--covariate_threshold", type = "integer", default = 5L,
               help = "Minimum number of individuals per covariate level for covariate to be retained [default %default]",
               metavar = "integer"),
   make_option("--age_spline", type = "logical", default = TRUE,
@@ -333,7 +333,7 @@ if (!is.null(covariate_other)) {
 # STOP if protected covariate is not in model ----------------------------------
 
 if (length(intersect(covariate_protect,covariate_removed))>0) {
-  stop(paste0("The following protected covariates have been removed from the regression model:",intersect(covariate_protect,covariate_removed),". Please check input data."))
+  stop(paste0("The following protected covariates have been removed from the regression model: ",intersect(covariate_protect,covariate_removed),". Please check input data."))
 }
 
 # Perform Cox modelling --------------------------------------------------------
