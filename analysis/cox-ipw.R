@@ -227,19 +227,18 @@ episode_info <- get_episode_info(df = data_surv,
 
 if (sum(episode_info[episode_info$time_period != "days_pre", ]$N_events) < total_event_threshold) {
   
-  results <- data.frame(error = paste0("The total number of post-exposure events is less than the prespecified limit (", total_event_threshold, ")."))
+  results <- data.frame(error = paste0("The total number of post-exposure events is less than the prespecified limit (limit = ", total_event_threshold, ")."))
   print(results$error)
   
 } else {
   
-  
-  # Add strata information to data -----------------------------------------------
+  # Add strata information to data ---------------------------------------------
   print("Add strata information to data")
   
   data_strata <- data[, c("patient_id", strata)]
   data_surv <- merge(data_surv, data_strata, by = "patient_id", all.x = TRUE)
   
-  # Add age covariates -----------------------------------------------------------
+  # Add age covariates ---------------------------------------------------------
   print("Add age covariates")
   
   if (opt$covariate_age!="NULL") {
@@ -255,7 +254,7 @@ if (sum(episode_info[episode_info$time_period != "days_pre", ]$N_events) < total
     
   }
   
-  # Add sex covariate ------------------------------------------------------------
+  # Add sex covariate ----------------------------------------------------------
   print("Add sex covariate")
   
   if (opt$covariate_sex!="NULL") {
@@ -269,7 +268,7 @@ if (sum(episode_info[episode_info$time_period != "days_pre", ]$N_events) < total
     
   }
   
-  # If additional covariates are specified, add covariate data -------------------
+  # If additional covariates are specified, add covariate data -----------------
   
   covariate_removed <- NULL
   covariate_collapsed <- NULL
