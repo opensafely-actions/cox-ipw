@@ -25,20 +25,20 @@ the arguments are as follows.
 # Taken from
 # https://github.com/yihui/knitr-examples/blob/master/077-wrap-output.Rmd
 library(knitr)
-hook_output = knit_hooks$get('output')
+hook_output <- knit_hooks$get("output")
 knit_hooks$set(output = function(x, options) {
   # this hook is used only when the linewidth option is not NULL
   if (!is.null(n <- options$linewidth)) {
-    x = knitr:::split_lines(x)
+    x <- knitr:::split_lines(x)
     # any lines wider than n should be wrapped
-    if (any(nchar(x) > n)) x = strwrap(x, width = n)
-    x = paste(x, collapse = '\n')
+    if (any(nchar(x) > n)) x <- strwrap(x, width = n)
+    x <- paste(x, collapse = "\n")
   }
   hook_output(x, options)
 })
 ```
 ```{r, echo=FALSE, comment = '', linewidth=80}
-source_lines <- function(file, lines){
+source_lines <- function(file, lines) {
     source(textConnection(readLines(file)[lines]))
 }
 # Note: in the following command the last line should be the line that
