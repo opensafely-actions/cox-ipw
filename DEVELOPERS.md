@@ -2,7 +2,7 @@
 
 ## Arguments
 
-This action's arguments are defined using the **optparse** package. This code is at the top of [_cox-ipw.R_](analysis/cox-ipw.R)
+This action's arguments are defined using the **optparse** package. This code is at the top of [_cox-ipw.R_](analysis/cox-ipw.R).
 
 ## Environment
 
