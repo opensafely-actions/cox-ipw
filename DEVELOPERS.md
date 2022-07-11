@@ -2,7 +2,21 @@
 
 ## Arguments
 
-This action's arguments are defined using the **optparse** package. This code is at the top of [_cox-ipw.R_](analysis/cox-ipw.R)
+This action's arguments are defined using the **optparse** package. This code is at the top of [_cox-ipw.R_](analysis/cox-ipw.R).
+
+## README.md
+
+_README.md_ is rendered from _README.Rmd_ using the **rmarkdown** package in R. This can be done within R using
+
+```r
+rmarkdown::render("README.Rmd")
+```
+
+or from a shell using the following code.
+
+```bash
+R -e "rmarkdown::render('README.Rmd')"
+```
 
 ## Environment
 

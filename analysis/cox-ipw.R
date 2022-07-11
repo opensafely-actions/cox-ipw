@@ -55,7 +55,7 @@ option_list <- list(
   make_option("--cut_points", type = "character", default = "28;197",
               help = "Semi-colon separated list of cut points to be used to define time post exposure [default %default]",
               metavar = "cutpoint_1;cutpoint_2"),
-  make_option("--controls_per_case", type = "integer", default = 10L,
+  make_option("--controls_per_case", type = "integer", default = 20L,
               help = "Number of controls to retain per case in the analysis [default %default]",
               metavar = "integer"),
   make_option("--total_event_threshold", type = "integer", default = 50L,
@@ -64,7 +64,7 @@ option_list <- list(
   make_option("--episode_event_threshold", type = "integer", default = 5L,
               help = "Number of events that must be present in a time period; if threshold is not met, time periods are collapsed [default %default]",
               metavar = "integer"),
-  make_option("--covariate_threshold", type = "integer", default = 2L,
+  make_option("--covariate_threshold", type = "integer", default = 5L,
               help = "Minimum number of individuals per covariate level for covariate to be retained [default %default]",
               metavar = "integer"),
   make_option("--age_spline", type = "logical", default = TRUE,
@@ -83,49 +83,11 @@ opt <- parse_args(opt_parser)
 # Record input arguments --------------------------------------------------------
 print("Record input arguments")
 
-record_args <- data.frame(argument = c("df_input",
-                                       "ipw",
-                                       "exposure",
-                                       "outcome",
-                                       "strata",
-                                       "covariate_sex",
-                                       "covariate_age",
-                                       "covariate_other",
-                                       "covariate_protect",
-                                       "cox_start",
-                                       "cox_stop",
-                                       "study_start",
-                                       "study_stop",
-                                       "cut_points",
-                                       "controls_per_case",
-                                       "total_event_threshold",
-                                       "episode_event_threshold",
-                                       "covariate_threshold",
-                                       "age_spline",
-                                       "df_output",
-                                       "seed"),
-                          value = c(opt$df_input,
-                                    opt$ipw,
-                                    opt$exposure,
-                                    opt$outcome,
-                                    opt$strata,
-                                    opt$covariate_sex,
-                                    opt$covariate_age,
-                                    opt$covariate_other,
-                                    opt$covariate_protect,
-                                    opt$cox_start,
-                                    opt$cox_stop,
-                                    opt$study_start,
-                                    opt$study_stop,
-                                    opt$cut_points,
-                                    opt$controls_per_case,
-                                    opt$total_event_threshold,
-                                    opt$episode_event_threshold,
-                                    opt$covariate_threshold,
-                                    opt$age_spline,
-                                    opt$df_output,
-                                    opt$seed),
+record_args <- data.frame(argument = names(opt),
+                          value = unlist(opt),
                           stringsAsFactors = FALSE)
+
+row.names(record_args) <- NULL
 
 print(record_args)
 
@@ -264,132 +226,142 @@ episode_info <- get_episode_info(df = data_surv,
 # STOP if the total number of events is insufficient ---------------------------
 
 if (sum(episode_info[episode_info$time_period != "days_pre", ]$N_events) < total_event_threshold) {
-  stop(paste0("The total number of post-exposure events is less than the prespecified limit (", total_event_threshold, ")."))
+  
+  results <- data.frame(error = paste0("The total number of post-exposure events is less than the prespecified limit (limit = ", total_event_threshold, ")."))
+  print(results$error)
+  
+} else {
+  
+  # Add strata information to data ---------------------------------------------
+  print("Add strata information to data")
+  
+  data_strata <- data[, c("patient_id", strata)]
+  data_surv <- merge(data_surv, data_strata, by = "patient_id", all.x = TRUE)
+  
+  # Add age covariates ---------------------------------------------------------
+  print("Add age covariates")
+  
+  if (opt$covariate_age!="NULL") {
+    
+    data_covar <- data[, c("patient_id", opt$covariate_age)]
+    
+    data_covar <- dplyr::rename(data_covar,
+                                "cov_num_age" = tidyselect::all_of(opt$covariate_age))
+    
+    data_covar$cov_num_age_sq <- data_covar$cov_num_age^2
+    
+    data_surv <- merge(data_surv, data_covar, by = "patient_id", all.x = TRUE)
+    
+  }
+  
+  # Add sex covariate ----------------------------------------------------------
+  print("Add sex covariate")
+  
+  if (opt$covariate_sex!="NULL") {
+    
+    data_covar <- data[, c("patient_id", opt$covariate_sex)]
+    
+    data_covar <- dplyr::rename(data_covar,
+                                "cov_cat_sex" = tidyselect::all_of(opt$covariate_sex))
+    
+    data_surv <- merge(data_surv, data_covar, by = "patient_id", all.x = TRUE)
+    
+  }
+  
+  # If additional covariates are specified, add covariate data -----------------
+  
+  covariate_removed <- NULL
+  covariate_collapsed <- NULL
+  
+  if (!is.null(covariate_other)) {
+    
+    # Add covariate information to data ----------------------------------------
+    print("Additional covariates specified: Add covariate information to data")
+    
+    data_covar <- data[, c("patient_id", covariate_other)]
+    
+    data_surv <- merge(data_surv, data_covar, by = "patient_id", all.x = TRUE)
+    
+    # Remove covariates with insufficient variation ----------------------------
+    print("Additional covariates specified: Remove covariates with insufficient variation")
+    
+    tmp <- check_covariates(df = data_surv,
+                            covariate_threshold = covariate_threshold)
+    
+    data_surv <- tmp$df
+    covariate_removed <- tmp$covariate_removed
+    covariate_collapsed <- tmp$covariate_collapsed
+    rm(tmp)
+    
+  }
+  
+  # STOP if protected covariate is not in model --------------------------------
+  
+  if (length(intersect(covariate_protect,covariate_removed))>0) {
+    
+    results <- data.frame(error = paste0("Please check input data. The following protected covariates have been removed from the regression model: ",paste0(intersect(covariate_protect,covariate_removed), collapse = ";")))
+    print(results$error)
+    
+  } else {
+    
+    # Perform Cox modelling ----------------------------------------------------
+    print("Perform Cox modelling")
+    
+    data_surv[, c("study_start", "study_stop")] <- NULL
+    
+    results <- fit_model(df = data_surv,
+                         time_periods = episode_info[episode_info$time_period != "days_pre", ]$time_period,
+                         covariates = covariate_other,
+                         strata = strata,
+                         age_spline = opt$age_spline,
+                         covariate_removed = covariate_removed,
+                         covariate_collapsed = covariate_collapsed)
+    
+    # Merge results with number of events and person time ----------------------
+    print("Merge results with number of events and person time")
+    
+    results <- merge(results,
+                     episode_info[, c("time_period", "N_events", "person_time")],
+                     by.x = "term",
+                     by.y = "time_period",
+                     all.x = TRUE)
+    
+    tmp <- data.frame(term = "days_pre",
+                      estimate = NA,
+                      robust.se = NA,
+                      robust.conf.low = NA,
+                      robust.conf.high = NA,
+                      se = NA,
+                      model = c("mdl_age_sex", "mdl_max_adj"),
+                      surv_formula = c(results[results$model=="mdl_age_sex",]$surv_formula[1], results[results$model=="mdl_max_adj",]$surv_formula[1]),
+                      covariate_removed = "",
+                      covariate_collapsed = "",
+                      N_events = episode_info[episode_info$time_period == "days_pre", ]$N_events,
+                      person_time = episode_info[episode_info$time_period == "days_pre",]$person_time,
+                      stringsAsFactors = FALSE)
+    
+    results <- rbind(results, tmp)
+    
+    # Tidy variables for outputting --------------------------------------------
+    print("Tidy variables for outputting")
+    
+    results$N_total <- N_total
+    results$N_exposed <- N_exposed
+    
+    results$exposure <- opt$exposure
+    results$outcome <- opt$outcome
+    
+    results$input <- opt$df_input
+    
+    results <- results[order(results$model),
+                       c("model", "exposure", "outcome", "term",
+                         "estimate", "robust.conf.low", "robust.conf.high", "robust.se", "se",
+                         "N_total", "N_exposed", "N_events", "person_time", 
+                         "surv_formula","input")]
+    
+  }
+  
 }
-
-# Add strata information to data -----------------------------------------------
-print("Add strata information to data")
-
-data_strata <- data[, c("patient_id", strata)]
-data_surv <- merge(data_surv, data_strata, by = "patient_id", all.x = TRUE)
-
-# Add age covariates -----------------------------------------------------------
-print("Add age covariates")
-
-if (opt$covariate_age!="NULL") {
-  
-  data_covar <- data[, c("patient_id", opt$covariate_age)]
-  
-  data_covar <- dplyr::rename(data_covar,
-                              "cov_num_age" = tidyselect::all_of(opt$covariate_age))
-  
-  data_covar$cov_num_age_sq <- data_covar$cov_num_age^2
-  
-  data_surv <- merge(data_surv, data_covar, by = "patient_id", all.x = TRUE)
-  
-}
-
-# Add sex covariate ------------------------------------------------------------
-print("Add sex covariate")
-
-if (opt$covariate_sex!="NULL") {
-
-  data_covar <- data[, c("patient_id", opt$covariate_sex)]
-  
-  data_covar <- dplyr::rename(data_covar,
-                              "cov_cat_sex" = tidyselect::all_of(opt$covariate_sex))
-  
-  data_surv <- merge(data_surv, data_covar, by = "patient_id", all.x = TRUE)
-
-}
-
-# If additional covariates are specified, add covariate data -------------------
-
-covariate_removed <- NULL
-covariate_collapsed <- NULL
-
-if (!is.null(covariate_other)) {
-
-  # Add covariate information to data ----------------------------------------
-  print("Additional covariates specified: Add covariate information to data")
-
-  data_covar <- data[, c("patient_id", covariate_other)]
-
-  data_surv <- merge(data_surv, data_covar, by = "patient_id", all.x = TRUE)
-
-  # Remove covariates with insufficient variation ----------------------------
-  print("Additional covariates specified: Remove covariates with insufficient variation")
-
-  tmp <- check_covariates(df = data_surv,
-                          covariate_threshold = covariate_threshold)
-
-  data_surv <- tmp$df
-  covariate_removed <- tmp$covariate_removed
-  covariate_collapsed <- tmp$covariate_collapsed
-  rm(tmp)
-
-}
-
-# STOP if protected covariate is not in model ----------------------------------
-
-if (length(intersect(covariate_protect,covariate_removed))>0) {
-  stop("A protected covariate has been removed from the regression model. Please check input data.")
-}
-
-# Perform Cox modelling --------------------------------------------------------
-print("Perform Cox modelling")
-
-data_surv[, c("study_start", "study_stop")] <- NULL
-
-results <- fit_model(df = data_surv,
-                     time_periods = episode_info[episode_info$time_period != "days_pre", ]$time_period,
-                     covariates = covariate_other,
-                     strata = strata,
-                     age_spline = opt$age_spline,
-                     covariate_removed = covariate_removed,
-                     covariate_collapsed = covariate_collapsed)
-
-# Merge results with number of events and person time --------------------------
-print("Merge results with number of events and person time")
-
-results <- merge(results,
-                 episode_info[, c("time_period", "N_events", "person_time")],
-                 by.x = "term",
-                 by.y = "time_period",
-                 all.x = TRUE)
-
-tmp <- data.frame(term = "days_pre",
-                  estimate = NA,
-                  robust.se = NA,
-                  robust.conf.low = NA,
-                  robust.conf.high = NA,
-                  se = NA,
-                  model = c("mdl_age_sex", "mdl_max_adj"),
-                  surv_formula = c(results[results$model=="mdl_age_sex",]$surv_formula[1], results[results$model=="mdl_max_adj",]$surv_formula[1]),
-                  covariate_removed = "",
-                  covariate_collapsed = "",
-                  N_events = episode_info[episode_info$time_period == "days_pre", ]$N_events,
-                  person_time = episode_info[episode_info$time_period == "days_pre",]$person_time,
-                  stringsAsFactors = FALSE)
-
-results <- rbind(results, tmp)
-
-# Tidy variables for outputting ------------------------------------------------
-print("Tidy variables for outputting")
-
-results$N_total <- N_total
-results$N_exposed <- N_exposed
-
-results$exposure <- opt$exposure
-results$outcome <- opt$outcome
-
-results$input <- opt$df_input
-
-results <- results[order(results$model),
-                   c("model", "exposure", "outcome", "term",
-                     "estimate", "robust.conf.low", "robust.conf.high", "robust.se", "se",
-                     "N_total", "N_exposed", "N_events", "person_time", 
-                     "surv_formula","input")]
 
 # Save output ------------------------------------------------------------------
 print("Save output")
