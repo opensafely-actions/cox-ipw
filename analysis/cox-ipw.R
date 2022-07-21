@@ -321,7 +321,7 @@ if (sum(episode_info[episode_info$time_period != "days_pre", ]$N_events) < total
     print("Merge results with number of events and person time")
     
     results <- merge(results,
-                     episode_info[, c("time_period", "N_events", "person_time")],
+                     episode_info[, c("time_period", "N_events", "person_time_total",  "person_time_median")],
                      by.x = "term",
                      by.y = "time_period",
                      all.x = TRUE)
@@ -337,7 +337,8 @@ if (sum(episode_info[episode_info$time_period != "days_pre", ]$N_events) < total
                       covariate_removed = "",
                       covariate_collapsed = "",
                       N_events = episode_info[episode_info$time_period == "days_pre", ]$N_events,
-                      person_time = episode_info[episode_info$time_period == "days_pre",]$person_time,
+                      person_time_total = episode_info[episode_info$time_period == "days_pre",]$person_time_total,
+                      person_time_median = episode_info[episode_info$time_period == "days_pre",]$person_time_median,
                       stringsAsFactors = FALSE)
     
     results <- rbind(results, tmp)
@@ -356,7 +357,7 @@ if (sum(episode_info[episode_info$time_period != "days_pre", ]$N_events) < total
     results <- results[order(results$model),
                        c("model", "exposure", "outcome", "term",
                          "estimate", "robust.conf.low", "robust.conf.high", "robust.se", "se",
-                         "N_total", "N_exposed", "N_events", "person_time", 
+                         "N_total", "N_exposed", "N_events", "person_time_total",  "person_time_median",
                          "surv_formula","input")]
     
   }

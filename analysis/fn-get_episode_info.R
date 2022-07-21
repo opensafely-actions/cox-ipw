@@ -18,12 +18,28 @@ get_episode_info <- function(df, cut_points, episode_labels) {
   
   # Calculate person-time in each episode --------------------------------------
   
-  tmp <- df[,c("episode","tstart","tstop")]
-  tmp$person_time <- tmp$tstop - tmp$tstart
-  tmp[,c("tstart","tstop")] <- NULL
-  tmp <- aggregate(person_time ~ episode, data = tmp, FUN = sum)
+  tmp <- df[,c("episode","tstart","tstop","cox_weight")]
   
-  # Add person-time to episode info table --------------------------------------
+  tmp$person_time_total <- (tmp$tstop - tmp$tstart)*tmp$cox_weight
+  
+  tmp[,c("tstart","tstop","cox_weight")] <- NULL
+  
+  tmp <- aggregate(person_time_total ~ episode, data = tmp, FUN = sum)
+  
+  episode_info <- merge(episode_info, tmp, by = "episode", all.x = TRUE)
+  
+  # Calculate median person-time -----------------------------------------------
+  
+  tmp <- df[,c("episode","tstart","tstop","cox_weight")]
+  
+  tmp$person_time <- tmp$tstop - tmp$tstart
+  
+  tmp <- tmp %>%
+    dplyr::group_by(episode) %>%
+    dplyr::mutate(person_time_median = matrixStats::weightedMedian(x = person_time, w = cox_weight)) %>%
+    dplyr::ungroup(episode)
+  
+  tmp <- unique(tmp[,c("episode","person_time_median")])
   
   episode_info <- merge(episode_info, tmp, by = "episode", all.x = TRUE)
   
