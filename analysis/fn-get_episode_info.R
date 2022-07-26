@@ -2,7 +2,7 @@ get_episode_info <- function(df, cut_points, episode_labels) {
 
   # Calculate number of events per episode -------------------------------------
 
-  events <- df[!is.na(df$outcome), c("patient_id","episode")]
+  events <- df[df$outcome_status==1, c("patient_id","episode")]
   
   events <- aggregate(episode ~ patient_id, data = events, FUN = max)
   
