@@ -36,10 +36,6 @@ option_list <- list(
               default = "cov_cat_ethnicity;cov_num_consulation_rate;cov_bin_healthcare_worker;cov_bin_carehome_status",
               help = "Semi-colon separated list of other covariates to be included in the regression model; specify argument as NULL to run age, age squared, sex adjusted model only [default %default]",
               metavar = "varname_1;varname_2;..."),
-  make_option("--covariate_protect", type = "character",
-              default = "cov_cat_ethnicity;cov_cat_region;cov_cat_sex;cov_num_age",
-              help = "Semi-colon separated list of protected covariates - if checks indicate one of these variables is to be removed from the regression model then an error is returned [default %default]",
-              metavar = "varname_1;varname_2;..."),
   make_option("--cox_start", type = "character", default = "pat_index_date",
               help = "Semi-colon separated list of variable names used to define start of patient follow-up or single variable if already defined [default %default]",
               metavar = "varname_1;varname_2;..."),
@@ -113,7 +109,7 @@ source("analysis/fn-fit_model.R")
 # Separate list arguments ------------------------------------------------------
 print("Separate list arguments")
 
-optlistargs <- c("strata", "covariate_other", "covariate_protect", "cut_points", "cox_start", "cox_stop")
+optlistargs <- c("strata", "covariate_other", "cut_points", "cox_start", "cox_stop")
 for (i in seq_len(length(optlistargs))) {
   tmp <- opt[optlistargs[i]]
   if (tmp[1] == "NULL") {
@@ -295,72 +291,61 @@ if (sum(episode_info[episode_info$time_period != "days_pre", ]$N_events) < total
     
   }
   
-  # STOP if protected covariate is not in model --------------------------------
+  # Perform Cox modelling ----------------------------------------------------
+  print("Perform Cox modelling")
   
-  if (length(intersect(covariate_protect,covariate_removed))>0) {
-    
-    results <- data.frame(error = paste0("Please check input data. The following protected covariates have been removed from the regression model: ",paste0(intersect(covariate_protect,covariate_removed), collapse = ";")))
-    print(results$error)
-    
-  } else {
-    
-    # Perform Cox modelling ----------------------------------------------------
-    print("Perform Cox modelling")
-    
-    data_surv[, c("study_start", "study_stop")] <- NULL
-    
-    results <- fit_model(df = data_surv,
-                         time_periods = episode_info[episode_info$time_period != "days_pre", ]$time_period,
-                         covariates = covariate_other,
-                         strata = strata,
-                         age_spline = opt$age_spline,
-                         covariate_removed = covariate_removed,
-                         covariate_collapsed = covariate_collapsed)
-    
-    # Merge results with number of events and person time ----------------------
-    print("Merge results with number of events and person time")
-    
-    results <- merge(results,
-                     episode_info[, c("time_period", "N_events", "person_time_total",  "person_time_median")],
-                     by.x = "term",
-                     by.y = "time_period",
-                     all.x = TRUE)
-    
-    tmp <- data.frame(term = "days_pre",
-                      estimate = NA,
-                      robust.se = NA,
-                      robust.conf.low = NA,
-                      robust.conf.high = NA,
-                      se = NA,
-                      model = c("mdl_age_sex", "mdl_max_adj"),
-                      surv_formula = c(results[results$model=="mdl_age_sex",]$surv_formula[1], results[results$model=="mdl_max_adj",]$surv_formula[1]),
-                      covariate_removed = "",
-                      covariate_collapsed = "",
-                      N_events = episode_info[episode_info$time_period == "days_pre", ]$N_events,
-                      person_time_total = episode_info[episode_info$time_period == "days_pre",]$person_time_total,
-                      person_time_median = episode_info[episode_info$time_period == "days_pre",]$person_time_median,
-                      stringsAsFactors = FALSE)
-    
-    results <- rbind(results, tmp)
-    
-    # Tidy variables for outputting --------------------------------------------
-    print("Tidy variables for outputting")
-    
-    results$N_total <- N_total
-    results$N_exposed <- N_exposed
-    
-    results$exposure <- opt$exposure
-    results$outcome <- opt$outcome
-    
-    results$input <- opt$df_input
-    
-    results <- results[order(results$model),
-                       c("model", "exposure", "outcome", "term",
-                         "estimate", "robust.conf.low", "robust.conf.high", "robust.se", "se",
-                         "N_total", "N_exposed", "N_events", "person_time_total",  "person_time_median",
-                         "surv_formula","input")]
-    
-  }
+  data_surv[, c("study_start", "study_stop")] <- NULL
+  
+  results <- fit_model(df = data_surv,
+                       time_periods = episode_info[episode_info$time_period != "days_pre", ]$time_period,
+                       covariates = covariate_other,
+                       strata = strata,
+                       age_spline = opt$age_spline,
+                       covariate_removed = covariate_removed,
+                       covariate_collapsed = covariate_collapsed)
+  
+  # Merge results with number of events and person time ----------------------
+  print("Merge results with number of events and person time")
+  
+  results <- merge(results,
+                   episode_info[, c("time_period", "N_events", "person_time_total",  "person_time_median")],
+                   by.x = "term",
+                   by.y = "time_period",
+                   all.x = TRUE)
+  
+  tmp <- data.frame(term = "days_pre",
+                    estimate = NA,
+                    robust.se = NA,
+                    robust.conf.low = NA,
+                    robust.conf.high = NA,
+                    se = NA,
+                    model = c("mdl_age_sex", "mdl_max_adj"),
+                    surv_formula = c(results[results$model=="mdl_age_sex",]$surv_formula[1], results[results$model=="mdl_max_adj",]$surv_formula[1]),
+                    covariate_removed = "",
+                    covariate_collapsed = "",
+                    N_events = episode_info[episode_info$time_period == "days_pre", ]$N_events,
+                    person_time_total = episode_info[episode_info$time_period == "days_pre",]$person_time_total,
+                    person_time_median = episode_info[episode_info$time_period == "days_pre",]$person_time_median,
+                    stringsAsFactors = FALSE)
+  
+  results <- rbind(results, tmp)
+  
+  # Tidy variables for outputting --------------------------------------------
+  print("Tidy variables for outputting")
+  
+  results$N_total <- N_total
+  results$N_exposed <- N_exposed
+  
+  results$exposure <- opt$exposure
+  results$outcome <- opt$outcome
+  
+  results$input <- opt$df_input
+  
+  results <- results[order(results$model),
+                     c("model", "exposure", "outcome", "term",
+                       "estimate", "robust.conf.low", "robust.conf.high", "robust.se", "se",
+                       "N_total", "N_exposed", "N_events", "person_time_total",  "person_time_median",
+                       "surv_formula","input")]
   
 }
 
