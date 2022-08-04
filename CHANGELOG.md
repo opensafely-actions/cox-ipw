@@ -1,3 +1,7 @@
+# [v0.0.8](https://github.com/opensafely-actions/cox-ipw/releases/tag/v0.0.8)
+
+- Remove protected covariate feature due to lack of generalizability
+
 # [v0.0.7](https://github.com/opensafely-actions/cox-ipw/releases/tag/v0.0.7)
 
 - Fixed outcomes per episode calculation
