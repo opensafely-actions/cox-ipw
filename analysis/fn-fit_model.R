@@ -55,7 +55,7 @@ fit_model <- function(df, time_periods, covariates, strata, age_spline, covariat
   
   results <- data.frame(term = names(fit_cox_model$coefficients),
                         lnhr = fit_cox_model$coefficients,
-                        se.lnhr = sqrt(diag(vcov(fit_cox_model))),
+                        se_lnhr = sqrt(diag(vcov(fit_cox_model))),
                         model = "mdl_age_sex",
                         surv_formula = surv_formula,
                         covariate_removed = "", 
@@ -104,7 +104,7 @@ fit_model <- function(df, time_periods, covariates, strata, age_spline, covariat
     
     results_adj <- data.frame(term = names(fit_cox_model_adj$coefficients),
                               lnhr = fit_cox_model_adj$coefficients,
-                              se.lnhr = sqrt(diag(vcov(fit_cox_model_adj))),
+                              se_lnhr = sqrt(diag(vcov(fit_cox_model_adj))),
                               model = "mdl_max_adj",
                               surv_formula = surv_formula_adj,
                               covariate_removed = paste0(covariate_removed, collapse = ";"),

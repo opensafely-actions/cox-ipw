@@ -316,7 +316,7 @@ if (sum(episode_info[episode_info$time_period != "days_pre", ]$N_events) < total
   
   tmp <- data.frame(term = "days_pre",
                     lnhr = NA,
-                    se.lnhr = NA,
+                    se_lnhr = NA,
                     model = c("mdl_age_sex", "mdl_max_adj"),
                     surv_formula = c(results[results$model=="mdl_age_sex",]$surv_formula[1], results[results$model=="mdl_max_adj",]$surv_formula[1]),
                     covariate_removed = "",
@@ -340,12 +340,12 @@ if (sum(episode_info[episode_info$time_period != "days_pre", ]$N_events) < total
   results$input <- opt$df_input
   
   results$hr <- exp(results$lnhr)
-  results$conf.low <- exp(results$lnhr - qnorm(0.975)*results$se.lnhr)
-  results$conf.high <- exp(results$lnhr + qnorm(0.975)*results$se.lnhr)
+  results$conf_low <- exp(results$lnhr - qnorm(0.975)*results$se_lnhr)
+  results$conf_high <- exp(results$lnhr + qnorm(0.975)*results$se_lnhr)
   
   results <- results[order(results$model),
                      c("model", "exposure", "outcome", "term",
-                       "lnhr","se.lnhr", "hr","conf.low", "conf.high", 
+                       "lnhr","se_lnhr", "hr","conf_low", "conf_high", 
                        "N_total", "N_exposed", "N_events", "person_time_total",  "outcome_time_median",
                        "surv_formula","input")]
   
