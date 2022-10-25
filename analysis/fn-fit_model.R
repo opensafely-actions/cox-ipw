@@ -1,12 +1,12 @@
-fit_model <- function(df, time_periods, covariates, strata, age_spline, covariate_removed, covariate_collapsed) {
+fit_model <- function(df, time_periods, covariates, strata, age_spline, covariate_removed, covariate_collapsed, ipw) {
   
   # Define model formula -------------------------------------------------------
   
   surv_formula <- paste0("Surv(tstart, tstop, outcome_status) ~ ",
                          paste(time_periods, collapse = " + "), 
                          ifelse("cov_cat_sex" %in% colnames(df), " + cov_cat_sex", ""),
-                         " + cluster(patient_id) + ",
-                         paste(paste0("rms::strat(", strata, ")"), collapse = " + "))
+                         paste(" +", paste0("rms::strat(", strata, ")"), collapse = " + "),
+                         ifelse(ipw==TRUE, " + cluster(patient_id)", ""))
   
   # Add age covariate, specifying knot placement for age spline if applicable --
   
@@ -26,31 +26,36 @@ fit_model <- function(df, time_periods, covariates, strata, age_spline, covariat
     
   }
   
-  
   # Fit Cox model ----------------------------------------------------------------
   
   dd <<- rms::datadist(df)
   
   withr::local_options(list(datadist = "dd", contrasts = c("contr.treatment", "contr.treatment")))
 
-  fit_cox_model <- rms::cph(formula = as.formula(surv_formula),
-                            data = df, 
-                            weight = df$cox_weights,
-                            surv = TRUE,
-                            x = TRUE,
-                            y = TRUE)
-  
-  robust_fit_cox_model <- rms::robcov(fit_cox_model, 
-                                      cluster = df$patient_id)
+  if (ipw==TRUE) {
+    
+    fit_cox_model <- rms::cph(formula = as.formula(surv_formula),
+                              data = df, 
+                              weight = df$cox_weights,
+                              surv = TRUE,
+                              x = TRUE,
+                              y = TRUE)
+    
+  } else {
+    
+    fit_cox_model <- rms::cph(formula = as.formula(surv_formula),
+                              data = df, 
+                              surv = TRUE,
+                              x = TRUE,
+                              y = TRUE)
+    
+  }
   
   # Format results ---------------------------------------------------------------
   
-  results <- data.frame(term = robust_fit_cox_model$Design$colnames,
-                        estimate = exp(robust_fit_cox_model$coefficients),
-                        robust.se = exp(sqrt(diag(vcov(robust_fit_cox_model)))),
-                        robust.conf.low = exp(confint(robust_fit_cox_model,level=0.95)[,1]),
-                        robust.conf.high = exp(confint(robust_fit_cox_model,level=0.95)[,2]),
-                        se = exp(sqrt(diag(vcov(fit_cox_model)))),
+  results <- data.frame(term = names(fit_cox_model$coefficients),
+                        lnhr = fit_cox_model$coefficients,
+                        se_lnhr = sqrt(diag(vcov(fit_cox_model))),
                         model = "mdl_age_sex",
                         surv_formula = surv_formula,
                         covariate_removed = "", 
@@ -76,24 +81,30 @@ fit_model <- function(df, time_periods, covariates, strata, age_spline, covariat
     
     withr::local_options(list(datadist = "dd_adj", contrasts = c("contr.treatment", "contr.treatment")))
 
-    fit_cox_model_adj <- rms::cph(formula = as.formula(surv_formula_adj),
-                                  data = df, 
-                                  weight = df$cox_weights,
-                                  surv = TRUE,
-                                  x = TRUE,
-                                  y = TRUE)
-    
-    robust_fit_cox_model_adj <- rms::robcov(fit_cox_model_adj,
-                                            cluster = df$patient_id)
+    if (ipw==TRUE) {
+      
+      fit_cox_model_adj <- rms::cph(formula = as.formula(surv_formula_adj),
+                                data = df, 
+                                weight = df$cox_weights,
+                                surv = TRUE,
+                                x = TRUE,
+                                y = TRUE)
+      
+    } else {
+      
+      fit_cox_model_adj <- rms::cph(formula = as.formula(surv_formula_adj),
+                                data = df, 
+                                surv = TRUE,
+                                x = TRUE,
+                                y = TRUE)
+      
+    }
     
     # Format results ---------------------------------------------------------------
     
-    results_adj <- data.frame(term = robust_fit_cox_model_adj$Design$colnames,
-                              estimate = exp(robust_fit_cox_model_adj$coefficients),
-                              robust.se = exp(sqrt(diag(vcov(robust_fit_cox_model_adj)))),
-                              robust.conf.low = exp(confint(robust_fit_cox_model_adj,level=0.95)[,1]),
-                              robust.conf.high = exp(confint(robust_fit_cox_model_adj,level=0.95)[,2]),
-                              se = exp(sqrt(diag(vcov(fit_cox_model_adj)))),
+    results_adj <- data.frame(term = names(fit_cox_model_adj$coefficients),
+                              lnhr = fit_cox_model_adj$coefficients,
+                              se_lnhr = sqrt(diag(vcov(fit_cox_model_adj))),
                               model = "mdl_max_adj",
                               surv_formula = surv_formula_adj,
                               covariate_removed = paste0(covariate_removed, collapse = ";"),

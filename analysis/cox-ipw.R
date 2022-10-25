@@ -133,7 +133,13 @@ covariate_threshold <- opt$covariate_threshold
 # Load data --------------------------------------------------------------------
 print("Load data")
 
-data <- readr::read_csv(paste0("output/", opt$df_input))
+if (grepl(".csv",opt$df_input)) {
+  data <- readr::read_csv(paste0("output/", opt$df_input))
+}
+
+if (grepl(".rds",opt$df_input)) {
+  data <- readr::read_rds(paste0("output/", opt$df_input))
+}
 
 # Restrict to core variables ---------------------------------------------------
 print("Restrict to core variables")
@@ -302,30 +308,28 @@ if (sum(episode_info[episode_info$time_period != "days_pre", ]$N_events) < total
                        strata = strata,
                        age_spline = opt$age_spline,
                        covariate_removed = covariate_removed,
-                       covariate_collapsed = covariate_collapsed)
+                       covariate_collapsed = covariate_collapsed,
+                       ipw = opt$ipw)
   
   # Merge results with number of events and person time ----------------------
   print("Merge results with number of events and person time")
   
   results <- merge(results,
-                   episode_info[, c("time_period", "N_events", "person_time_total",  "person_time_median")],
+                   episode_info[, c("time_period", "N_events", "person_time_total",  "outcome_time_median")],
                    by.x = "term",
                    by.y = "time_period",
                    all.x = TRUE)
   
   tmp <- data.frame(term = "days_pre",
-                    estimate = NA,
-                    robust.se = NA,
-                    robust.conf.low = NA,
-                    robust.conf.high = NA,
-                    se = NA,
+                    lnhr = NA,
+                    se_lnhr = NA,
                     model = c("mdl_age_sex", "mdl_max_adj"),
                     surv_formula = c(results[results$model=="mdl_age_sex",]$surv_formula[1], results[results$model=="mdl_max_adj",]$surv_formula[1]),
                     covariate_removed = "",
                     covariate_collapsed = "",
                     N_events = episode_info[episode_info$time_period == "days_pre", ]$N_events,
                     person_time_total = episode_info[episode_info$time_period == "days_pre",]$person_time_total,
-                    person_time_median = episode_info[episode_info$time_period == "days_pre",]$person_time_median,
+                    outcome_time_median = episode_info[episode_info$time_period == "days_pre",]$outcome_time_median,
                     stringsAsFactors = FALSE)
   
   results <- rbind(results, tmp)
@@ -341,10 +345,14 @@ if (sum(episode_info[episode_info$time_period != "days_pre", ]$N_events) < total
   
   results$input <- opt$df_input
   
+  results$hr <- exp(results$lnhr)
+  results$conf_low <- exp(results$lnhr - qnorm(0.975)*results$se_lnhr)
+  results$conf_high <- exp(results$lnhr + qnorm(0.975)*results$se_lnhr)
+  
   results <- results[order(results$model),
                      c("model", "exposure", "outcome", "term",
-                       "estimate", "robust.conf.low", "robust.conf.high", "robust.se", "se",
-                       "N_total", "N_exposed", "N_events", "person_time_total",  "person_time_median",
+                       "lnhr","se_lnhr", "hr","conf_low", "conf_high", 
+                       "N_total", "N_exposed", "N_events", "person_time_total",  "outcome_time_median",
                        "surv_formula","input")]
   
 }
