@@ -3,6 +3,7 @@
 - Fix robust SEs so they are only applied when sampling is on
 - Clarify ln(hr) versus hr
 - Add code to calculate median time to outcome for each time period
+- Add support for '.rds' as an input file
 
 # [v0.0.8](https://github.com/opensafely-actions/cox-ipw/releases/tag/v0.0.8)
 
