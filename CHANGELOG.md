@@ -1,10 +1,10 @@
 # [v0.0.10](https://github.com/opensafely-actions/cox-ipw/releases/tag/v0.0.10)
 
-- Add cox-ipw version number to output
-- Use Breslow for ties in Cox model
+- Add `cox-ipw` version number to output
+- Use Breslow method for ties in Cox model
 - Add option to save analysis ready dataset
-- Print survival::tmerge() inputs to log
-- Make outcome_time_median include time from previous episodes
+- Print `survival::tmerge()` inputs to log
+- Make `outcome_time_median` include time from previous episodes
 
 # [v0.0.9](https://github.com/opensafely-actions/cox-ipw/releases/tag/v0.0.9)
 
