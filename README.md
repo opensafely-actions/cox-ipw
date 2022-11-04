@@ -9,10 +9,10 @@ action for the OpenSAFELY framework.
 
 The action:
 
--   Samples data and applies inverse probability weights
--   Performs survival data setup
--   Checks covariate variation
--   Fits the specified Cox model
+- Samples data and applies inverse probability weights
+- Performs survival data setup
+- Checks covariate variation
+- Fits the specified Cox model
 
 ## Usage
 
