@@ -71,7 +71,10 @@ option_list <- list(
               metavar = "filename.csv"),
   make_option("--seed", type = "integer", default = 137L,
               help = "Random number generator seed passed to IPW sampling [default %default]",
-              metavar = "integer")
+              metavar = "integer"),
+  make_option("--save_analysis_ready", type = "logical", default = FALSE,
+              help = "Logical, if analysis ready dataset should be saved [default %default]",
+              metavar = "TRUE/FALSE")
 )
 opt_parser <- OptionParser(usage = "cox-ipw:[version] [options]", option_list = option_list)
 opt <- parse_args(opt_parser)
@@ -297,11 +300,19 @@ if (sum(episode_info[episode_info$time_period != "days_pre", ]$N_events) < total
     
   }
   
-  # Perform Cox modelling ----------------------------------------------------
-  print("Perform Cox modelling")
+  # Save analysis ready dataset ------------------------------------------------
+  print("Save analysis ready dataset")
   
   data_surv[, c("study_start", "study_stop")] <- NULL
   
+  if (opt$save_analysis_ready == TRUE) {
+    readr::write_rds(data_surv, 
+                     file = paste0("output/analysis_ready-", gsub("\\...*","",opt$df_input),".rds"))
+  }
+  
+  # Perform Cox modelling ----------------------------------------------------
+  print("Perform Cox modelling")
+
   results <- fit_model(df = data_surv,
                        time_periods = episode_info[episode_info$time_period != "days_pre", ]$time_period,
                        covariates = covariate_other,
