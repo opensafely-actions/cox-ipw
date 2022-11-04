@@ -1,3 +1,9 @@
+# [v0.0.10](https://github.com/opensafely-actions/cox-ipw/releases/tag/v0.0.10)
+
+- Add cox-ipw version number to output
+- Use Breslow for ties in Cox model
+- Add option to save analysis ready dataset
+
 # [v0.0.9](https://github.com/opensafely-actions/cox-ipw/releases/tag/v0.0.9)
 
 - Fix robust SEs so they are only applied when sampling is on
