@@ -88,6 +88,7 @@ fit_model <- function(df, time_periods, covariates, strata, age_spline, covariat
       fit_cox_model_adj <- rms::cph(formula = as.formula(surv_formula_adj),
                                 data = df, 
                                 weight = df$cox_weights,
+                                method = "breslow",
                                 surv = TRUE,
                                 x = TRUE,
                                 y = TRUE)
@@ -96,6 +97,7 @@ fit_model <- function(df, time_periods, covariates, strata, age_spline, covariat
       
       fit_cox_model_adj <- rms::cph(formula = as.formula(surv_formula_adj),
                                 data = df, 
+                                method = "breslow",
                                 surv = TRUE,
                                 x = TRUE,
                                 y = TRUE)
