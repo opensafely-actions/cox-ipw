@@ -3,6 +3,7 @@
 - Add cox-ipw version number to output
 - Use Breslow for ties in Cox model
 - Add option to save analysis ready dataset
+- Print survival::tmerge() inputs to log
 
 # [v0.0.9](https://github.com/opensafely-actions/cox-ipw/releases/tag/v0.0.9)
 
