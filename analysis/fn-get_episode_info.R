@@ -43,6 +43,13 @@ get_episode_info <- function(df, cut_points, episode_labels) {
   
   episode_info <- merge(episode_info, tmp, by = "episode", all.x = TRUE)
   
+  # Add time from previous episodes to median person-time -----------------------
+  
+  episode_info$add <- as.numeric(gsub("days","",gsub("_.*","",episode_info$time_period)))
+  episode_info$add <- ifelse(is.na(episode_info$add),0,episode_info$add)
+  episode_info$outcome_time_median <- episode_info$outcome_time_median + episode_info$add
+  episode_info$add <- NULL
+  
   # Return episode_info table --------------------------------------------------
   
   return(episode_info)

@@ -9,10 +9,10 @@ action for the OpenSAFELY framework.
 
 The action:
 
--   Samples data and applies inverse probability weights
--   Performs survival data setup
--   Checks covariate variation
--   Fits the specified Cox model
+- Samples data and applies inverse probability weights
+- Performs survival data setup
+- Checks covariate variation
+- Fits the specified Cox model
 
 ## Usage
 
@@ -99,6 +99,9 @@ The arguments/options to the action are specified using the flags style
 
     --seed=INTEGER
     Random number generator seed passed to IPW sampling [default 137]
+
+    --save_analysis_ready=TRUE/FALSE
+    Logical, if analysis ready dataset should be saved [default FALSE]
 
     -h, --help
     Show this help message and exit

@@ -15,7 +15,12 @@ survival_data_setup <- function(df, cut_points, episode_labels) {
   
   ## Put into survival format
   d1 <- exposed[,!(colnames(exposed) %in% c("days_to_start", "days_to_exp", "days_to_end", "outcome_status"))]
+  print("Survival format, d1")
+  print(head(d1))
+  
   d2 <- exposed[,c("patient_id", "days_to_start", "days_to_exp", "days_to_end", "outcome_status")]
+  print("Survival format, d2")
+  print(head(d2))
   
   exposed <- survival::tmerge(data1=d1, 
                               data2=d2, 
