@@ -1,6 +1,7 @@
 fit_model <- function(df, time_periods, covariates, strata, age_spline, covariate_removed, covariate_collapsed, ipw) {
   
   # Define model formula -------------------------------------------------------
+  print("Define model formula")
   
   surv_formula <- paste0("Surv(tstart, tstop, outcome_status) ~ ",
                          paste(time_periods, collapse = " + "), 
@@ -12,9 +13,15 @@ fit_model <- function(df, time_periods, covariates, strata, age_spline, covariat
   
   if ("cov_num_age" %in% colnames(df)) {
     
-    if ((age_spline=="TRUE")) {
+    print("Add age covariate")
+    
+    if (age_spline=="TRUE") {
+      
+      print("Specify knot placement for age spline")
       
       knot_placement <- as.numeric(quantile(df$cov_num_age, probs=c(0.1,0.5,0.9)))
+      
+      print(paste0("Knots will be placed at: ", paste0(knot_placement, collapse = ", ")))
       
       surv_formula <- paste0(surv_formula, " + rms::rcs(cov_num_age, parms=knot_placement)")
       
@@ -26,7 +33,10 @@ fit_model <- function(df, time_periods, covariates, strata, age_spline, covariat
     
   }
   
+  print(surv_formula)
+  
   # Fit Cox model ----------------------------------------------------------------
+  print("Fit Cox model")
   
   dd <<- rms::datadist(df)
   
@@ -53,7 +63,10 @@ fit_model <- function(df, time_periods, covariates, strata, age_spline, covariat
     
   }
   
+  print(fit_cox_model)
+  
   # Format results ---------------------------------------------------------------
+  print("Format results")
   
   results <- data.frame(term = names(fit_cox_model$coefficients),
                         lnhr = fit_cox_model$coefficients,
@@ -73,11 +86,15 @@ fit_model <- function(df, time_periods, covariates, strata, age_spline, covariat
   if (!is.null(covariates) & length(covariates)>0) {
     
     # Add covariates to model formula ------------------------------------------
+    print("Add covariates to model formula")
     
     surv_formula_adj <- paste0(surv_formula, " + ",
                                paste(covariates, collapse = " + "))
     
+    print(surv_formula_adj)
+    
     # Fit Cox model ------------------------------------------------------------
+    print("Fit Cox model with covariates")
     
     dd_adj <<- rms::datadist(df)
     
@@ -104,7 +121,10 @@ fit_model <- function(df, time_periods, covariates, strata, age_spline, covariat
       
     }
     
+    print(fit_cox_model_adj)
+    
     # Format results ---------------------------------------------------------------
+    print("Format results")
     
     results_adj <- data.frame(term = names(fit_cox_model_adj$coefficients),
                               lnhr = fit_cox_model_adj$coefficients,
@@ -118,13 +138,16 @@ fit_model <- function(df, time_periods, covariates, strata, age_spline, covariat
     row.names(results_adj) <- NULL
     
     # Bind to other results ----------------------------------------------------
+    print("Bind to other results")
     
     results <- rbind(results,results_adj)
     
   }
   
   # Return results -------------------------------------------------------------
+  print("Return results")  
   
   return(results)
+  print(summary(results))
   
 }
