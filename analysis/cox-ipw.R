@@ -144,6 +144,8 @@ if (grepl(".rds",opt$df_input)) {
   data <- readr::read_rds(paste0("output/", opt$df_input))
 }
 
+print(summary(data))
+
 # Restrict to core variables ---------------------------------------------------
 print("Restrict to core variables")
 
@@ -152,6 +154,8 @@ core <- core[!grepl("cov_", core)]
 core <- core[!grepl("sub_", core)]
 
 input <- data[, core]
+
+print(paste0("Core variables: ", paste0(core, collapse = ", ")))
 
 # Give generic names to variables ----------------------------------------------
 print("Give generic names to variables")
@@ -166,11 +170,15 @@ cox_start <- gsub(opt$exposure, "exposure", cox_start)
 cox_stop <- gsub(opt$outcome, "outcome", cox_stop)
 cox_stop <- gsub(opt$exposure, "exposure", cox_stop)
 
+print(summary(input))
+
 # Specify study dates ----------------------------------------------------------
 print("Specify study dates")
 
 input$study_start <- as.Date(opt$study_start)
 input$study_stop <- as.Date(opt$study_stop)
+
+print(summary(input))
 
 # Specify follow-up dates ------------------------------------------------------
 print("Specify follow-up dates")
@@ -183,17 +191,27 @@ input$fup_stop <- do.call(pmin,
 
 input <- input[input$fup_stop >= input$fup_start, ]
 
+print(summary(input))
+
 # Remove exposures and outcomes outside follow-up ------------------------------
 print("Remove exposures and outcomes outside follow-up")
+
+print(paste0("Exposure data range: ", min(input$exposure, na.rm = TRUE), " to ", max(input$exposure, na.rm = TRUE)))
+print(paste0("Outcome data range: ", min(input$outcome, na.rm = TRUE), " to ", max(input$outcome, na.rm = TRUE)))
 
 input <- input %>% 
   dplyr::mutate(exposure = replace(exposure, which(exposure>fup_stop | exposure<fup_start), NA),
                 outcome = replace(outcome, which(outcome>fup_stop | outcome<fup_start), NA))
 
+print(paste0("Exposure data range: ", min(input$exposure, na.rm = TRUE), " to ", max(input$exposure, na.rm = TRUE)))
+print(paste0("Outcome data range: ", min(input$outcome, na.rm = TRUE), " to ", max(input$outcome, na.rm = TRUE)))
+
 # Make indicator variable for outcome status -----------------------------------
 print("Make indicator variable for outcome status")
 
 input$outcome_status <- input$outcome==input$fup_stop & !is.na(input$outcome) & !is.na(input$fup_stop)
+
+print(table(input$outcome_status))
 
 # Sample control population ----------------------------------------------------
 
@@ -207,12 +225,16 @@ if (opt$ipw == TRUE) {
                       seed = opt$seed)
 }
 
+print(summary(input))
+
 # Define episode labels --------------------------------------------------------
 print("Define episode labels")
 
 episode_labels <- data.frame(episode = 0:length(cut_points),
                              time_period = c("days_pre",paste0("days", c("0", cut_points[1:(length(cut_points)-1)]),"_", cut_points)),
                              stringsAsFactors = FALSE)
+
+print(episode_labels)
 
 # Survival data setup ----------------------------------------------------------
 print("Survival data setup")
@@ -221,12 +243,16 @@ data_surv <- survival_data_setup(df = input,
                                  cut_points = cut_points,
                                  episode_labels = episode_labels)
 
+print(summary(data_surv))
+
 # Calculate events in each time period -----------------------------------------
 print("Calculate events in each time period")
 
 episode_info <- get_episode_info(df = data_surv,
                                  cut_points = cut_points,
                                  episode_labels = episode_labels)
+
+print(episode_info)
 
 # STOP if the total number of events is insufficient ---------------------------
 
@@ -243,6 +269,8 @@ if (sum(episode_info[episode_info$time_period != "days_pre", ]$N_events) < total
   data_strata <- data[, c("patient_id", strata)]
   data_surv <- merge(data_surv, data_strata, by = "patient_id", all.x = TRUE)
   
+  print(summary(data_surv))
+  
   # Add age covariates ---------------------------------------------------------
   print("Add age covariates")
   
@@ -257,6 +285,8 @@ if (sum(episode_info[episode_info$time_period != "days_pre", ]$N_events) < total
     
     data_surv <- merge(data_surv, data_covar, by = "patient_id", all.x = TRUE)
     
+    print(summary(data_surv))
+    
   }
   
   # Add sex covariate ----------------------------------------------------------
@@ -270,6 +300,8 @@ if (sum(episode_info[episode_info$time_period != "days_pre", ]$N_events) < total
                                 "cov_cat_sex" = tidyselect::all_of(opt$covariate_sex))
     
     data_surv <- merge(data_surv, data_covar, by = "patient_id", all.x = TRUE)
+    
+    print(summary(data_surv))
     
   }
   
@@ -297,6 +329,10 @@ if (sum(episode_info[episode_info$time_period != "days_pre", ]$N_events) < total
     covariate_removed <- tmp$covariate_removed
     covariate_collapsed <- tmp$covariate_collapsed
     rm(tmp)
+    
+    print(summary(data_surv))
+    print(paste0("Removed covariates: ",paste0(covariate_removed)))
+    print(paste0("Collapsed covariates: ",paste0(covariate_collapsed)))
     
   }
   
@@ -331,6 +367,11 @@ if (sum(episode_info[episode_info$time_period != "days_pre", ]$N_events) < total
                    by.y = "time_period",
                    all.x = TRUE)
   
+  print(summary(results))
+  
+  # Add dummy row for days_pre term --------------------------------------------
+  print("Add dummy row for days_pre term")
+  
   tmp <- data.frame(term = "days_pre",
                     lnhr = NA,
                     se_lnhr = NA,
@@ -344,6 +385,8 @@ if (sum(episode_info[episode_info$time_period != "days_pre", ]$N_events) < total
                     stringsAsFactors = FALSE)
   
   results <- rbind(results, tmp)
+  
+  print(summary(results))
   
   # Tidy variables for outputting --------------------------------------------
   print("Tidy variables for outputting")
@@ -371,8 +414,10 @@ if (sum(episode_info[episode_info$time_period != "days_pre", ]$N_events) < total
 # Save output ------------------------------------------------------------------
 print("Save output")
 
-results$cox_ipw <- "v0.0.10"
+results$cox_ipw <- "v0.0.11"
 
 write.csv(results,
           file = paste0("output/", opt$df_output),
           row.names = FALSE)
+
+print(summary(results))

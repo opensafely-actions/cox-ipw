@@ -1,3 +1,7 @@
+# [v0.0.11](https://github.com/opensafely-actions/cox-ipw/releases/tag/v0.0.11)
+
+- Print output to log at each stage for better debugging
+
 # [v0.0.10](https://github.com/opensafely-actions/cox-ipw/releases/tag/v0.0.10)
 
 - Add `cox-ipw` version number to output
