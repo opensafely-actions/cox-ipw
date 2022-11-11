@@ -16,6 +16,9 @@ option_list <- list(
   make_option("--ipw", type = "logical", default = TRUE,
               help = "Logical, indicating whether sampling and IPW are to be applied [default %default]",
               metavar = "TRUE/FALSE"),
+  make_option("--sample_exposed", type = "logical", default = FALSE,
+              help = "Logical, indicating whether exposed individuals should be sampled [default %default]",
+              metavar = "TRUE/FALSE"),
   make_option("--exposure", type = "character",
               default = "exp_date_covid19_confirmed",
               help = "Exposure variable name [default %default]",
@@ -240,16 +243,22 @@ print(table(input$outcome_status))
 # Sample control population ----------------------------------------------------
 
 N_total <- nrow(input)
+print(paste0("N_total = ",N_total))
+
 N_exposed <- nrow(input[!is.na(input$exposure),])
+print(paste0("N_exposed = ",N_exposed))
 
 if (opt$ipw == TRUE) {
   print("Sample control population")
   input <- ipw_sample(df = input,
                       controls_per_case = controls_per_case, 
-                      seed = opt$seed)
+                      seed = opt$seed,
+                      sample_exposed = opt$sample_exposed)
+  print(paste0("After sampling, N_total = ",nrow(input)))
 }
 
 print(summary(input))
+
 
 # Define episode labels --------------------------------------------------------
 print("Define episode labels")
@@ -438,7 +447,7 @@ if (sum(episode_info[episode_info$time_period != "days_pre", ]$N_events) < total
 # Save output ------------------------------------------------------------------
 print("Save output")
 
-results$cox_ipw <- "v0.0.12"
+results$cox_ipw <- "v0.0.13"
 
 write.csv(results,
           file = paste0("output/", opt$df_output),

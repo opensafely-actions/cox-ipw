@@ -1,4 +1,4 @@
-ipw_sample <- function(df, controls_per_case, seed = 137) {
+ipw_sample <- function(df, controls_per_case, seed = 137, sample_exposed) {
   
   # Set seed -------------------------------------------------------------------
   print("Set seed")
@@ -9,9 +9,20 @@ ipw_sample <- function(df, controls_per_case, seed = 137) {
   print("Split cases and controls")
   
   cases <- df[df$outcome_status==TRUE,]
-  print(summary(cases))
   
   controls <- df[df$outcome_status==FALSE,]
+
+  if (sample_exposed==FALSE) {
+    print("Separate exposed controls so they are not sampled")
+    controls <- controls[is.na(controls$exposure),]
+    exposed <- controls[!is.na(controls$exposure),]
+    exposed$cox_weight <- 1
+  } 
+
+  print("Cases:")
+  print(summary(cases))
+  
+  print("Controls:")
   print(summary(controls))
   
   # Sample controls if more than enough, otherwise retain all controls ---------
@@ -26,6 +37,12 @@ ipw_sample <- function(df, controls_per_case, seed = 137) {
     print("Retain all controls")
     controls$cox_weight <- 1
   }
+  
+  if (sample_exposed==FALSE) {
+    print("Add exposed control individuals back to control dataset")
+    controls <- rbind(controls,exposed)
+    print(summary(controls))
+  } 
   
   # Specify cox weight for cases -----------------------------------------------
   print("Specify cox weight for cases")

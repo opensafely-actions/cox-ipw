@@ -1,3 +1,7 @@
+# [v0.0.13](https://github.com/opensafely-actions/cox-ipw/releases/tag/v0.0.13)
+
+- Add option to sample exposed individuals. If not sampled, all exposed individuals are included regardless of case/control status.
+
 # [v0.0.12](https://github.com/opensafely-actions/cox-ipw/releases/tag/v0.0.12)
 
 - Print output to log at each stage of `fn-check_covariates.R` for better debugging
