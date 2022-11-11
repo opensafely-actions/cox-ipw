@@ -1,3 +1,8 @@
+# [v0.0.12](https://github.com/opensafely-actions/cox-ipw/releases/tag/v0.0.12)
+
+- Print output to log at each stage of `fn-check_covariates.R` for better debugging
+- For structured variable names, impose class (e.g., make variables containing '_date' into dates)
+
 # [v0.0.11](https://github.com/opensafely-actions/cox-ipw/releases/tag/v0.0.11)
 
 - Print output to log at each stage for better debugging
