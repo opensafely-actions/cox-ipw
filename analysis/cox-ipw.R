@@ -146,6 +146,30 @@ if (grepl(".rds",opt$df_input)) {
 
 print(summary(data))
 
+# Make binary variables logical ------------------------------------------------
+print("Make binary variables logical")
+
+var_bin <- colnames(data)[grepl("_bin_",colnames(data))]
+data[,var_bin] <- lapply(data[,var_bin],as.logical)
+
+# Make date variables dates ----------------------------------------------------
+print("Make date variables dates")
+
+var_date <- colnames(data)[grepl("_date",colnames(data))]
+data[,var_date] <- lapply(data[,var_date],as.Date)
+
+# Make categorical variables factors -------------------------------------------
+print("Make categorical variables factors")
+
+var_cat <- colnames(data)[grepl("_cat_",colnames(data))]
+data[,var_cat] <- lapply(data[,var_cat],as.factor)
+
+# Make numerical variables numerical -------------------------------------------
+print(" Make numerical variables numerical")
+
+var_num <- colnames(data)[grepl("_num_",colnames(data))]
+data[,var_num] <- lapply(data[,var_num],as.numeric)
+
 # Restrict to core variables ---------------------------------------------------
 print("Restrict to core variables")
 
@@ -414,7 +438,7 @@ if (sum(episode_info[episode_info$time_period != "days_pre", ]$N_events) < total
 # Save output ------------------------------------------------------------------
 print("Save output")
 
-results$cox_ipw <- "v0.0.11"
+results$cox_ipw <- "v0.0.12"
 
 write.csv(results,
           file = paste0("output/", opt$df_output),

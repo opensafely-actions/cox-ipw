@@ -1,6 +1,7 @@
 check_covariates <- function(df, covariate_threshold) {
   
-  # Idenfify non-numeric covariates to remove ----------------------------------
+  # Identify non-numeric covariates to remove ----------------------------------
+  print("Identify non-numeric covariates to remove")
   
   covariate_removed <- NULL
   
@@ -10,20 +11,27 @@ check_covariates <- function(df, covariate_threshold) {
     
     if (grepl("cov_bin_",i) | grepl("cov_cat_",i)) {
       
+      print(paste0("Covariate: ",i))
+      
       # Calculate frequency for each level -------------------------------------
+      print("Calculate frequency for each level")
       
       tmp <- unique(df[df$exposure_status==1 & df$outcome_status==1,c("patient_id",i)])
       freq <- data.frame(table(tmp[,i]))
       
+      print(freq)
+      
       # Add covariates to removal list if they fall below covariate threshold --
       
       if (nrow(freq[freq$Freq<=covariate_threshold  & freq$Var1!="Missing",])>0) {
+        print("Add covariate to removal list")
         covariate_removed <- c(covariate_removed,i)
       }
       
       # Add covariates to removal list if the covariate has a single level -----
       
       if (nrow(freq)==1) {
+        print("Add covariate to removal list")
         covariate_removed <- c(covariate_removed,i)
       }
       
@@ -38,6 +46,7 @@ check_covariates <- function(df, covariate_threshold) {
   ## Deprivation  
   
   if ("cov_cat_deprivation" %in% covariate_removed) {
+    print("Collapsing deprivation as special case")
     
     df <- df %>% 
       dplyr::mutate(cov_cat_deprivation = 
@@ -60,6 +69,7 @@ check_covariates <- function(df, covariate_threshold) {
   # Smoking status -------------------------------------------------------------
   
   if ("cov_cat_smoking_status" %in% covariate_removed) {
+    print("Collapsing smoking status as special case")
     
     df <- df %>% 
       dplyr::mutate(cov_cat_smoking_status = 
@@ -81,14 +91,20 @@ check_covariates <- function(df, covariate_threshold) {
     
     if (i %in% colnames(df)) {
       
-      # Calculate frequency for each level -------------------------------------
+      print("Rechecking covariate: ", i)
+      
+      # Calculate frequency for each level among exposed with outcome ----------
+      print("Calculate frequency for each level among exposed with outcome")
       
       tmp <- unique(df[df$exposure_status==1 & df$outcome_status==1,c("patient_id",i)])
       freq <- data.frame(table(tmp[,i]))
       
+      print(freq)
+      
       # Add covariates to removal list if they fall below covariate threshold --
       
       if (nrow(freq[freq$Freq<=covariate_threshold & freq$Var1!="Missing",])>0) {
+        print("Add covariate to removal list")
         covariate_removed <- c(covariate_removed,i)
         covariate_collapsed <- setdiff(covariate_collapsed, i)
       }
@@ -96,6 +112,7 @@ check_covariates <- function(df, covariate_threshold) {
       # Add covariates to removal list if the covariate has a single level -----
       
       if (nrow(freq)==1) {
+        print("Add covariate to removal list")
         covariate_removed <- c(covariate_removed,i)
         covariate_collapsed <- setdiff(covariate_collapsed, i)
       }
@@ -104,8 +121,8 @@ check_covariates <- function(df, covariate_threshold) {
     
   }
   
-  
   # Remove covariates ----------------------------------------------------------
+  print("Remove covariates")
   
   df <- df[,!(colnames(df) %in% covariate_removed)]
   
