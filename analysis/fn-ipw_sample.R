@@ -13,7 +13,7 @@ ipw_sample <- function(df, controls_per_case, seed = 137, sample_exposed) {
   controls <- df[df$outcome_status==FALSE,]
 
   if (sample_exposed==FALSE) {
-    print("Seperate exposed controls so they are not sampled")
+    print("Separate exposed controls so they are not sampled")
     controls <- controls[is.na(controls$exposure),]
     exposed <- controls[!is.na(controls$exposure),]
     exposed$cox_weight <- 1
