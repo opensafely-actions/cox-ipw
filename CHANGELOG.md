@@ -1,3 +1,7 @@
+# [v0.0.14](https://github.com/opensafely-actions/cox-ipw/releases/tag/v0.0.14)
+
+- Fix typo that caused fatal error for fn-check_covariates.R
+
 # [v0.0.13](https://github.com/opensafely-actions/cox-ipw/releases/tag/v0.0.13)
 
 - Add option to sample exposed individuals. If not sampled, all exposed individuals are included regardless of case/control status.

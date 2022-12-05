@@ -91,7 +91,7 @@ check_covariates <- function(df, covariate_threshold) {
     
     if (i %in% colnames(df)) {
       
-      print("Rechecking covariate: ", i)
+      print(paste0("Rechecking covariate: ", i))
       
       # Calculate frequency for each level among exposed with outcome ----------
       print("Calculate frequency for each level among exposed with outcome")
