@@ -1,3 +1,7 @@
+# [v0.0.15](https://github.com/opensafely-actions/cox-ipw/releases/tag/v0.0.15)
+
+- Update `mathieudutour/github-tag-action` GitHub Action to v6.1 tag
+
 # [v0.0.14](https://github.com/opensafely-actions/cox-ipw/releases/tag/v0.0.14)
 
 - Fix typo that caused fatal error for fn-check_covariates.R
