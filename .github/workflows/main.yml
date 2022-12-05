@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: opensafely-core/research-action@v2
 
   tag-new-version:
@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Tag new version
         uses: mathieudutour/github-tag-action@d745f2e74aaf1ee82e747b181f7a0967978abee0
         with:
