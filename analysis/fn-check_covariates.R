@@ -1,11 +1,11 @@
-check_covariates <- function(df, covariate_threshold) {
-  
+check_covariates <- function(df, covariate_threshold, strata) {
+
   # Identify non-numeric covariates to remove ----------------------------------
   print("Identify non-numeric covariates to remove")
   
   covariate_removed <- NULL
   
-  for (i in colnames(df)[grepl("cov_",colnames(df))]) {
+  for (i in unique(c(colnames(df)[grepl("cov_",colnames(df))], strata))) {
     
     # Consider non-numeric covariates ------------------------------------------
     
@@ -121,16 +121,32 @@ check_covariates <- function(df, covariate_threshold) {
     
   }
   
+  # Check strata variables meet covariate threshold ----------------------------
+  print("Check strata variables meet covariate threshold")
+  
+  strata_warning <- ""
+  
+  if (length(intersect(covariate_removed,strata))>0) {
+    strata_warning <- paste0(intersect(covariate_removed,strata), collapse = ";")
+    for (i in intersect(covariate_removed,strata)) {
+      tmp <- unique(df[df$exposure_status==1 & df$outcome_status==1,c("patient_id",i)])
+      freq <- data.frame(table(tmp[,i]))
+      print(paste0("Warning: strata variable '",i,"' does not meet covariate threshold"))
+      print(freq)
+    }
+  } 
+  
   # Remove covariates ----------------------------------------------------------
   print("Remove covariates")
   
-  df <- df[,!(colnames(df) %in% covariate_removed)]
+  df <- df[,!(colnames(df) %in% setdiff(covariate_removed,strata))]
   
   # Return data and list of removed covariates ---------------------------------
   
   output <- list(df = df, 
-                 covariate_removed = covariate_removed, 
-                 covariate_collapsed = covariate_collapsed)
+                 covariate_removed = setdiff(covariate_removed,strata), 
+                 covariate_collapsed = covariate_collapsed,
+                 strata_warning = strata_warning)
   
   return(output)
   

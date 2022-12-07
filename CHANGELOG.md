@@ -2,6 +2,7 @@
 
 - Update `mathieudutour/github-tag-action` GitHub Action to v6.1 tag
 - Set cox weights to one to calculate person-time in each episode if cox weights not otherwise provided
+- Stop code removing strata variables and add warning for potentially low counts
 
 # [v0.0.14](https://github.com/opensafely-actions/cox-ipw/releases/tag/v0.0.14)
 
