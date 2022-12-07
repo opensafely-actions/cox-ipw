@@ -1,6 +1,7 @@
 # [v0.0.15](https://github.com/opensafely-actions/cox-ipw/releases/tag/v0.0.15)
 
 - Update `mathieudutour/github-tag-action` GitHub Action to v6.1 tag
+- Set cox weights to one to calculate person-time in each episode if cox weights not otherwise provided
 
 # [v0.0.14](https://github.com/opensafely-actions/cox-ipw/releases/tag/v0.0.14)
 
