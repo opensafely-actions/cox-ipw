@@ -25,6 +25,10 @@ get_episode_info <- function(df, cut_points, episode_labels) {
   # Calculate person-time in each episode --------------------------------------
   print("Calculate person-time in each episode")
   
+  if (!("cox_weight" %in% colnames(df))) {
+    df$cox_weight <- 1
+  }
+  
   tmp <- df[,c("episode","tstart","tstop","cox_weight")]
   
   tmp$person_time_total <- (tmp$tstop - tmp$tstart)*tmp$cox_weight

@@ -356,11 +356,13 @@ if (sum(episode_info[episode_info$time_period != "days_pre", ]$N_events) < total
     print("Additional covariates specified: Remove covariates with insufficient variation")
     
     tmp <- check_covariates(df = data_surv,
-                            covariate_threshold = covariate_threshold)
+                            covariate_threshold = covariate_threshold,
+                            strata = strata)
     
     data_surv <- tmp$df
     covariate_removed <- tmp$covariate_removed
     covariate_collapsed <- tmp$covariate_collapsed
+    strata_warning <- tmp$strata_warning
     rm(tmp)
     
     print(summary(data_surv))
@@ -436,18 +438,20 @@ if (sum(episode_info[episode_info$time_period != "days_pre", ]$N_events) < total
   results$conf_low <- exp(results$lnhr - qnorm(0.975)*results$se_lnhr)
   results$conf_high <- exp(results$lnhr + qnorm(0.975)*results$se_lnhr)
   
+  results$strata_warning <- strata_warning
+  
   results <- results[order(results$model),
                      c("model", "exposure", "outcome", "term",
                        "lnhr","se_lnhr", "hr","conf_low", "conf_high", 
                        "N_total", "N_exposed", "N_events", "person_time_total",  "outcome_time_median",
-                       "surv_formula","input")]
+                       "strata_warning","surv_formula","input")]
   
 }
 
 # Save output ------------------------------------------------------------------
 print("Save output")
 
-results$cox_ipw <- "v0.0.14"
+results$cox_ipw <- "v0.0.15"
 
 write.csv(results,
           file = paste0("output/", opt$df_output),
