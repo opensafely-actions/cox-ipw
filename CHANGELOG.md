@@ -1,3 +1,7 @@
+# [v0.0.16](https://github.com/opensafely-actions/cox-ipw/releases/tag/v0.0.16)
+
+- Collapse region from 9 into 6 regions when covariate thresholds are not met
+
 # [v0.0.15](https://github.com/opensafely-actions/cox-ipw/releases/tag/v0.0.15)
 
 - Update `mathieudutour/github-tag-action` GitHub Action to v6.1 tag

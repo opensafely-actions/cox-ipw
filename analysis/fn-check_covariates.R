@@ -43,6 +43,31 @@ check_covariates <- function(df, covariate_threshold, strata) {
   
   covariate_collapsed <- NULL
   
+  ## Region  
+  
+  if ("cov_cat_region" %in% covariate_removed) {
+    print("Collapsing region as special case")
+    
+    df <- df %>% 
+      dplyr::mutate(cov_cat_region = 
+                      dplyr::case_when(cov_cat_region=="North East"~"North",
+                                       cov_cat_region=="North West"~"North",
+                                       cov_cat_region=="Yorkshire and The Humber"~"Yorkshire and The Humber",
+                                       cov_cat_region=="London"~"South East, including London",
+                                       cov_cat_region=="South East"~"South East, including London",
+                                       cov_cat_region=="East Midlands"~"Midlands",
+                                       cov_cat_region=="West Midlands"~"Midlands",
+                                       cov_cat_region=="South West"~"South West",
+                                       cov_cat_region=="East"~"East"))
+    
+    df$cov_cat_region <- factor(df$cov_cat_region)
+    df$cov_cat_region <- relevel(df$cov_cat_region, ref = "East")
+    
+    covariate_removed <- setdiff(covariate_removed,"cov_cat_region")
+    covariate_collapsed <- c(covariate_collapsed, "cov_cat_region")
+    
+  }
+  
   ## Deprivation  
   
   if ("cov_cat_deprivation" %in% covariate_removed) {
@@ -61,8 +86,6 @@ check_covariates <- function(df, covariate_threshold, strata) {
     
     covariate_removed <- setdiff(covariate_removed,"cov_cat_deprivation")
     covariate_collapsed <- c(covariate_collapsed, "cov_cat_deprivation")
-    
-    
     
   }
   
@@ -87,7 +110,7 @@ check_covariates <- function(df, covariate_threshold, strata) {
   
   # Check special case collapsed covariates ------------------------------------
   
-  for (i in c("cov_cat_deprivation","cov_cat_smoking_status")) {
+  for (i in c("cov_cat_deprivation","cov_cat_smoking_status","cov_cat_region")) {
     
     if (i %in% colnames(df)) {
       

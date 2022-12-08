@@ -443,15 +443,17 @@ if (sum(episode_info[episode_info$time_period != "days_pre", ]$N_events) < total
   results <- results[order(results$model),
                      c("model", "exposure", "outcome", "term",
                        "lnhr","se_lnhr", "hr","conf_low", "conf_high", 
-                       "N_total", "N_exposed", "N_events", "person_time_total",  "outcome_time_median",
-                       "strata_warning","surv_formula","input")]
+                       "N_total", "N_exposed", "N_events", 
+                       "person_time_total", "outcome_time_median",
+                       "covariate_collapsed","strata_warning",
+                       "surv_formula","input")]
   
 }
 
 # Save output ------------------------------------------------------------------
 print("Save output")
 
-results$cox_ipw <- "v0.0.15"
+results$cox_ipw <- "v0.0.16"
 
 write.csv(results,
           file = paste0("output/", opt$df_output),
