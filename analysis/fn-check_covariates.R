@@ -50,18 +50,18 @@ check_covariates <- function(df, covariate_threshold, strata) {
     
     df <- df %>% 
       dplyr::mutate(cov_cat_region = 
-                      dplyr::case_when(cov_cat_region=="North East"~"North",
-                                       cov_cat_region=="North West"~"North",
-                                       cov_cat_region=="Yorkshire and The Humber"~"Yorkshire and The Humber",
-                                       cov_cat_region=="London"~"South East, including London",
-                                       cov_cat_region=="South East"~"South East, including London",
+                      dplyr::case_when(cov_cat_region=="North East"~"Northern England",
+                                       cov_cat_region=="North West"~"Northern England",
+                                       cov_cat_region=="Yorkshire and The Humber"~"Northern England",
+                                       cov_cat_region=="London"~"Southern England",
+                                       cov_cat_region=="South East"~"Southern England",
                                        cov_cat_region=="East Midlands"~"Midlands",
                                        cov_cat_region=="West Midlands"~"Midlands",
-                                       cov_cat_region=="South West"~"South West",
-                                       cov_cat_region=="East"~"East"))
+                                       cov_cat_region=="South West"~"Southern England",
+                                       cov_cat_region=="East"~"Southern England"))
     
     df$cov_cat_region <- factor(df$cov_cat_region)
-    df$cov_cat_region <- relevel(df$cov_cat_region, ref = "East")
+    df$cov_cat_region <- relevel(df$cov_cat_region, ref = "Southern England")
     
     covariate_removed <- setdiff(covariate_removed,"cov_cat_region")
     covariate_collapsed <- c(covariate_collapsed, "cov_cat_region")
