@@ -1,3 +1,9 @@
+# [v0.0.16](https://github.com/opensafely-actions/cox-ipw/releases/tag/v0.0.16)
+
+- Collapse region from 9 into 3 regions when covariate thresholds are not met
+- Fix sampling bug where exposed controls were being incorrectly handled
+- Fix person time bug where Cox weights were not being appropriately applied
+
 # [v0.0.15](https://github.com/opensafely-actions/cox-ipw/releases/tag/v0.0.15)
 
 - Update `mathieudutour/github-tag-action` GitHub Action to v6.1 tag
