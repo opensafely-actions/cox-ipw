@@ -454,7 +454,7 @@ if (sum(episode_info[episode_info$time_period != "days_pre", ]$N_events) < total
 # Save output ------------------------------------------------------------------
 print("Save output")
 
-results$cox_ipw <- "v0.0.16"
+results$cox_ipw <- "v0.0.17"
 
 write.csv(results,
           file = paste0("output/", opt$df_output),
