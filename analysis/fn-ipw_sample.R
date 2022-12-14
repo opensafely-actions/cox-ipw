@@ -10,45 +10,51 @@ ipw_sample <- function(df, controls_per_case, seed = 137, sample_exposed) {
   
   cases <- df[df$outcome_status==TRUE,]
   controls <- df[df$outcome_status==FALSE,]
-
-  print("Cases:")
+  
+  print(paste0("Cases: ",nrow(cases)))
   print(summary(cases))
   
-  print("Controls:")
+  print(paste0("Controls:",nrow(controls)))
   print(summary(controls))
   
   # Sample controls if more than enough, otherwise retain all controls ---------
   
-  if (sample_exposed==TRUE & nrow(cases)*controls_per_case<nrow(controls)) {
+  if (nrow(cases)*controls_per_case<nrow(controls)) {
     
-    print("Sample controls, including exposed control individuals")
-    controls <- controls[sample(1:nrow(controls), nrow(cases)*controls_per_case, replace = FALSE),]
-    controls$cox_weight <- (nrow(df)-nrow(cases))/nrow(controls)
-    print(paste0(nrow(controls), " controls sampled"))
-    print(summary(controls$cox_weight))
+    if (sample_exposed==TRUE) {
+      
+      print("Sample controls, including exposed control individuals")
+      controls <- controls[sample(1:nrow(controls), nrow(cases)*controls_per_case, replace = FALSE),]
+      controls$cox_weight <- (nrow(df)-nrow(cases))/nrow(controls)
+      print(paste0(nrow(controls), " controls sampled"))
+      print(summary(controls$cox_weight))
+      
+    }
     
-  } else if (sample_exposed==FALSE & nrow(cases)*controls_per_case<nrow(controls)) {
-    
-    print("Separate exposed controls so they are not sampled")
-    exposed <- controls[!is.na(controls$exposure),]
-    controls <- controls[is.na(controls$exposure),]
-    exposed$cox_weight <- 1
-    
-    print("Exposed controls:")
-    print(summary(exposed))
-    
-    print("Unexposed controls:")
-    print(summary(controls))
-    
-    print("Sample controls, not including exposed control individuals")
-    controls <- controls[sample(1:nrow(controls), nrow(cases)*controls_per_case, replace = FALSE),]
-    controls$cox_weight <- (nrow(df)-nrow(exposed)-nrow(cases))/nrow(controls)
-    print(paste0(nrow(controls), " controls sampled"))
-    print(summary(controls$cox_weight))
-    
-    print("Add exposed control individuals back to control dataset")
-    controls <- rbind(controls,exposed)
-    print(summary(controls))
+    if (sample_exposed==FALSE) {
+      
+      print("Separate exposed controls so they are not sampled")
+      exposed <- controls[!is.na(controls$exposure),]
+      controls <- controls[is.na(controls$exposure),]
+      exposed$cox_weight <- 1
+      
+      print("Exposed controls:")
+      print(summary(exposed))
+      
+      print("Unexposed controls:")
+      print(summary(controls))
+      
+      print("Sample controls, not including exposed control individuals")
+      controls <- controls[sample(1:nrow(controls), nrow(cases)*controls_per_case, replace = FALSE),]
+      controls$cox_weight <- (nrow(df)-nrow(exposed)-nrow(cases))/nrow(controls)
+      print(paste0(nrow(controls), " controls sampled"))
+      print(summary(controls$cox_weight))
+      
+      print("Add exposed control individuals back to control dataset")
+      controls <- rbind(controls,exposed)
+      print(summary(controls))
+      
+    }
     
   } else {
     

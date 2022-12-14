@@ -1,3 +1,7 @@
+# [v0.0.17](https://github.com/opensafely-actions/cox-ipw/releases/tag/v0.0.17)
+
+- Further fix for the sampling bug for cases where the number of controls to be sampled is greater than the number available
+
 # [v0.0.16](https://github.com/opensafely-actions/cox-ipw/releases/tag/v0.0.16)
 
 - Collapse region from 9 into 3 regions when covariate thresholds are not met
