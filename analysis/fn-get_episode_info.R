@@ -1,4 +1,4 @@
-get_episode_info <- function(df, cut_points, episode_labels) {
+get_episode_info <- function(df, cut_points, episode_labels, ipw) {
 
   # Calculate number of events per episode -------------------------------------
   print("Calculate number of events per episode")
@@ -25,15 +25,17 @@ get_episode_info <- function(df, cut_points, episode_labels) {
   # Calculate person-time in each episode --------------------------------------
   print("Calculate person-time in each episode")
   
-  if (!("cox_weight" %in% colnames(df))) {
-    df$cox_weight <- 1
+  if (ipw==TRUE) {
+    tmp <- df[,c("episode","tstart","tstop","cox_weight")]
+    tmp$person_time_total <- (tmp$tstop - tmp$tstart)*tmp$cox_weight
+    tmp[,c("tstart","tstop","cox_weight")] <- NULL
   }
   
-  tmp <- df[,c("episode","tstart","tstop","cox_weight")]
-  
-  tmp$person_time_total <- (tmp$tstop - tmp$tstart)*tmp$cox_weight
-  
-  tmp[,c("tstart","tstop","cox_weight")] <- NULL
+  if (ipw==FALSE) {
+    tmp <- df[,c("episode","tstart","tstop")]
+    tmp$person_time_total <- (tmp$tstop - tmp$tstart)
+    tmp[,c("tstart","tstop")] <- NULL
+  }
   
   tmp <- aggregate(person_time_total ~ episode, data = tmp, FUN = sum)
   

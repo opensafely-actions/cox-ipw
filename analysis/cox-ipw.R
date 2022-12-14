@@ -283,7 +283,8 @@ print("Calculate events in each time period")
 
 episode_info <- get_episode_info(df = data_surv,
                                  cut_points = cut_points,
-                                 episode_labels = episode_labels)
+                                 episode_labels = episode_labels,
+                                 ipw = opt$ipw)
 
 print(episode_info)
 
