@@ -1,3 +1,7 @@
+# [v0.0.18](https://github.com/opensafely-actions/cox-ipw/releases/tag/v0.0.18)
+
+- Add origin for data converted to date format
+
 # [v0.0.17](https://github.com/opensafely-actions/cox-ipw/releases/tag/v0.0.17)
 
 - Further fix for the sampling bug for cases where the number of controls to be sampled is greater than the number available
