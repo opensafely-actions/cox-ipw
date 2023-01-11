@@ -159,7 +159,7 @@ data[,var_bin] <- lapply(data[,var_bin],as.logical)
 print("Make date variables dates")
 
 var_date <- colnames(data)[grepl("_date",colnames(data))]
-data[,var_date] <- lapply(data[,var_date],as.Date)
+data[,var_date] <- lapply(data[,var_date], function(x) as.Date(x,origin="1970-01-01"))
 
 # Make categorical variables factors -------------------------------------------
 print("Make categorical variables factors")
@@ -454,7 +454,7 @@ if (sum(episode_info[episode_info$time_period != "days_pre", ]$N_events) < total
 # Save output ------------------------------------------------------------------
 print("Save output")
 
-results$cox_ipw <- "v0.0.17"
+results$cox_ipw <- "v0.0.18"
 
 write.csv(results,
           file = paste0("output/", opt$df_output),
