@@ -1,3 +1,7 @@
+# [v0.0.19](https://github.com/opensafely-actions/cox-ipw/releases/tag/v0.0.19)
+
+- Tidy naming in ipw sample script
+
 # [v0.0.18](https://github.com/opensafely-actions/cox-ipw/releases/tag/v0.0.18)
 
 - Add origin for data converted to date format
