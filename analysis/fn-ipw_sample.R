@@ -14,54 +14,67 @@ ipw_sample <- function(df, controls_per_case, seed = 137, sample_exposed) {
   print(paste0("Cases: ",nrow(cases)))
   print(summary(cases))
   
-  print(paste0("Controls:",nrow(controls)))
+  print(paste0("Controls: ",nrow(controls)))
   print(summary(controls))
   
   # Sample controls if more than enough, otherwise retain all controls ---------
   
-  if (nrow(cases)*controls_per_case<nrow(controls)) {
     
     if (sample_exposed==TRUE) {
       
-      print("Sample controls, including exposed control individuals")
-      controls <- controls[sample(1:nrow(controls), nrow(cases)*controls_per_case, replace = FALSE),]
-      controls$cox_weight <- (nrow(df)-nrow(cases))/nrow(controls)
-      print(paste0(nrow(controls), " controls sampled"))
-      print(summary(controls$cox_weight))
-      
+      if (nrow(cases)*controls_per_case<nrow(controls)) {
+        
+          print("Sample controls, including exposed control individuals")
+          controls <- controls[sample(1:nrow(controls), nrow(cases)*controls_per_case, replace = FALSE),]
+          controls$cox_weight <- (nrow(df)-nrow(cases))/nrow(controls)
+          print(paste0(nrow(controls), " controls sampled with Cox weight of ",controls$cox_weight[1]))
+        
+      } else {
+        
+        print("Retain all controls")
+        controls$cox_weight <- 1
+        
+      }
+     
     }
     
     if (sample_exposed==FALSE) {
       
       print("Separate exposed controls so they are not sampled")
-      exposed <- controls[!is.na(controls$exposure),]
-      controls <- controls[is.na(controls$exposure),]
-      exposed$cox_weight <- 1
+      controls_exposed <- controls[!is.na(controls$exposure),]
+      controls_exposed$cox_weight <- 1
+      print(paste0(nrow(controls_exposed), " exposed controls"))
       
       print("Exposed controls:")
-      print(summary(exposed))
+      print(summary(controls_exposed))
       
-      print("Unexposed controls:")
-      print(summary(controls))
+      print("Sample unexposed controls")
+      controls_unexposed <- controls[is.na(controls$exposure),]
       
-      print("Sample controls, not including exposed control individuals")
-      controls <- controls[sample(1:nrow(controls), nrow(cases)*controls_per_case, replace = FALSE),]
-      controls$cox_weight <- (nrow(df)-nrow(exposed)-nrow(cases))/nrow(controls)
-      print(paste0(nrow(controls), " controls sampled"))
-      print(summary(controls$cox_weight))
+      if (nrow(cases)*controls_per_case<nrow(controls_unexposed)) {
       
-      print("Add exposed control individuals back to control dataset")
-      controls <- rbind(controls,exposed)
-      print(summary(controls))
+        controls_unexposed <- controls_unexposed[sample(1:nrow(controls_unexposed), nrow(cases)*controls_per_case, replace = FALSE),]
+        controls_unexposed$cox_weight <- (nrow(df)-nrow(cases)-nrow(controls_exposed))/nrow(controls_unexposed)
+        print(paste0(nrow(controls_unexposed), " unexposed controls sampled with Cox weight of ",controls_unexposed$cox_weight[1]))
+        
+        print("Unexposed controls:")
+        print(summary(controls_unexposed))
+        
+        print("Add exposed control individuals back to control dataset")
+        controls <- NULL
+        controls <- rbind(controls_unexposed,controls_exposed)
+        print(paste0("Controls (N=",nrow(controls), "):"))
+        print(summary(controls))
       
-    }
+      } else {
+        
+        print("Insufficient controls so retain all controls")
+        rm(controls_exposed, controls_unexposed)
+        controls$cox_weight <- 1
+        
+      }
     
-  } else {
-    
-    print("Retain all controls")
-    controls$cox_weight <- 1
-    
-  }
+    } 
   
   # Specify cox weight for cases -----------------------------------------------
   print("Specify cox weight for cases")
@@ -71,10 +84,10 @@ ipw_sample <- function(df, controls_per_case, seed = 137, sample_exposed) {
   # Recombine cases and controls -----------------------------------------------
   print("Recombine cases and controls")
   
-  df <- rbind(cases,controls)
+  return_df <- rbind(cases,controls)
   
   # Return dataset -------------------------------------------------------------
   
-  return(df) 
+  return(return_df) 
   
 }

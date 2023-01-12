@@ -259,7 +259,6 @@ if (opt$ipw == TRUE) {
 
 print(summary(input))
 
-
 # Define episode labels --------------------------------------------------------
 print("Define episode labels")
 
@@ -454,7 +453,7 @@ if (sum(episode_info[episode_info$time_period != "days_pre", ]$N_events) < total
 # Save output ------------------------------------------------------------------
 print("Save output")
 
-results$cox_ipw <- "v0.0.18"
+results$cox_ipw <- "v0.0.19"
 
 write.csv(results,
           file = paste0("output/", opt$df_output),
