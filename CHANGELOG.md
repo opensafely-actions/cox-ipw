@@ -1,3 +1,7 @@
+# [v0.0.20](https://github.com/opensafely-actions/cox-ipw/releases/tag/v0.0.20)
+
+- Fix weighting bug for models
+
 # [v0.0.19](https://github.com/opensafely-actions/cox-ipw/releases/tag/v0.0.19)
 
 - Tidy naming in ipw sample script
