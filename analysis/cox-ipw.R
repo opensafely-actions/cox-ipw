@@ -259,7 +259,6 @@ if (opt$ipw == TRUE) {
 
 print(summary(input))
 
-
 # Define episode labels --------------------------------------------------------
 print("Define episode labels")
 

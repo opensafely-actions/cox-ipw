@@ -34,24 +34,24 @@ ipw_sample <- function(df, controls_per_case, seed = 137, sample_exposed) {
     if (sample_exposed==FALSE) {
       
       print("Separate exposed controls so they are not sampled")
-      exposed <- controls[!is.na(controls$exposure),]
-      controls <- controls[is.na(controls$exposure),]
-      exposed$cox_weight <- 1
+      controls_exposed <- controls[!is.na(controls$exposure),]
+      controls_exposed$cox_weight <- 1
       
-      print("Exposed controls:")
-      print(summary(exposed))
+      print(paste0("Exposed controls (N=",nrow(controls_exposed), "):"))
+      print(summary(controls_exposed))
+
+      print("Sample unexposed controls")
+      controls_unexposed <- controls[is.na(controls$exposure),]
+      controls_unexposed <- controls_unexposed[sample(1:nrow(controls_unexposed), nrow(cases)*controls_per_case, replace = FALSE),]
+      controls_unexposed$cox_weight <- (nrow(df)-nrow(cases)-nrow(controls_exposed))/nrow(controls_unexposed)
       
-      print("Unexposed controls:")
-      print(summary(controls))
-      
-      print("Sample controls, not including exposed control individuals")
-      controls <- controls[sample(1:nrow(controls), nrow(cases)*controls_per_case, replace = FALSE),]
-      controls$cox_weight <- (nrow(df)-nrow(exposed)-nrow(cases))/nrow(controls)
-      print(paste0(nrow(controls), " controls sampled"))
-      print(summary(controls$cox_weight))
+      print(paste0("Unexposed controls (N=",nrow(controls_unexposed), "):"))
+      print(summary(controls_unexposed))
       
       print("Add exposed control individuals back to control dataset")
-      controls <- rbind(controls,exposed)
+      controls <- NULL
+      controls <- rbind(controls_unexposed,controls_exposed)
+      print(paste0("Controls (N=",nrow(controls), "):"))
       print(summary(controls))
       
     }
@@ -71,10 +71,10 @@ ipw_sample <- function(df, controls_per_case, seed = 137, sample_exposed) {
   # Recombine cases and controls -----------------------------------------------
   print("Recombine cases and controls")
   
-  df <- rbind(cases,controls)
+  return_df <- rbind(cases,controls)
   
   # Return dataset -------------------------------------------------------------
   
-  return(df) 
+  return(return_df) 
   
 }
