@@ -9,7 +9,7 @@ check_covariates <- function(df, covariate_threshold, strata) {
     
     # Consider non-numeric covariates ------------------------------------------
     
-    if (grepl("cov_bin_",i) | grepl("cov_cat_",i)) {
+    if (grepl("cov_bin_",i) || grepl("cov_cat_",i)) {
       
       print(paste0("Covariate: ",i))
       
