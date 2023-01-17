@@ -54,7 +54,7 @@ survival_data_setup <- function(df, cut_points, episode_labels) {
   
   print(summary(exposed_post))
   
-  exposed_post <- survSplit(Surv(tstop, outcome_status) ~ ., 
+  exposed_post <- survival::survSplit(Surv(tstop, outcome_status) ~ ., 
                             exposed_post,
                             cut=cut_points,
                             episode="episode")
