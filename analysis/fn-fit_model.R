@@ -83,7 +83,7 @@ fit_model <- function(df, time_periods, covariates, strata, age_spline, covariat
   
   covariates <- setdiff(covariate_other, covariate_removed)
   
-  if (!is.null(covariates) & length(covariates)>0) {
+  if (!is.null(covariates) && length(covariates)>0) {
     
     # Add covariates to model formula ------------------------------------------
     print("Add covariates to model formula")
