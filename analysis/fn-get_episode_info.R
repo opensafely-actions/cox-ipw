@@ -1,5 +1,7 @@
 get_episode_info <- function(df, cut_points, episode_labels, ipw) {
 
+  library(magrittr)
+
   # Calculate number of events per episode -------------------------------------
   print("Calculate number of events per episode")
   

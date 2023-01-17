@@ -1,5 +1,7 @@
 check_covariates <- function(df, covariate_threshold, strata) {
 
+  library(magrittr)
+
   # Identify non-numeric covariates to remove ----------------------------------
   print("Identify non-numeric covariates to remove")
   
