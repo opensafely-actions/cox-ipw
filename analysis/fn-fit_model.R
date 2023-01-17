@@ -15,7 +15,7 @@ fit_model <- function(df, time_periods, covariates, strata, age_spline, covariat
     
     print("Add age covariate")
     
-    if (age_spline=="TRUE") {
+    if (age_spline==TRUE) {
       
       print("Specify knot placement for age spline")
       
