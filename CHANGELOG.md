@@ -1,3 +1,7 @@
+# [v0.0.21](https://github.com/opensafely-actions/cox-ipw/releases/tag/v0.0.21)
+
+- Various improvements to the code to fix linting warnings
+
 # [v0.0.20](https://github.com/opensafely-actions/cox-ipw/releases/tag/v0.0.20)
 
 - Fix weighting bug for models

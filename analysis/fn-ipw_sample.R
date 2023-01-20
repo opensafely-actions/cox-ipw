@@ -25,7 +25,7 @@ ipw_sample <- function(df, controls_per_case, seed = 137, sample_exposed) {
       if (nrow(cases)*controls_per_case<nrow(controls)) {
         
           print("Sample controls, including exposed control individuals")
-          controls <- controls[sample(1:nrow(controls), nrow(cases)*controls_per_case, replace = FALSE),]
+          controls <- controls[sample(seq_len(nrow(controls)), nrow(cases)*controls_per_case, replace = FALSE),]
           controls$cox_weight <- (nrow(df)-nrow(cases))/nrow(controls)
           print(paste0(nrow(controls), " controls sampled with Cox weight of ",controls$cox_weight[1]))
         
@@ -53,7 +53,7 @@ ipw_sample <- function(df, controls_per_case, seed = 137, sample_exposed) {
       
       if (nrow(cases)*controls_per_case<nrow(controls_unexposed)) {
       
-        controls_unexposed <- controls_unexposed[sample(1:nrow(controls_unexposed), nrow(cases)*controls_per_case, replace = FALSE),]
+        controls_unexposed <- controls_unexposed[sample(seq_len(nrow(controls_unexposed)), nrow(cases)*controls_per_case, replace = FALSE),]
         controls_unexposed$cox_weight <- (nrow(df)-nrow(cases)-nrow(controls_exposed))/nrow(controls_unexposed)
         print(paste0(nrow(controls_unexposed), " unexposed controls sampled with Cox weight of ",controls_unexposed$cox_weight[1]))
         

@@ -15,7 +15,7 @@ fit_model <- function(df, time_periods, covariates, strata, age_spline, covariat
     
     print("Add age covariate")
     
-    if (age_spline=="TRUE") {
+    if (age_spline==TRUE) {
       
       print("Specify knot placement for age spline")
       
@@ -81,9 +81,9 @@ fit_model <- function(df, time_periods, covariates, strata, age_spline, covariat
   
   # If covariates are specified, run an additional model including them --------
   
-  covariates <- setdiff(covariate_other, covariate_removed)
+  covariates <- setdiff(covariates, covariate_removed)
   
-  if (!is.null(covariates) & length(covariates)>0) {
+  if (!is.null(covariates) && length(covariates)>0) {
     
     # Add covariates to model formula ------------------------------------------
     print("Add covariates to model formula")
