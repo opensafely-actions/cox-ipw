@@ -262,7 +262,7 @@ print(summary(input))
 # Define episode labels --------------------------------------------------------
 print("Define episode labels")
 
-if (length(cut_points)==1) {
+if (length(cut_points)==1L) {
   time_period_labels <- paste0("days0_", cut_points)
 } else {
   time_period_labels <- paste0("days", c("0", cut_points[1:(length(cut_points)-1)]),"_", cut_points)
