@@ -1,3 +1,7 @@
+# [v0.0.22](https://github.com/opensafely-actions/cox-ipw/releases/tag/v0.0.22)
+
+- Fix bug that occurred with episode labels if only one post-exposure time point was specified
+
 # [v0.0.21](https://github.com/opensafely-actions/cox-ipw/releases/tag/v0.0.21)
 
 - Various improvements to the code to fix linting warnings
