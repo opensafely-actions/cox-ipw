@@ -262,8 +262,14 @@ print(summary(input))
 # Define episode labels --------------------------------------------------------
 print("Define episode labels")
 
+if (length(cut_points)==1L) {
+  time_period_labels <- paste0("days0_", cut_points)
+} else {
+  time_period_labels <- paste0("days", c("0", cut_points[1:(length(cut_points)-1)]),"_", cut_points)
+}
+
 episode_labels <- data.frame(episode = 0:length(cut_points),
-                             time_period = c("days_pre",paste0("days", c("0", cut_points[1:(length(cut_points)-1)]),"_", cut_points)),
+                             time_period = c("days_pre",time_period_labels),
                              stringsAsFactors = FALSE)
 
 print(episode_labels)
@@ -453,7 +459,7 @@ if (sum(episode_info[episode_info$time_period != "days_pre", ]$N_events) < total
 # Save output ------------------------------------------------------------------
 print("Save output")
 
-results$cox_ipw <- "v0.0.21"
+results$cox_ipw <- "v0.0.22"
 
 write.csv(results,
           file = paste0("output/", opt$df_output),
