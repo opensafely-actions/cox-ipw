@@ -387,11 +387,11 @@ if (sum(episode_info[episode_info$time_period != "days_pre", ]$N_events) < total
   
   if (opt$save_analysis_ready == TRUE) {
     readr::write_rds(data_surv, 
-                     file = paste0("output/analysis_ready-", gsub("\\...*","",opt$df_input),".rds"))
+                     path = paste0("output/analysis_ready-", gsub("\\...*","",opt$df_input),".rds"))
   } else {
     analysis_ready_empty <- NULL
     readr::write_rds(analysis_ready_empty, 
-                     file = paste0("output/analysis_ready-", gsub("\\...*","",opt$df_input),".rds"))
+                     path = paste0("output/analysis_ready-", gsub("\\...*","",opt$df_input),".rds"))
   }
 
   if (opt$run_analysis == TRUE)  {
