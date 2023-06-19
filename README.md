@@ -107,6 +107,9 @@ The arguments/options to the action are specified using the flags style
     --save_analysis_ready=TRUE/FALSE
     Logical, if analysis ready dataset should be saved [default FALSE]
 
+    --run_analysis=TRUE/FALSE
+    Logical, if analysis should be run [default TRUE]
+
     -h, --help
     Show this help message and exit
 

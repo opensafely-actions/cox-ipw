@@ -1,3 +1,8 @@
+# [v0.0.23](https://github.com/opensafely-actions/cox-ipw/releases/tag/v0.0.23)
+
+- Specify analysis ready data set as output in YAML
+- Add option to not run analysis (i.e., just save analysis ready dataset and stop)
+
 # [v0.0.22](https://github.com/opensafely-actions/cox-ipw/releases/tag/v0.0.22)
 
 - Fix bug that occurred with episode labels if only one post-exposure time point was specified
