@@ -18,11 +18,11 @@ actions:
     needs:
     - generate_study_population
     outputs:
-        highly_sensitive:
-          analysis_ready: output/analysis_ready-*.rds
-        moderately_sensitive:
-          arguments: output/args-results.csv
-          estimates: output/results.csv
+      highly_sensitive:
+        analysis_ready: output/analysis_ready-*.rds
+      moderately_sensitive:
+        arguments: output/args-results.csv
+        estimates: output/results.csv
 
   # Test the action works in the system and with a flag
   # cox_ipw_2:
