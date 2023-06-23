@@ -77,6 +77,9 @@ option_list <- list(
               metavar = "integer"),
   make_option("--save_analysis_ready", type = "logical", default = FALSE,
               help = "Logical, if analysis ready dataset should be saved [default %default]",
+              metavar = "TRUE/FALSE"),
+  make_option("--run_analysis", type = "logical", default = TRUE,
+              help = "Logical, if analysis should be run [default %default]",
               metavar = "TRUE/FALSE")
 )
 opt_parser <- OptionParser(usage = "cox-ipw:[version] [options]", option_list = option_list)
@@ -384,82 +387,94 @@ if (sum(episode_info[episode_info$time_period != "days_pre", ]$N_events) < total
   
   if (opt$save_analysis_ready == TRUE) {
     readr::write_rds(data_surv, 
-                     file = paste0("output/analysis_ready-", gsub("\\...*","",opt$df_input),".rds"))
+                     path = paste0("output/analysis_ready-", gsub("\\...*","",opt$df_input),".rds"))
+  } else {
+    analysis_ready_empty <- NULL
+    readr::write_rds(analysis_ready_empty, 
+                     path = paste0("output/analysis_ready-", gsub("\\...*","",opt$df_input),".rds"))
+  }
+
+  if (opt$run_analysis == TRUE)  {
+    
+    # Perform Cox modelling ----------------------------------------------------
+    print("Perform Cox modelling")
+    
+    results <- fit_model(df = data_surv,
+                         time_periods = episode_info[episode_info$time_period != "days_pre", ]$time_period,
+                         covariates = covariate_other,
+                         strata = strata,
+                         age_spline = opt$age_spline,
+                         covariate_removed = covariate_removed,
+                         covariate_collapsed = covariate_collapsed,
+                         ipw = opt$ipw)
+    
+    # Merge results with number of events and person time ----------------------
+    print("Merge results with number of events and person time")
+    
+    results <- merge(results,
+                     episode_info[, c("time_period", "N_events", "person_time_total",  "outcome_time_median")],
+                     by.x = "term",
+                     by.y = "time_period",
+                     all.x = TRUE)
+    
+    print(summary(results))
+    
+    # Add dummy row for days_pre term --------------------------------------------
+    print("Add dummy row for days_pre term")
+    
+    tmp <- data.frame(term = "days_pre",
+                      lnhr = NA,
+                      se_lnhr = NA,
+                      model = c("mdl_age_sex", "mdl_max_adj"),
+                      surv_formula = c(results[results$model=="mdl_age_sex",]$surv_formula[1], results[results$model=="mdl_max_adj",]$surv_formula[1]),
+                      covariate_removed = "",
+                      covariate_collapsed = "",
+                      N_events = episode_info[episode_info$time_period == "days_pre", ]$N_events,
+                      person_time_total = episode_info[episode_info$time_period == "days_pre",]$person_time_total,
+                      outcome_time_median = episode_info[episode_info$time_period == "days_pre",]$outcome_time_median,
+                      stringsAsFactors = FALSE)
+    
+    results <- rbind(results, tmp)
+    
+    print(summary(results))
+    
+    # Tidy variables for outputting --------------------------------------------
+    print("Tidy variables for outputting")
+    
+    results$N_total <- N_total
+    results$N_exposed <- N_exposed
+    
+    results$exposure <- opt$exposure
+    results$outcome <- opt$outcome
+    
+    results$input <- opt$df_input
+    
+    results$hr <- exp(results$lnhr)
+    results$conf_low <- exp(results$lnhr - qnorm(0.975)*results$se_lnhr)
+    results$conf_high <- exp(results$lnhr + qnorm(0.975)*results$se_lnhr)
+    
+    results$strata_warning <- strata_warning
+    
+    results$cox_ipw <- "v0.0.23"
+    
+    results <- results[order(results$model),
+                       c("model", "exposure", "outcome", "term",
+                         "lnhr","se_lnhr", "hr","conf_low", "conf_high", 
+                         "N_total", "N_exposed", "N_events", 
+                         "person_time_total", "outcome_time_median",
+                         "covariate_collapsed","strata_warning",
+                         "surv_formula","input","cox_ipw")]
+  } else {
+    
+    results <- NULL
+    
   }
   
-  # Perform Cox modelling ----------------------------------------------------
-  print("Perform Cox modelling")
-
-  results <- fit_model(df = data_surv,
-                       time_periods = episode_info[episode_info$time_period != "days_pre", ]$time_period,
-                       covariates = covariate_other,
-                       strata = strata,
-                       age_spline = opt$age_spline,
-                       covariate_removed = covariate_removed,
-                       covariate_collapsed = covariate_collapsed,
-                       ipw = opt$ipw)
-  
-  # Merge results with number of events and person time ----------------------
-  print("Merge results with number of events and person time")
-  
-  results <- merge(results,
-                   episode_info[, c("time_period", "N_events", "person_time_total",  "outcome_time_median")],
-                   by.x = "term",
-                   by.y = "time_period",
-                   all.x = TRUE)
-  
-  print(summary(results))
-  
-  # Add dummy row for days_pre term --------------------------------------------
-  print("Add dummy row for days_pre term")
-  
-  tmp <- data.frame(term = "days_pre",
-                    lnhr = NA,
-                    se_lnhr = NA,
-                    model = c("mdl_age_sex", "mdl_max_adj"),
-                    surv_formula = c(results[results$model=="mdl_age_sex",]$surv_formula[1], results[results$model=="mdl_max_adj",]$surv_formula[1]),
-                    covariate_removed = "",
-                    covariate_collapsed = "",
-                    N_events = episode_info[episode_info$time_period == "days_pre", ]$N_events,
-                    person_time_total = episode_info[episode_info$time_period == "days_pre",]$person_time_total,
-                    outcome_time_median = episode_info[episode_info$time_period == "days_pre",]$outcome_time_median,
-                    stringsAsFactors = FALSE)
-  
-  results <- rbind(results, tmp)
-  
-  print(summary(results))
-  
-  # Tidy variables for outputting --------------------------------------------
-  print("Tidy variables for outputting")
-  
-  results$N_total <- N_total
-  results$N_exposed <- N_exposed
-  
-  results$exposure <- opt$exposure
-  results$outcome <- opt$outcome
-  
-  results$input <- opt$df_input
-  
-  results$hr <- exp(results$lnhr)
-  results$conf_low <- exp(results$lnhr - qnorm(0.975)*results$se_lnhr)
-  results$conf_high <- exp(results$lnhr + qnorm(0.975)*results$se_lnhr)
-  
-  results$strata_warning <- strata_warning
-  
-  results <- results[order(results$model),
-                     c("model", "exposure", "outcome", "term",
-                       "lnhr","se_lnhr", "hr","conf_low", "conf_high", 
-                       "N_total", "N_exposed", "N_events", 
-                       "person_time_total", "outcome_time_median",
-                       "covariate_collapsed","strata_warning",
-                       "surv_formula","input")]
   
 }
 
 # Save output ------------------------------------------------------------------
 print("Save output")
-
-results$cox_ipw <- "v0.0.22"
 
 write.csv(results,
           file = paste0("output/", opt$df_output),

@@ -107,6 +107,9 @@ The arguments/options to the action are specified using the flags style
     --save_analysis_ready=TRUE/FALSE
     Logical, if analysis ready dataset should be saved [default FALSE]
 
+    --run_analysis=TRUE/FALSE
+    Logical, if analysis should be run [default TRUE]
+
     -h, --help
     Show this help message and exit
 
@@ -129,6 +132,8 @@ cox_ipw:
   needs:
   - generate_study_population
   outputs:
+    highly_sensitive:
+      analysis_ready: output/analysis_ready-*.rds
     moderately_sensitive:
       arguments: output/args-results.csv
       estimates: output/results.csv
@@ -156,6 +161,8 @@ cox_ipw_2:
   needs:
   - generate_study_population
   outputs:
+    highly_sensitive:
+      analysis_ready: output/analysis_ready-*.rds
     moderately_sensitive:
       arguments: output/args-results_2.csv
       estimates: output/results_2.csv
