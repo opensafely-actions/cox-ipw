@@ -1,3 +1,7 @@
+# [v0.0.24](https://github.com/opensafely-actions/cox-ipw/releases/tag/v0.0.24)
+
+- Save the anaylysis ready dataset in csv.gz format instead of rds
+
 # [v0.0.23](https://github.com/opensafely-actions/cox-ipw/releases/tag/v0.0.23)
 
 - Specify analysis ready data set as output in YAML
