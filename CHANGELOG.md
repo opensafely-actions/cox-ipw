@@ -1,3 +1,7 @@
+# [v0.0.25](https://github.com/opensafely-actions/cox-ipw/releases/tag/v0.0.25)
+
+- Update follow-up end criteria to include outcome
+
 # [v0.0.24](https://github.com/opensafely-actions/cox-ipw/releases/tag/v0.0.24)
 
 - Save the anaylysis ready dataset in csv.gz format instead of rds
