@@ -219,7 +219,6 @@ input$fup_start <- do.call(pmax,
 input$fup_stop <- do.call(pmin,
                           c(input[, c("study_stop", cox_stop, "outcome")], list(na.rm = TRUE)))
 
-
 input <- input[input$fup_stop >= input$fup_start, ]
 
 print(summary(input))
