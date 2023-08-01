@@ -1,3 +1,7 @@
+# [v0.0.26](https://github.com/opensafely-actions/cox-ipw/releases/tag/v0.0.26)
+
+- Shorten analysis ready output file name 
+
 # [v0.0.25](https://github.com/opensafely-actions/cox-ipw/releases/tag/v0.0.25)
 
 - Update follow-up end criteria to include outcome
