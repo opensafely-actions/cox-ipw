@@ -1,3 +1,7 @@
+# [v0.0.27](https://github.com/opensafely-actions/cox-ipw/releases/tag/v0.0.27)
+
+- Shorten analysis ready output file name further
+
 # [v0.0.26](https://github.com/opensafely-actions/cox-ipw/releases/tag/v0.0.26)
 
 - Shorten analysis ready output file name 

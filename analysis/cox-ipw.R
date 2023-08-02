@@ -387,11 +387,11 @@ if (sum(episode_info[episode_info$time_period != "days_pre", ]$N_events) < total
   
   if (opt$save_analysis_ready == TRUE) {
     readr::write_csv(data_surv, 
-                     path = paste0("output/ar-", gsub("\\...*","",opt$df_input),".csv.gz"))
+                     path = paste0("output/", gsub("\\...*","",gsub("model_input-","ready-",opt$df_input)),".csv.gz"))
   } else {
     analysis_ready_empty <- data.frame()
     readr::write_csv(analysis_ready_empty, 
-                     path = paste0("output/ar-", gsub("\\...*","",opt$df_input),".csv.gz"))
+                     path = paste0("output/", gsub("\\...*","",gsub("model_input-","ready-",opt$df_input)),".csv.gz"))
   }
 
   if (opt$run_analysis == TRUE)  {
@@ -455,7 +455,7 @@ if (sum(episode_info[episode_info$time_period != "days_pre", ]$N_events) < total
     
     results$strata_warning <- strata_warning
     
-    results$cox_ipw <- "v0.0.26"
+    results$cox_ipw <- "v0.0.27"
     
     results <- results[order(results$model),
                        c("model", "exposure", "outcome", "term",
