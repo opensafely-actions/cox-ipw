@@ -133,7 +133,7 @@ cox_ipw:
   - generate_study_population
   outputs:
     highly_sensitive:
-      analysis_ready: output/ar-*.csv.gz
+      analysis_ready: output/ready-*.csv.gz
     moderately_sensitive:
       arguments: output/args-results.csv
       estimates: output/results.csv
@@ -162,7 +162,7 @@ cox_ipw_2:
   - generate_study_population
   outputs:
     highly_sensitive:
-      analysis_ready: output/ar-*.csv.gz
+      analysis_ready: output/ready-*.csv.gz
     moderately_sensitive:
       arguments: output/args-results_2.csv
       estimates: output/results_2.csv
