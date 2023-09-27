@@ -1,3 +1,9 @@
+# [v0.0.28](https://github.com/opensafely-actions/cox-ipw/releases/tag/v0.0.28)
+
+- Due to the upgrading of the **readr** package (from version 1.3.1 to 2.1.4) in the [r](https://github.com/opensafely-core/r-docker) image on 22/09/2023, update calls to `readr::write_csv()` to use the `file` argument instead of the deprecated `path` argument.
+- In the GitHub Actions workflows update the actions/checkout action from the v3 to the v4 sliding tag as per the [README](https://github.com/actions/checkout/#readme)
+- Refine the workflows in the test action
+
 # [v0.0.27](https://github.com/opensafely-actions/cox-ipw/releases/tag/v0.0.27)
 
 - Shorten analysis ready output file name further
