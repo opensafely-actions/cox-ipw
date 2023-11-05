@@ -1,6 +1,10 @@
 name: Test that the project is runnable
 
-on: [pull_request, workflow_dispatch]
+on:
+  pull_request:
+  workflow_dispatch:
+  schedule:
+    - cron: '37 2 * * TUE' # run at 2:37am UTC on Tuesdays
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   DOCKER_RO_TOKEN: ${{ secrets.DOCKER_RO_TOKEN }}
