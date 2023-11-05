@@ -387,11 +387,11 @@ if (sum(episode_info[episode_info$time_period != "days_pre", ]$N_events) < total
   
   if (opt$save_analysis_ready == TRUE) {
     readr::write_csv(data_surv, 
-                     file = paste0("output/ready-", gsub("\\...*","",gsub("model_input-","",opt$df_input)),".csv.gz"))
+                     path = paste0("output/ready-", gsub("\\...*","",gsub("model_input-","",opt$df_input)),".csv.gz"))
   } else {
     analysis_ready_empty <- data.frame()
     readr::write_csv(analysis_ready_empty, 
-                     file = paste0("output/ready-", gsub("\\...*","",gsub("model_input-","",opt$df_input)),".csv.gz"))
+                     path = paste0("output/ready-", gsub("\\...*","",gsub("model_input-","",opt$df_input)),".csv.gz"))
   }
 
   if (opt$run_analysis == TRUE)  {
