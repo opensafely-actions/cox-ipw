@@ -1,3 +1,8 @@
+# [v0.0.29](https://github.com/opensafely-actions/cox-ipw/releases/tag/v0.0.29)
+
+- The r image has been reverted to use the old version of the **readr** package. Hence, the `path` argument is now used again in the calls to `readr::write_csv()`.
+- Add a cron job to the GitHub Action workflow which runs the cox-ipw GitHub Actions test workflow once per week.
+
 # [v0.0.28](https://github.com/opensafely-actions/cox-ipw/releases/tag/v0.0.28)
 
 - Due to the upgrading of the **readr** package (from version 1.3.1 to 2.1.4) in the [r](https://github.com/opensafely-core/r-docker) image on 22/09/2023, update calls to `readr::write_csv()` to use the `file` argument instead of the deprecated `path` argument.
