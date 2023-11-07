@@ -2,6 +2,7 @@
 
 - The r image has been reverted to use the old version of the **readr** package. Hence, the `path` argument is now used again in the calls to `readr::write_csv()`.
 - Add a cron job to the GitHub Action workflow which runs the cox-ipw GitHub Actions test workflow once per week.
+- Ran `opensafely codelists update` to update the codelists in this repo.
 
 # [v0.0.28](https://github.com/opensafely-actions/cox-ipw/releases/tag/v0.0.28)
 
