@@ -2,61 +2,61 @@
   "files": {
     "user-RochelleKnight-confirmed-hospitalised-covid-19.csv": {
       "id": "user/RochelleKnight/confirmed-hospitalised-covid-19/1f0d2526",
-      "url": "https://codelists.opensafely.org/codelist/user/RochelleKnight/confirmed-hospitalised-covid-19/1f0d2526/",
+      "url": "https://www.opencodelists.org/codelist/user/RochelleKnight/confirmed-hospitalised-covid-19/1f0d2526/",
       "downloaded_at": "2022-05-04 13:08:57.126223Z",
       "sha": "7b472652a66eed89b0495a2cf43cf6e894451cb8"
     },
     "opensafely-ethnicity.csv": {
       "id": "opensafely/ethnicity/2020-04-27",
-      "url": "https://codelists.opensafely.org/codelist/opensafely/ethnicity/2020-04-27/",
+      "url": "https://www.opencodelists.org/codelist/opensafely/ethnicity/2020-04-27/",
       "downloaded_at": "2022-05-04 13:08:57.268945Z",
       "sha": "3d2f3998b71863a80b24d60f6f4282e14191ae13"
     },
     "primis-covid19-vacc-uptake-eth2001.csv": {
       "id": "primis-covid19-vacc-uptake/eth2001/v1",
-      "url": "https://codelists.opensafely.org/codelist/primis-covid19-vacc-uptake/eth2001/v1/",
-      "downloaded_at": "2022-05-04 13:08:57.432413Z",
-      "sha": "36e4eacba898e6ec72da8ff66e8c673bfd9aa8e4"
+      "url": "https://www.opencodelists.org/codelist/primis-covid19-vacc-uptake/eth2001/v1/",
+      "downloaded_at": "2023-11-07 18:34:18.458718Z",
+      "sha": "2ff9aea91a05f41fe911a885eee50d2494247d58"
     },
     "user-RochelleKnight-dvt_dvt_icd10.csv": {
       "id": "user/RochelleKnight/dvt_dvt_icd10/24dab358",
-      "url": "https://codelists.opensafely.org/codelist/user/RochelleKnight/dvt_dvt_icd10/24dab358/",
+      "url": "https://www.opencodelists.org/codelist/user/RochelleKnight/dvt_dvt_icd10/24dab358/",
       "downloaded_at": "2022-05-04 13:08:57.619006Z",
       "sha": "a58107609d45a2400d985a7f45ba03ea218a3a31"
     },
     "user-elsie_horne-dvt_icvt_icd10.csv": {
       "id": "user/elsie_horne/dvt_icvt_icd10/30a4dcad",
-      "url": "https://codelists.opensafely.org/codelist/user/elsie_horne/dvt_icvt_icd10/30a4dcad/",
+      "url": "https://www.opencodelists.org/codelist/user/elsie_horne/dvt_icvt_icd10/30a4dcad/",
       "downloaded_at": "2022-05-04 13:08:57.805801Z",
       "sha": "5c1f4d677b9411b6b52d5da8d9c234baf45d0d02"
     },
     "user-elsie_horne-dvt_pregnancy_icd10.csv": {
       "id": "user/elsie_horne/dvt_pregnancy_icd10/6576830d",
-      "url": "https://codelists.opensafely.org/codelist/user/elsie_horne/dvt_pregnancy_icd10/6576830d/",
+      "url": "https://www.opencodelists.org/codelist/user/elsie_horne/dvt_pregnancy_icd10/6576830d/",
       "downloaded_at": "2022-05-04 13:08:57.980799Z",
       "sha": "9d329a04c29cb4bbe16e7685c8e8b223e3d1eef1"
     },
     "user-RochelleKnight-pe_icd10.csv": {
       "id": "user/RochelleKnight/pe_icd10/59ac59b8",
-      "url": "https://codelists.opensafely.org/codelist/user/RochelleKnight/pe_icd10/59ac59b8/",
+      "url": "https://www.opencodelists.org/codelist/user/RochelleKnight/pe_icd10/59ac59b8/",
       "downloaded_at": "2022-05-04 13:08:58.132356Z",
       "sha": "066b79182d212664aff52aa293ba048295499eb9"
     },
     "user-elsie_horne-other_dvt_icd10.csv": {
       "id": "user/elsie_horne/other_dvt_icd10/547f4fba",
-      "url": "https://codelists.opensafely.org/codelist/user/elsie_horne/other_dvt_icd10/547f4fba/",
+      "url": "https://www.opencodelists.org/codelist/user/elsie_horne/other_dvt_icd10/547f4fba/",
       "downloaded_at": "2022-05-04 13:08:58.286330Z",
       "sha": "c3d8dbfd49282af699396b8996c9d46d74e8723d"
     },
     "user-elsie_horne-icvt_pregnancy_icd10.csv": {
       "id": "user/elsie_horne/icvt_pregnancy_icd10/3b6fdc85",
-      "url": "https://codelists.opensafely.org/codelist/user/elsie_horne/icvt_pregnancy_icd10/3b6fdc85/",
+      "url": "https://www.opencodelists.org/codelist/user/elsie_horne/icvt_pregnancy_icd10/3b6fdc85/",
       "downloaded_at": "2022-05-04 13:08:58.457202Z",
       "sha": "5549985dd9f06c465df3a32f935a60d5578c1835"
     },
     "user-elsie_horne-portal_vein_thrombosis_icd10.csv": {
       "id": "user/elsie_horne/portal_vein_thrombosis_icd10/22606950",
-      "url": "https://codelists.opensafely.org/codelist/user/elsie_horne/portal_vein_thrombosis_icd10/22606950/",
+      "url": "https://www.opencodelists.org/codelist/user/elsie_horne/portal_vein_thrombosis_icd10/22606950/",
       "downloaded_at": "2022-05-04 13:08:58.605765Z",
       "sha": "68ab66c54a622d81330d8cb718422fa4554e1560"
     }
