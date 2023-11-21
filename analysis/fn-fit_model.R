@@ -44,6 +44,8 @@ fit_model <- function(df, time_periods, covariates, strata, age_spline, covariat
 
   if (ipw==TRUE) {
     
+    N_obs_in <- nrow(df)
+    
     fit_cox_model <- rms::cph(formula = as.formula(surv_formula),
                               data = df, 
                               weight = df$cox_weight,
@@ -52,7 +54,11 @@ fit_model <- function(df, time_periods, covariates, strata, age_spline, covariat
                               x = TRUE,
                               y = TRUE)
     
+    N_obs_out <- sum(fit_cox_model$n)
+    
   } else {
+    
+    N_obs_in <- nrow(df)
     
     fit_cox_model <- rms::cph(formula = as.formula(surv_formula),
                               data = df, 
@@ -60,6 +66,8 @@ fit_model <- function(df, time_periods, covariates, strata, age_spline, covariat
                               surv = TRUE,
                               x = TRUE,
                               y = TRUE)
+    
+    N_obs_out <- sum(fit_cox_model$n)
     
   }
   
@@ -75,6 +83,7 @@ fit_model <- function(df, time_periods, covariates, strata, age_spline, covariat
                         surv_formula = surv_formula,
                         covariate_removed = "", 
                         covariate_collapsed = "",
+                        obs_warning = ifelse(N_obs_in==N_obs_out,"",paste0(N_obs_in," observations provided. ",N_obs_out," observations used.")),
                         stringsAsFactors = FALSE)
   
   row.names(results) <- NULL
@@ -102,6 +111,8 @@ fit_model <- function(df, time_periods, covariates, strata, age_spline, covariat
 
     if (ipw==TRUE) {
       
+      N_obs_in <- nrow(df)
+      
       fit_cox_model_adj <- rms::cph(formula = as.formula(surv_formula_adj),
                                     data = df, 
                                     weight = df$cox_weight,
@@ -110,7 +121,11 @@ fit_model <- function(df, time_periods, covariates, strata, age_spline, covariat
                                     x = TRUE,
                                     y = TRUE)
       
+      N_obs_out <- sum(fit_cox_model$n)
+      
     } else {
+      
+      N_obs_in <- nrow(df)
       
       fit_cox_model_adj <- rms::cph(formula = as.formula(surv_formula_adj),
                                     data = df, 
@@ -119,12 +134,15 @@ fit_model <- function(df, time_periods, covariates, strata, age_spline, covariat
                                     x = TRUE,
                                     y = TRUE)
       
+      N_obs_out <- sum(fit_cox_model$n)
+      
     }
     
     print(fit_cox_model_adj)
     
     # Format results ---------------------------------------------------------------
     print("Format results")
+    
     
     results_adj <- data.frame(term = names(fit_cox_model_adj$coefficients),
                               lnhr = fit_cox_model_adj$coefficients,
@@ -133,6 +151,7 @@ fit_model <- function(df, time_periods, covariates, strata, age_spline, covariat
                               surv_formula = surv_formula_adj,
                               covariate_removed = paste0(covariate_removed, collapse = ";"),
                               covariate_collapsed = paste0(covariate_collapsed, collapse = ";"),
+                              obs_warning = ifelse(N_obs_in==N_obs_out,"",paste0(N_obs_in," observations provided. ",N_obs_out," observations used.")),
                               stringsAsFactors = FALSE)
     
     row.names(results_adj) <- NULL
