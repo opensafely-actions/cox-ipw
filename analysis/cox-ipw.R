@@ -429,6 +429,7 @@ if (sum(episode_info[episode_info$time_period != "days_pre", ]$N_events) < total
                       surv_formula = c(results[results$model=="mdl_age_sex",]$surv_formula[1], results[results$model=="mdl_max_adj",]$surv_formula[1]),
                       covariate_removed = "",
                       covariate_collapsed = "",
+                      obs_warning = "",
                       N_events = episode_info[episode_info$time_period == "days_pre", ]$N_events,
                       person_time_total = episode_info[episode_info$time_period == "days_pre",]$person_time_total,
                       outcome_time_median = episode_info[episode_info$time_period == "days_pre",]$outcome_time_median,
@@ -455,14 +456,14 @@ if (sum(episode_info[episode_info$time_period != "days_pre", ]$N_events) < total
     
     results$strata_warning <- strata_warning
     
-    results$cox_ipw <- "v0.0.29"
+    results$cox_ipw <- "v0.0.30"
     
     results <- results[order(results$model),
                        c("model", "exposure", "outcome", "term",
                          "lnhr","se_lnhr", "hr","conf_low", "conf_high", 
                          "N_total", "N_exposed", "N_events", 
                          "person_time_total", "outcome_time_median",
-                         "covariate_collapsed","strata_warning",
+                         "covariate_collapsed","strata_warning","obs_warning",
                          "surv_formula","input","cox_ipw")]
   } else {
     
