@@ -1,6 +1,6 @@
 # [v0.0.30](https://github.com/opensafely-actions/cox-ipw/releases/tag/v0.0.30)
 
-- Add observation warning that returns a mesage if the number of observations provided to the model differs from the number of observations used by the model.
+- Add an observation warning that returns a message if the number of observations provided to the model differs from the number of observations used by the model.
 
 # [v0.0.29](https://github.com/opensafely-actions/cox-ipw/releases/tag/v0.0.29)
 
