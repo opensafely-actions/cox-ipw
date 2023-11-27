@@ -466,7 +466,7 @@ if (sum(episode_info[episode_info$time_period != "days_pre", ]$N_events) < total
     
     results$strata_warning <- strata_warning
     
-    results$cox_ipw <- "v0.0.30"
+    results$cox_ipw <- "v0.0.31"
     
     results <- results[order(results$model),
                        c("model", "exposure", "outcome", "term",
