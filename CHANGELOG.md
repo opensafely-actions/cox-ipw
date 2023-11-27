@@ -1,3 +1,7 @@
+# [v0.0.31](https://github.com/opensafely-actions/cox-ipw/releases/tag/v0.0.31)
+
+- The `readr::write_csv()` calls are now more robust to the version of the readr package installed in the r image, i.e., if the version of readr is less that 1.4.0 then the `path` argument is used, otherwise the `file` argument is used. [Tidyverse blogpost about readr 1.4.0](https://www.tidyverse.org/blog/2020/10/readr-1-4-0/#argument-name-consistency).
+
 # [v0.0.30](https://github.com/opensafely-actions/cox-ipw/releases/tag/v0.0.30)
 
 - Add an observation warning that returns a message if the number of observations provided to the model differs from the number of observations used by the model.
