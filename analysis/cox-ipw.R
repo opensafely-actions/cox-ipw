@@ -76,7 +76,7 @@ option_list <- list(
               help = "Random number generator seed passed to IPW sampling [default %default]",
               metavar = "integer"),
   make_option("--save_analysis_ready", type = "logical", default = FALSE,
-              help = "Logical, if analysis ready dataset should be saved [default %default]",
+              help = "Logical, if analysis ready dataset for Stata should be saved [default %default]",
               metavar = "TRUE/FALSE"),
   make_option("--run_analysis", type = "logical", default = TRUE,
               help = "Logical, if analysis should be run [default %default]",
@@ -386,22 +386,12 @@ if (sum(episode_info[episode_info$time_period != "days_pre", ]$N_events) < total
   data_surv[, c("study_start", "study_stop")] <- NULL
   
   if (opt$save_analysis_ready == TRUE) {
-    if (packageVersion('readr') < '1.4.0') {
-      readr::write_csv(data_surv, 
-                       path = paste0("output/ready-", gsub("\\...*","",gsub("model_input-","",opt$df_input)),".csv.gz"))
-    } else {
-      readr::write_csv(data_surv, 
-                       file = paste0("output/ready-", gsub("\\...*","",gsub("model_input-","",opt$df_input)),".csv.gz"))
-    }
+    foreign::write.dta(data_surv, 
+                       paste0("output/ready-", gsub("\\...*","",gsub("model_input-","",opt$df_input)),".dta"))
   } else {
     analysis_ready_empty <- data.frame()
-    if (packageVersion('readr') < '1.4.0') {
-      readr::write_csv(analysis_ready_empty, 
-                       path = paste0("output/ready-", gsub("\\...*","",gsub("model_input-","",opt$df_input)),".csv.gz"))
-    } else {
-            readr::write_csv(analysis_ready_empty, 
-                       file = paste0("output/ready-", gsub("\\...*","",gsub("model_input-","",opt$df_input)),".csv.gz"))
-    }
+    foreign::write.dta(analysis_ready_empty, 
+                       paste0("output/ready-", gsub("\\...*","",gsub("model_input-","",opt$df_input)),".dta"))
   }
 
   if (opt$run_analysis == TRUE)  {
