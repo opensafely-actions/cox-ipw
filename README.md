@@ -105,7 +105,7 @@ The arguments/options to the action are specified using the flags style
     Random number generator seed passed to IPW sampling [default 137]
 
     --save_analysis_ready=TRUE/FALSE
-    Logical, if analysis ready dataset should be saved [default FALSE]
+    Logical, if analysis ready dataset for Stata should be saved [default FALSE]
 
     --run_analysis=TRUE/FALSE
     Logical, if analysis should be run [default TRUE]
@@ -133,7 +133,7 @@ cox_ipw:
   - generate_study_population
   outputs:
     highly_sensitive:
-      analysis_ready: output/ready-*.csv.gz
+      analysis_ready: output/ready-*.dta
     moderately_sensitive:
       arguments: output/args-results.csv
       estimates: output/results.csv
@@ -162,7 +162,7 @@ cox_ipw_2:
   - generate_study_population
   outputs:
     highly_sensitive:
-      analysis_ready: output/ready-*.csv.gz
+      analysis_ready: output/ready-*.dta
     moderately_sensitive:
       arguments: output/args-results_2.csv
       estimates: output/results_2.csv

@@ -1,3 +1,7 @@
+# [v0.0.31](https://github.com/opensafely-actions/cox-ipw/releases/tag/v0.0.31)
+
+- Save analysis ready now uses `foreign::write.dta()` so that output can be read directly into Stata.
+
 # [v0.0.30](https://github.com/opensafely-actions/cox-ipw/releases/tag/v0.0.30)
 
 - Add an observation warning that returns a message if the number of observations provided to the model differs from the number of observations used by the model.
