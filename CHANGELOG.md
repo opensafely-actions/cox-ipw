@@ -1,3 +1,7 @@
+# [v0.0.32](https://github.com/opensafely-actions/cox-ipw/releases/tag/v0.0.32)
+
+- Bump the [mathieudutour/github-tag-action](https://github.com/mathieudutour/github-tag-action) GitHub Action to version 6.2.
+
 # [v0.0.31](https://github.com/opensafely-actions/cox-ipw/releases/tag/v0.0.31)
 
 - Save analysis ready now uses `foreign::write.dta()` so that output can be read directly into Stata.
