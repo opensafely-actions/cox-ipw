@@ -14,7 +14,7 @@ actions:
   cox_ipw:
     # For user-facing documentation, call:
     # cox-ipw:[version]
-    run: r:latest analysis/cox-ipw.R
+    run: r:v2 analysis/cox-ipw.R
     needs:
     - generate_study_population
     outputs:
