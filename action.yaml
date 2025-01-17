@@ -1,1 +1,1 @@
-run: r:latest analysis/cox-ipw.R
+run: r:v2 analysis/cox-ipw.R

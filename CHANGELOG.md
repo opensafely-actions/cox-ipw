@@ -1,6 +1,7 @@
 # [v0.0.32](https://github.com/opensafely-actions/cox-ipw/releases/tag/v0.0.32)
 
 - Bump the [mathieudutour/github-tag-action](https://github.com/mathieudutour/github-tag-action) GitHub Action to version 6.2.
+- Switch to using the new r:v2 image.
 
 # [v0.0.31](https://github.com/opensafely-actions/cox-ipw/releases/tag/v0.0.31)
 
