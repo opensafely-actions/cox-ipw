@@ -2,6 +2,7 @@
 
 - Bump the [mathieudutour/github-tag-action](https://github.com/mathieudutour/github-tag-action) GitHub Action to version 6.2.
 - Switch to using the new r:v2 image.
+- Add a justfile with recipe to perform the rendering of README.Rmd to produce README.md.
 
 # [v0.0.31](https://github.com/opensafely-actions/cox-ipw/releases/tag/v0.0.31)
 
