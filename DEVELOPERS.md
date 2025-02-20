@@ -6,7 +6,13 @@ This action's arguments are defined using the **optparse** package. This code is
 
 ## README.md
 
-_README.md_ is rendered from _README.Rmd_ using the **rmarkdown** package in R. This can be done within R using
+_README.md_ is rendered from _README.Rmd_, simply install [just](https://just.systems/man/en/) and run
+
+```bash
+just render
+```
+
+Alternatively the rendering can be performed locally uusing the **rmarkdown** package in R. This can be done within R using
 
 ```r
 rmarkdown::render("README.Rmd")
