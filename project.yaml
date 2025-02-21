@@ -6,7 +6,7 @@ expectations:
 actions:
 
   generate_study_population:
-    run: cohortextractor:latest generate_cohort --study-definition study_definition
+    run: r:v2 analysis/move-test-data.R
     outputs:
       highly_sensitive:
         cohort: output/input.csv
