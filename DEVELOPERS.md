@@ -32,3 +32,11 @@ This is an R resuable action, run within the R container created from the [https
 * The container provides the packages, with their respective version numbers, listed in [v2/packages.md](https://github.com/opensafely-core/r-docker/blob/main/v2/packages.md).
 
 For more information about reusable actions see [here](https://docs.opensafely.org/actions-reusable/).
+
+## Test
+
+Run the test defined in the _project.yaml_ with
+
+```bash
+just test
+```
