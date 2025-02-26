@@ -24,8 +24,8 @@ The arguments/options to the action are specified using the flags style
     
     Options:
     --df_input=FILENAME.CSV
-    Input dataset csv filename (this is assumed to be within the output directory)
-    [default input.csv]
+    Input dataset. csv, csv.gz, rds, arrow, or a feather filename (this is assumed
+    to be within the output directory) [default input.csv]
     
     --ipw=TRUE/FALSE
     Logical, indicating whether sampling and IPW are to be applied [default TRUE]
