@@ -1,1 +1,1 @@
-R.utils::gzip("dummy_tables/input.csv", "output/input-3.csv.gz")
+file.copy("dummy_tables/input.csv.gz", "output/input-3.csv.gz")
