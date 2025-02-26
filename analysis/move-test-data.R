@@ -1,1 +1,1 @@
-file.copy("dummy_tables/input.csv", "output/input.csv")
+R.utils::gunzip("dummy_tables/input.csv.gz", "output/input.csv")
