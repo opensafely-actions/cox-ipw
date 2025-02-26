@@ -11,7 +11,7 @@
 library(optparse)
 option_list <- list(
   make_option("--df_input", type = "character", default = "input.csv",
-              help = "Input dataset csv filename (this is assumed to be within the output directory) [default %default]",
+              help = "Input dataset. csv, csv.gz, rds, arrow, or a feather filename (this is assumed to be within the output directory) [default %default]",
               metavar = "filename.csv"),
   make_option("--ipw", type = "logical", default = TRUE,
               help = "Logical, indicating whether sampling and IPW are to be applied [default %default]",
@@ -151,12 +151,16 @@ covariate_threshold <- opt$covariate_threshold
 # Load data --------------------------------------------------------------------
 print("Load data")
 
-if (grepl(".csv",opt$df_input)) {
-  data <- readr::read_csv(paste0("output/", opt$df_input))
+if (grepl(".csv.gz", opt$df_input)) {
+  R.utils::gunzip(paste0("output/", opt$df_input), remove = FALSE)
+  opt$df_input <- substr(opt$df_input, 1, nchar(opt$df_input) - 3)
 }
-
-if (grepl(".rds",opt$df_input)) {
+if (grepl(".csv", opt$df_input)) {
+  data <- readr::read_csv(paste0("output/", opt$df_input))
+} else if (grepl(".rds", opt$df_input)) {
   data <- readr::read_rds(paste0("output/", opt$df_input))
+} else if (grepl(".feather", opt$df_input) || grepl(".arrow", opt$df_input)) {
+  data <- arrow::read_feather(paste0("output/", opt$df_input))
 }
 
 print(summary(data))
