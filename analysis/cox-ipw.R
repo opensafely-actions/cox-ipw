@@ -80,10 +80,19 @@ option_list <- list(
               metavar = "TRUE/FALSE"),
   make_option("--run_analysis", type = "logical", default = TRUE,
               help = "Logical, if analysis should be run [default %default]",
-              metavar = "TRUE/FALSE")
+              metavar = "TRUE/FALSE"),
+  make_option("--config", type = "character", default = "",
+              help = "Config parsed from the YAML",
+              metavar = "")
 )
 opt_parser <- OptionParser(usage = "cox-ipw:[version] [options]", option_list = option_list)
 opt <- parse_args(opt_parser)
+
+# Parse the config from YAML
+if (opt$config != "") {
+  config <- jsonlite::fromJSON(opt$config)
+  opt <- modifyList(opt, config)
+}
 
 # Record input arguments --------------------------------------------------------
 print("Record input arguments")
