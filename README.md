@@ -110,6 +110,9 @@ The arguments/options to the action are specified using the flags style
     --run_analysis=TRUE/FALSE
     Logical, if analysis should be run [default TRUE]
     
+    --config=
+    Config parsed from the YAML
+    
     -h, --help
     Show this help message and exit
 
@@ -166,6 +169,23 @@ cox_ipw_2:
     moderately_sensitive:
       arguments: output/args-results_2.csv
       estimates: output/results_2.csv
+```
+
+Options can also be specified using a `config:` key in the YAML as
+follows. Options specified in the config overwrite those specified at
+the command line.
+
+``` yaml
+  cox_ipw_2:
+    run: cox-ipw:[version]
+    config:
+      df_output: results-2.csv
+    needs:
+    - generate_study_population
+    outputs:
+      moderately_sensitive:
+        arguments: output/args-results-2.csv
+        estimates: output/results-2.csv
 ```
 
 ## Notes for developers
