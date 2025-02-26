@@ -3,3 +3,7 @@ render:
 
 test:
     opensafely run run_all -f
+test-1:
+    opensafely run cox_ipw -f
+test-2:
+    opensafely run cox_ipw_2 -f
