@@ -5,6 +5,7 @@
 - Add a justfile with recipe to perform the rendering of README.Rmd to produce README.md.
 - The test defined in _project.yaml_ now uses saved dummy data instead of using cohortextractor or ehrql.
 - Add ability to specify options using a `config:` key in the YAML.
+- Allow the input file to additionally be .csv.gz, .arrow, or .feather files (in addition to .csv and .rds).
 
 # [v0.0.31](https://github.com/opensafely-actions/cox-ipw/releases/tag/v0.0.31)
 
