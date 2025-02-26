@@ -35,3 +35,18 @@ actions:
       moderately_sensitive:
         arguments: output/args-results-2.csv
         estimates: output/results-2.csv
+
+  generate_study_population_3:
+    run: r:v2 analysis/move-test-data-csv-gz.R
+    outputs:
+      highly_sensitive:
+        cohort: output/input-3.csv.gz
+
+  cox_ipw_3:
+    run: r:v2 analysis/cox-ipw.R --df_input input-3.csv.gz --df_output results-3.csv
+    needs:
+    - generate_study_population_3
+    outputs:
+      moderately_sensitive:
+        arguments: output/args-results-3.csv
+        estimates: output/results-3.csv

@@ -7,3 +7,5 @@ test-1:
     opensafely run cox_ipw -f
 test-2:
     opensafely run cox_ipw_2 -f
+test-3:
+    opensafely run cox_ipw_3 -f
