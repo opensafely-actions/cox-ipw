@@ -9,3 +9,5 @@ test-2:
     opensafely run cox_ipw_2 -f
 test-3:
     opensafely run cox_ipw_3 -f
+test-4:
+    opensafely run cox_ipw_4 -f
