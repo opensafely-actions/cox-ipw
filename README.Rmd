@@ -20,8 +20,10 @@ The action:
 
 ## Usage
 
-The arguments/options to the action are specified using the flags style (i.e., `--argname=argvalue`), 
-the arguments are as follows.
+### Options
+
+The available options for the action can be specified using the flags style (i.e., `--argname=argvalue`) or the config style (i.e., `config: argname: argvalue`).
+The available options (using the flags style) are as follows:
 
 ```{r, include=FALSE}
 # Taken from
@@ -49,72 +51,70 @@ source_lines("analysis/cox-ipw.R", 1:88)
 optparse::print_help(opt_parser)
 ```
 
-This action can be specified in the `project.yaml` with its options at their default values as follows, 
+### Action with options set to default
+
+The action can be specified in the `project.yaml` with its options at their default values as follows, 
 where you should replace `[version]` with the latest tag from 
 [here](https://github.com/opensafely-actions/cox-ipw/tags), e.g., `v0.0.1`. 
 Note that no space is allowed between `cox-ipw:` and `[version]`.
 
 ```yaml
-generate_study_population:
-  run: cohortextractor:latest generate_cohort --study-definition study_definition
-  outputs:
-    highly_sensitive:
-      cohort: output/input.csv
-
 cox_ipw:
   run: cox-ipw:[version]
   needs:
-  - generate_study_population
+  - generate-dataset
   outputs:
-    highly_sensitive:
-      analysis_ready: output/ready-*.dta
     moderately_sensitive:
       arguments: output/args-results.csv
       estimates: output/results.csv
 ```
 
-Note that the csv file of argument values is automatically named with `args-` prepended to the name of the output data csv file. 
-Hence, both the output data file and the file of argument values should be listed as `moderately_sensitive` outputs as shown above.
+### Action with options specified as arguments
 
-This action can be run specifying arguments as follows 
-(in YAML `>` indicates to treat the subsequent nested lines as a single line).
+The action ccan be specified in the `project.yaml` with its options specified as arguments as follows, 
+where you should replace `[version]` with the latest tag from 
+[here](https://github.com/opensafely-actions/cox-ipw/tags), e.g., `v0.0.1`. 
+Note in YAML `>` indicates that the subsequent nested lines should be treated as a single line.
 
 ```yaml
-generate_study_population:
-  run: cohortextractor:latest generate_cohort --study-definition study_definition
-  outputs:
-    highly_sensitive:
-      cohort: output/input.csv
-
-cox_ipw_2:
+cox_ipw:
   run: >
     cox-ipw:[version]
-      --df_output=results_2.csv
+      --df_output=results.csv
   needs:
-  - generate_study_population
+  - generate-dataset
   outputs:
-    highly_sensitive:
-      analysis_ready: output/ready-*.dta
     moderately_sensitive:
-      arguments: output/args-results_2.csv
-      estimates: output/results_2.csv
+      arguments: output/args-results.csv
+      estimates: output/results.csv
 ```
 
-Options can also be specified using a `config:` key in the YAML as follows.
-Options specified in the config overwrite those specified at the command line.
+### Actions with options specified using config
+
+The action can be specified in the `project.yaml` with its options specified  using a `config:` key in the YAML as follows, 
+where you should replace `[version]` with the latest tag from 
+[here](https://github.com/opensafely-actions/cox-ipw/tags), e.g., `v0.0.1`. 
+Note that options specified in the config overwrite those specified at the command line.
 
 ```yaml
-  cox_ipw_2:
+  cox_ipw:
     run: cox-ipw:[version]
     config:
-      df_output: results-2.csv
+      df_output: results.csv
     needs:
-    - generate_study_population
+    - generate-dataset
     outputs:
       moderately_sensitive:
-        arguments: output/args-results-2.csv
-        estimates: output/results-2.csv
+        arguments: output/args-results.csv
+        estimates: output/results.csv
 ```
+
+### Recording of options
+
+A csv file of argument values is automatically named with
+`args-` prepended to the name of the output data csv file. Hence, both
+the output data file and the file of argument values should be listed as
+`moderately_sensitive` outputs as shown in the above example.
 
 ## Notes for developers
 
