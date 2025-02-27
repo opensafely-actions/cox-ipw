@@ -11,7 +11,7 @@
 library(optparse)
 option_list <- list(
   make_option("--df_input", type = "character", default = "input.csv",
-              help = "Input dataset csv filename (this is assumed to be within the output directory) [default %default]",
+              help = "Input dataset. csv, csv.gz, rds, arrow, or a feather filename (this is assumed to be within the output directory) [default %default]",
               metavar = "filename.csv"),
   make_option("--ipw", type = "logical", default = TRUE,
               help = "Logical, indicating whether sampling and IPW are to be applied [default %default]",
@@ -80,10 +80,19 @@ option_list <- list(
               metavar = "TRUE/FALSE"),
   make_option("--run_analysis", type = "logical", default = TRUE,
               help = "Logical, if analysis should be run [default %default]",
-              metavar = "TRUE/FALSE")
+              metavar = "TRUE/FALSE"),
+  make_option("--config", type = "character", default = "",
+              help = "Config parsed from the YAML",
+              metavar = "")
 )
 opt_parser <- OptionParser(usage = "cox-ipw:[version] [options]", option_list = option_list)
 opt <- parse_args(opt_parser)
+
+# Parse the config from YAML
+if (opt$config != "") {
+  config <- jsonlite::fromJSON(opt$config)
+  opt <- modifyList(opt, config)
+}
 
 # Record input arguments --------------------------------------------------------
 print("Record input arguments")
@@ -142,12 +151,16 @@ covariate_threshold <- opt$covariate_threshold
 # Load data --------------------------------------------------------------------
 print("Load data")
 
-if (grepl(".csv",opt$df_input)) {
-  data <- readr::read_csv(paste0("output/", opt$df_input))
+if (grepl(".csv.gz", opt$df_input)) {
+  R.utils::gunzip(paste0("output/", opt$df_input), remove = FALSE)
+  opt$df_input <- substr(opt$df_input, 1, nchar(opt$df_input) - 3)
 }
-
-if (grepl(".rds",opt$df_input)) {
+if (grepl(".csv", opt$df_input)) {
+  data <- readr::read_csv(paste0("output/", opt$df_input))
+} else if (grepl(".rds", opt$df_input)) {
   data <- readr::read_rds(paste0("output/", opt$df_input))
+} else if (grepl(".feather", opt$df_input) || grepl(".arrow", opt$df_input)) {
+  data <- arrow::read_feather(paste0("output/", opt$df_input))
 }
 
 print(summary(data))
@@ -456,7 +469,7 @@ if (sum(episode_info[episode_info$time_period != "days_pre", ]$N_events) < total
     
     results$strata_warning <- strata_warning
     
-    results$cox_ipw <- "v0.0.31"
+    results$cox_ipw <- "v0.0.32"
     
     results <- results[order(results$model),
                        c("model", "exposure", "outcome", "term",
