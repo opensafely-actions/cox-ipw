@@ -2,18 +2,18 @@ version: '4.0'
 
 actions:
 
-  generate_study_population:
+  generate-dataset_csv:
     run: r:v2 analysis/move-test-data.R
     outputs:
       highly_sensitive:
         cohort: output/input.csv
 
-  cox_ipw:
+  cox-ipw_using-args_input-csv:
     # For user-facing documentation, call:
     # cox-ipw:[version]
     run: r:v2 analysis/cox-ipw.R --df_input input.csv
     needs:
-    - generate_study_population
+    - generate-dataset_csv
     outputs:
       # uncomment and reindent the lines below when saving the analysis ready dataset
       # highly_sensitive:
@@ -22,42 +22,42 @@ actions:
         arguments: output/args-results.csv
         estimates: output/results.csv
 
-  cox_ipw_2:
+  cox-ipw_using_config-input_csv:
     run: r:v2 analysis/cox-ipw.R
     config:
       df_output: results-2.csv
     needs:
-    - generate_study_population
+    - generate-dataset_csv
     outputs:
       moderately_sensitive:
         arguments: output/args-results-2.csv
         estimates: output/results-2.csv
 
-  generate_study_population_3:
+  generate-dataset_csv-gz:
     run: r:v2 analysis/move-test-data-csv-gz.R
     outputs:
       highly_sensitive:
         cohort: output/input-3.csv.gz
 
-  cox_ipw_3:
+  cox-ipw_using-args_input-csv-gz:
     run: r:v2 analysis/cox-ipw.R --df_input input-3.csv.gz --df_output results-3.csv
     needs:
-    - generate_study_population_3
+    - generate-dataset_csv-gz
     outputs:
       moderately_sensitive:
         arguments: output/args-results-3.csv
         estimates: output/results-3.csv
 
-  generate_study_population_4:
+  generate-dataset_arrow:
     run: r:v2 analysis/move-test-data-arrow.R
     outputs:
       highly_sensitive:
         cohort: output/input-4.arrow
   
-  cox_ipw_4:
+  cox-ipw_using-args_input-arrow:
     run: r:v2 analysis/cox-ipw.R --df_input input-4.arrow --df_output results-4.csv
     needs:
-    - generate_study_population_4
+    - generate-dataset_arrow
     outputs:
       moderately_sensitive:
         arguments: output/args-results-4.csv
