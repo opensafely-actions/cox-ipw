@@ -6,6 +6,10 @@ on:
     branches:
       - main
 
+concurrency:
+  group: tag-new-version-group
+  cancel-in-progress: false
+
 jobs:
   test-integration:
     runs-on: ubuntu-latest
