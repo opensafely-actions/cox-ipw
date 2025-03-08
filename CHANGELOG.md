@@ -1,3 +1,7 @@
+# [v0.0.33](https://github.com/opensafely-actions/cox-ipw/releases/tag/v0.0.33)
+
+- Fix potential race condition in tagging GitHub Actions workflow.
+
 # [v0.0.32](https://github.com/opensafely-actions/cox-ipw/releases/tag/v0.0.32)
 
 - Bump the [mathieudutour/github-tag-action](https://github.com/mathieudutour/github-tag-action) GitHub Action to version 6.2.
