@@ -1,3 +1,7 @@
+# [v0.0.34](https://github.com/opensafely-actions/cox-ipw/releases/tag/v0.0.34)
+
+- Specify analysis ready dataset name rather than deriving the name from df_input. This allows df_input to be read from a subdirectory and the analysis ready dataset to be saved to a subdirectory.
+
 # [v0.0.33](https://github.com/opensafely-actions/cox-ipw/releases/tag/v0.0.33)
 
 - Fix potential race condition in tagging GitHub Actions workflow.

@@ -29,7 +29,8 @@ as follows:
     Options:
     --df_input=FILENAME.CSV
     Input dataset. csv, csv.gz, rds, arrow, or a feather filename (this is assumed
-    to be within the output directory) [default input.csv]
+    to be within the output directory but can be within a subdirectory) [default
+    input.csv]
     
     --ipw=TRUE/FALSE
     Logical, indicating whether sampling and IPW are to be applied [default TRUE]
@@ -102,14 +103,15 @@ as follows:
     0.5, 0.9 [default TRUE]
     
     --df_output=FILENAME.CSV
-    Output data csv filename (this is assumed to be within the output directory)
-    [default results.csv]
+    Output data csv filename (this is assumed to be within the output directory but
+    can be within a subdirectory) [default results.csv]
     
     --seed=INTEGER
     Random number generator seed passed to IPW sampling [default 137]
     
-    --save_analysis_ready=TRUE/FALSE
-    Logical, if analysis ready dataset for Stata should be saved [default FALSE]
+    --save_analysis_ready=FILENAME.CSV
+    If provided, analysis ready data csv filename (this is assumed to be within the
+    output directory but can be within a subdirectory) [default ]
     
     --run_analysis=TRUE/FALSE
     Logical, if analysis should be run [default TRUE]
