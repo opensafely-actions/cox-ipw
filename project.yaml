@@ -62,3 +62,18 @@ actions:
       moderately_sensitive:
         arguments: output/args-results-4.csv
         estimates: output/results-4.csv
+
+  generate-dataset_arrow-subdir:
+    run: r:v2 analysis/move-test-data-arrow-subdir.R
+    outputs:
+      highly_sensitive:
+        cohort: output/subdir/input-5.arrow
+  
+  cox-ipw_using-args_input-arrow-subdir:
+    run: r:v2 analysis/cox-ipw.R --df_input subdir/input-5.arrow --df_output results-5.csv
+    needs:
+    - generate-dataset_arrow-subdir
+    outputs:
+      moderately_sensitive:
+        arguments: output/args-results-5.csv
+        estimates: output/results-5.csv
