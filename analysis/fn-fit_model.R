@@ -2,13 +2,19 @@ fit_model <- function(df, time_periods, covariates, strata, age_spline, covariat
   
   # Define model formula -------------------------------------------------------
   print("Define model formula")
-  
-  surv_formula <- paste0("Surv(tstart, tstop, outcome_status) ~ ",
-                         paste(time_periods, collapse = " + "), 
-                         ifelse("cov_cat_sex" %in% colnames(df), " + cov_cat_sex", ""),
-                         paste(" +", paste0("rms::strat(", strata, ")"), collapse = " + "),
-                         ifelse(ipw==TRUE, " + cluster(patient_id)", ""))
-  
+
+  surv_formula <- paste0(
+    "Surv(tstart, tstop, outcome_status) ~ ",
+    paste(time_periods, collapse = " + "),
+    ifelse("cov_cat_sex" %in% colnames(df), " + cov_cat_sex", ""),
+    ifelse(
+      is.null(strata),
+      "",
+      paste(" +", paste0("rms::strat(", strata, ")"), collapse = " + ")
+    ),
+    ifelse(isTRUE(ipw), " + cluster(patient_id)", "")
+  )
+
   # Add age covariate, specifying knot placement for age spline if applicable --
   
   if ("cov_num_age" %in% colnames(df)) {
