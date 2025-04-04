@@ -461,14 +461,16 @@ print(summary(data_surv))
 # Calculate events in each time period -----------------------------------------
 print("Calculate events in each time period")
 
-episode_info <- get_episode_info(
-  df = data_surv,
-  cut_points = cut_points,
-  episode_labels = episode_labels,
-  ipw = opt$ipw
-)
+if (nrow(data_surv[data_surv$outcome_status == 1, ]) > 0) {
+  episode_info <- get_episode_info(
+    df = data_surv,
+    cut_points = cut_points,
+    episode_labels = episode_labels,
+    ipw = opt$ipw
+  )
 
-print(episode_info)
+  print(episode_info)
+}
 
 # STOP if the total number of events is insufficient ---------------------------
 
