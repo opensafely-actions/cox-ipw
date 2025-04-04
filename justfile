@@ -11,3 +11,5 @@ test-3:
     opensafely run cox_ipw_3 -f
 test-4:
     opensafely run cox_ipw_4 -f
+test-5:
+    opensafely run cox-ipw_using-args_input-arrow-subdir -f
