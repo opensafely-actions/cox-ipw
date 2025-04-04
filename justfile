@@ -4,12 +4,12 @@ render:
 test:
     opensafely run run_all -f
 test-1:
-    opensafely run cox_ipw -f
+    opensafely run cox-ipw_using-args_input-csv -f
 test-2:
-    opensafely run cox_ipw_2 -f
+    opensafely run cox-ipw_using_config-input_csv -f
 test-3:
-    opensafely run cox_ipw_3 -f
+    opensafely run cox-ipw_using-args_input-csv-gz -f
 test-4:
-    opensafely run cox_ipw_4 -f
+    opensafely run cox-ipw_using-args_input-arrow -f
 test-5:
     opensafely run cox-ipw_using-args_input-arrow-subdir -f
