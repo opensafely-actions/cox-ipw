@@ -219,11 +219,10 @@ library(magrittr)
 # Import functions -------------------------------------------------------------
 print("Import functions")
 
-source("analysis/fn-ipw_sample.R")
-source("analysis/fn-survival_data_setup.R")
-source("analysis/fn-get_episode_info.R")
-source("analysis/fn-check_covariates.R")
-source("analysis/fn-fit_model.R")
+lapply(
+  list.files("analysis", full.names = TRUE, pattern = "fn-"),
+  source
+)
 
 # Separate list arguments ------------------------------------------------------
 print("Separate list arguments")
@@ -659,7 +658,7 @@ if (
 
     results$strata_warning <- strata_warning
 
-    results$cox_ipw <- "v0.0.34"
+    results$cox_ipw <- "v0.0.35"
 
     results <- results[
       order(results$model),
