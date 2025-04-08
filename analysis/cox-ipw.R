@@ -301,12 +301,8 @@ data[, var_num] <- lapply(data[, var_num], as.numeric)
 # Restrict to core variables ---------------------------------------------------
 print("Restrict to core variables")
 
-core <- colnames(data)
-core <- core[!grepl("cov_", core)]
-core <- core[!grepl("sub_", core)]
-
+core <- c("patient_id", opt$exposure, opt$outcome, cox_start, cox_stop)
 input <- data[, core]
-
 print(paste0("Core variables: ", paste0(core, collapse = ", ")))
 
 # Give generic names to variables ----------------------------------------------
@@ -658,7 +654,7 @@ if (
 
     results$strata_warning <- strata_warning
 
-    results$cox_ipw <- "v0.0.35"
+    results$cox_ipw <- "v0.0.36"
 
     results <- results[
       order(results$model),

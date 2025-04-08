@@ -1,3 +1,7 @@
+# [v0.0.36](https://github.com/opensafely-actions/cox-ipw/releases/tag/v0.0.36)
+
+- Positively code core variables to avoid variable name conflicts.
+
 # [v0.0.35](https://github.com/opensafely-actions/cox-ipw/releases/tag/v0.0.35)
 
 - Allow there to be no pre-exposure events.
