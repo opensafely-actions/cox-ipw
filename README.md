@@ -144,7 +144,7 @@ cox_ipw:
 
 ### Action with options specified as arguments
 
-The action ccan be specified in the `project.yaml` with its options
+The action can be specified in the `project.yaml` with its options
 specified as arguments as follows, where you should replace `[version]`
 with the latest tag from
 [here](https://github.com/opensafely-actions/cox-ipw/tags), e.g.,
