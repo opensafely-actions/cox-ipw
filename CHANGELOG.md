@@ -1,3 +1,8 @@
+# [v0.0.37](https://github.com/opensafely-actions/cox-ipw/releases/tag/v0.0.37)
+
+- Fix typo in README.
+- Rename args file to be compatible with subdirectories.
+
 # [v0.0.36](https://github.com/opensafely-actions/cox-ipw/releases/tag/v0.0.36)
 
 - Positively code core variables to avoid variable name conflicts.

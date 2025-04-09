@@ -19,7 +19,7 @@ actions:
       # highly_sensitive:
       #   analysis_ready: output/ready-*.csv.gz
       moderately_sensitive:
-        arguments: output/args-results.csv
+        arguments: output/results-args.csv
         estimates: output/results.csv
 
   cox-ipw_using_config-input_csv:
@@ -30,7 +30,7 @@ actions:
     - generate-dataset_csv
     outputs:
       moderately_sensitive:
-        arguments: output/args-results-2.csv
+        arguments: output/results-2-args.csv
         estimates: output/results-2.csv
 
   generate-dataset_csv-gz:
@@ -45,7 +45,7 @@ actions:
     - generate-dataset_csv-gz
     outputs:
       moderately_sensitive:
-        arguments: output/args-results-3.csv
+        arguments: output/results-3-args.csv
         estimates: output/results-3.csv
 
   generate-dataset_arrow:
@@ -60,7 +60,7 @@ actions:
     - generate-dataset_arrow
     outputs:
       moderately_sensitive:
-        arguments: output/args-results-4.csv
+        arguments: output/results-4-args.csv
         estimates: output/results-4.csv
 
   generate-dataset_arrow-subdir:
@@ -75,5 +75,5 @@ actions:
     - generate-dataset_arrow-subdir
     outputs:
       moderately_sensitive:
-        arguments: output/args-results-5.csv
+        arguments: output/results-5-args.csv
         estimates: output/results-5.csv
