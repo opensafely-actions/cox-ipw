@@ -1,3 +1,7 @@
+# [v0.0.38](https://github.com/opensafely-actions/cox-ipw/releases/tag/v0.0.38)
+
+- Minor updates to GitHub Actions workflows.
+
 # [v0.0.37](https://github.com/opensafely-actions/cox-ipw/releases/tag/v0.0.37)
 
 - Fix typo in README.
