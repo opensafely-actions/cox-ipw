@@ -206,7 +206,7 @@ print(record_args)
 
 write.csv(
   record_args,
-  file = paste0("output/", gsub(".csv","-args.csv",opt$df_output)),
+  file = paste0("output/", gsub(".csv", "-args.csv", opt$df_output)),
   row.names = FALSE
 )
 
