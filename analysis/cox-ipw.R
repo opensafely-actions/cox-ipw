@@ -84,7 +84,7 @@ option_list <- list(
     "--cox_stop",
     type = "character",
     default = "death_date;out_date_vte;vax_date_covid_1",
-    help = "semicolon separated list of variable names used to define end of patient follow-up or single variable if already defined [default %default]",
+    help = "Semi-colon separated list of variable names used to define end of patient follow-up or single variable if already defined [default %default]",
     metavar = "varname_1;varname_2;..."
   ),
   make_option(
