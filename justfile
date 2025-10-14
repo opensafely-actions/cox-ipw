@@ -13,3 +13,5 @@ test-4:
     opensafely run cox-ipw_using-args_input-arrow -f
 test-5:
     opensafely run cox-ipw_using-args_input-arrow-subdir -f
+test-6:
+    opensafely run cox-ipw_covariate-other-filename -f
