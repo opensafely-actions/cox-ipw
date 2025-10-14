@@ -70,8 +70,8 @@ option_list <- list(
     "--covariate_other",
     type = "character",
     default = "cov_cat_ethnicity;cov_num_consulation_rate;cov_bin_healthcare_worker;cov_bin_carehome_status",
-    help = "Semi-colon separated list of other covariates to be included in the regression model; specify argument as NULL to run age, age squared, sex adjusted model only [default %default]",
-    metavar = "varname_1;varname_2;..."
+    help = "Semi-colon separated list of other covariates or filename of text file containing semi-colon separated list of other covariates to be included in the regression model; specify argument as NULL to run age, age squared, sex adjusted model only [default %default]",
+    metavar = "varname_1;varname_2;... or covariate-other.txt"
   ),
   make_option(
     "--cox_start",
@@ -223,6 +223,31 @@ lapply(
   list.files("analysis", full.names = TRUE, pattern = "fn-"),
   source
 )
+
+# Read in covariate_other if a filename ----
+# Assuming it's a filename if the character string contains no semi-colons
+# Note to future self/developer - could change the second condition here to look for say .txt in string
+if (!is.null(opt$covariate_other) && !grepl(";", opt$covariate_other)) {
+  # Check if file exists
+  if (!file.exists(opt$covariate_other)) {
+    stop(paste("The file", opt$covariate_other, "does not exist, please check how you have specified the covariate_other option."))
+  }
+
+  # Read in text file contents
+  # Get the size of the file in bytes
+  covariate_other_file_size <- file.info(opt$covariate_other)$size
+
+  # Read the entire file content as a single character string
+  covariate_other_single_string <- readChar(opt$covariate_other, covariate_other_file_size)
+  # Strip newlines from (likely the end of) string (but could be multi-line text file)
+  covariate_other_single_string <- gsub("[\r\n]", "", covariate_other_single_string)
+
+  # Overwrite opt$covariate_other so it can be processed as the direct specification of this option
+  opt$covariate_other <- covariate_other_single_string
+}
+
+# If last character of opt$covariate_other is a ; replace with nothing
+opt$covariate_other <- trimws(opt$covariate_other, which = "right", whitespace = ";")
 
 # Separate list arguments ------------------------------------------------------
 print("Separate list arguments")
