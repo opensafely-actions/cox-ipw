@@ -110,9 +110,9 @@ as follows:
     --seed=INTEGER
     Random number generator seed passed to IPW sampling [default 137]
     
-    --save_analysis_ready=FILENAME.CSV
-    If provided, analysis ready data csv filename (this is assumed to be within the
-    output directory but can be within a subdirectory) [default ]
+    --save_analysis_ready=FILENAME.DTA
+    If provided, analysis ready Stata dataset filename (this is assumed to be
+    within the output directory but can be within a subdirectory) [default ]
     
     --run_analysis=TRUE/FALSE
     Logical, if analysis should be run [default TRUE]
