@@ -161,8 +161,8 @@ option_list <- list(
     "--save_analysis_ready",
     type = "character",
     default = "",
-    help = "If provided, analysis ready data csv filename (this is assumed to be within the output directory but can be within a subdirectory) [default %default]",
-    metavar = "filename.csv"
+    help = "If provided, analysis ready Stata dataset filename (this is assumed to be within the output directory but can be within a subdirectory) [default %default]",
+    metavar = "filename.dta"
   ),
   make_option(
     "--run_analysis",
