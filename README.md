@@ -61,7 +61,8 @@ as follows:
     Semi-colon separated list of other covariates or filename of text file
     containing semi-colon separated list of other covariates to be included in the
     regression model; specify argument as NULL to run age, age squared, sex
-    adjusted model only [default
+    adjusted model only. Note that if you are including only a single covariate
+    please include the semi-colon after it [default
     cov_cat_ethnicity;cov_num_consulation_rate;cov_bin_healthcare_worker;cov_bin_carehome_status]
     
     --cox_start=VARNAME_1;VARNAME_2;...
