@@ -1,6 +1,7 @@
 # [v0.0.39](https://github.com/opensafely-actions/cox-ipw/releases/tag/v0.0.39)
 
 - Allow option `--covariate_other` to be specified as a filename of a text file of semi-colon separated variable names.
+- Updated the documentation for `--save_analysis_ready` to reflect that it saves a Stata dataset.
 
 # [v0.0.38](https://github.com/opensafely-actions/cox-ipw/releases/tag/v0.0.38)
 
