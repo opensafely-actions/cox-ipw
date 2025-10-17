@@ -77,3 +77,19 @@ actions:
       moderately_sensitive:
         arguments: output/results-5-args.csv
         estimates: output/results-5.csv
+
+  cox-ipw_move-covariate-other-filename:
+    run: r:v2 analysis/move-covariate-other-txt.R
+    outputs:
+      moderately_sensitive:
+        covariates: output/covariate-other.txt
+
+  cox-ipw_covariate-other-filename:
+    run: r:v2 analysis/cox-ipw.R --df_input input.csv --covariate_other output/covariate-other.txt --df_output results-6.csv
+    needs:
+    - cox-ipw_move-covariate-other-filename
+    - generate-dataset_csv
+    outputs:
+      moderately_sensitive:
+        arguments: output/results-6-args.csv
+        estimates: output/results-6.csv

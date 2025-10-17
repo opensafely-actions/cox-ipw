@@ -57,10 +57,12 @@ as follows:
     Variable name for the age covariate; specify argument as NULL to model without
     age covariate [default cov_num_age]
     
-    --covariate_other=VARNAME_1;VARNAME_2;...
-    Semi-colon separated list of other covariates to be included in the regression
-    model; specify argument as NULL to run age, age squared, sex adjusted model
-    only [default
+    --covariate_other=VARNAME_1;VARNAME_2;... OR COVARIATE-OTHER.TXT
+    Semi-colon separated list of other covariates or filename of text file
+    containing semi-colon separated list of other covariates to be included in the
+    regression model; specify argument as NULL to run age, age squared, sex
+    adjusted model only. Note that if you are including only a single covariate
+    please include the semi-colon after it [default
     cov_cat_ethnicity;cov_num_consulation_rate;cov_bin_healthcare_worker;cov_bin_carehome_status]
     
     --cox_start=VARNAME_1;VARNAME_2;...
@@ -68,7 +70,7 @@ as follows:
     follow-up or single variable if already defined [default pat_index_date]
     
     --cox_stop=VARNAME_1;VARNAME_2;...
-    semicolon separated list of variable names used to define end of patient
+    Semi-colon separated list of variable names used to define end of patient
     follow-up or single variable if already defined [default
     death_date;out_date_vte;vax_date_covid_1]
     
@@ -109,9 +111,9 @@ as follows:
     --seed=INTEGER
     Random number generator seed passed to IPW sampling [default 137]
     
-    --save_analysis_ready=FILENAME.CSV
-    If provided, analysis ready data csv filename (this is assumed to be within the
-    output directory but can be within a subdirectory) [default ]
+    --save_analysis_ready=FILENAME.DTA
+    If provided, analysis ready Stata dataset filename (this is assumed to be
+    within the output directory but can be within a subdirectory) [default ]
     
     --run_analysis=TRUE/FALSE
     Logical, if analysis should be run [default TRUE]

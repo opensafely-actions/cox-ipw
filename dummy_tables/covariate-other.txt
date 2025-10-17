@@ -1,0 +1,1 @@
+cov_cat_ethnicity;cov_num_consulation_rate
