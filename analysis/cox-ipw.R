@@ -679,7 +679,7 @@ if (
 
     results$strata_warning <- strata_warning
 
-    results$cox_ipw <- "v0.0.39"
+    results$cox_ipw <- "v0.0.40"
 
     results <- results[
       order(results$model),
