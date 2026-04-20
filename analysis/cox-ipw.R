@@ -69,7 +69,7 @@ option_list <- list(
   make_option(
     "--covariate_other",
     type = "character",
-    default = "cov_cat_ethnicity;cov_num_consulation_rate;cov_bin_healthcare_worker;cov_bin_carehome_status",
+    default = "cov_cat_ethnicity;cov_num_consultation_rate;cov_bin_healthcare_worker;cov_bin_carehome_status",
     help = "Semi-colon separated list of other covariates or filename of text file containing semi-colon separated list of other covariates to be included in the regression model; specify argument as NULL to run age, age squared, sex adjusted model only. Note that if you are including only a single covariate please include the semi-colon after it [default %default]",
     metavar = "varname_1;varname_2;... or covariate-other.txt"
   ),
