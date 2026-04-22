@@ -1,3 +1,9 @@
+# [v0.0.41](https://github.com/opensafely-actions/cox-ipw/releases/tag/v0.0.41)
+
+- Amend `cov_num_consulation_rate` to `cov_num_consultation_rate`
+- Bump pipeline version in _project.yaml_ to 5.0 as per <https://docs.opensafely.org/actions-pipelines/>
+- Fix some other typos
+
 # [v0.0.40](https://github.com/opensafely-actions/cox-ipw/releases/tag/v0.0.40)
 
 - Minor updates to GitHub Actions workflows.
