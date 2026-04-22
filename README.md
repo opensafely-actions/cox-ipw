@@ -63,7 +63,7 @@ as follows:
     regression model; specify argument as NULL to run age, age squared, sex
     adjusted model only. Note that if you are including only a single covariate
     please include the semi-colon after it [default
-    cov_cat_ethnicity;cov_num_consulation_rate;cov_bin_healthcare_worker;cov_bin_carehome_status]
+    cov_cat_ethnicity;cov_num_consultation_rate;cov_bin_healthcare_worker;cov_bin_carehome_status]
     
     --cox_start=VARNAME_1;VARNAME_2;...
     Semi-colon separated list of variable names used to define start of patient
