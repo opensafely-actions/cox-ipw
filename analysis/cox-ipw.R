@@ -318,7 +318,7 @@ var_cat <- colnames(data)[grepl("_cat_", colnames(data))]
 data[var_cat] <- lapply(data[var_cat], as.factor)
 
 # Make numerical variables numerical -------------------------------------------
-print(" Make numerical variables numerical")
+print("Make numerical variables numerical")
 
 var_num <- colnames(data)[grepl("_num_", colnames(data))]
 data[var_num] <- lapply(data[var_num], as.numeric)
