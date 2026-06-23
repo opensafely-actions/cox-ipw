@@ -509,6 +509,20 @@ if (n_postexp_events < total_event_threshold) {
     )
   )
   print(results$error)
+
+  # Still write an analysis-ready .dta so downstream Stata pipelines do not break
+  print("Save analysis ready dataset with error message")
+
+  analysis_ready_error <- data.frame(error = results$error)
+
+  if (opt$save_analysis_ready != "") {
+    foreign::write.dta(
+      analysis_ready_error,
+      paste0("output/", opt$save_analysis_ready)
+    )
+  } else {
+    foreign::write.dta(analysis_ready_error, "output/analysis_ready_empty.dta")
+  }
 } else {
   # Add strata information to data ---------------------------------------------
   print("Add strata information to data")
