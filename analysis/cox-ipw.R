@@ -206,7 +206,7 @@ print(record_args)
 
 write.csv(
   record_args,
-  file = paste0("output/", gsub(".csv", "-args.csv", opt$df_output)),
+  file = paste0("output/", gsub("\\.csv$", "-args.csv", opt$df_output)),
   row.names = FALSE
 )
 
@@ -282,15 +282,15 @@ covariate_threshold <- opt$covariate_threshold
 # Load data --------------------------------------------------------------------
 print("Load data")
 
-if (grepl(".csv.gz", opt$df_input)) {
+if (grepl("\\.csv\\.gz$", opt$df_input)) {
   R.utils::gunzip(paste0("output/", opt$df_input), remove = FALSE)
   opt$df_input <- substr(opt$df_input, 1, nchar(opt$df_input) - 3)
 }
-if (grepl(".csv", opt$df_input)) {
+if (grepl("\\.csv$", opt$df_input)) {
   data <- readr::read_csv(paste0("output/", opt$df_input))
-} else if (grepl(".rds", opt$df_input)) {
+} else if (grepl("\\.rds$", opt$df_input)) {
   data <- readr::read_rds(paste0("output/", opt$df_input))
-} else if (grepl(".feather", opt$df_input) || grepl(".arrow", opt$df_input)) {
+} else if (grepl("\\.feather$", opt$df_input) || grepl("\\.arrow$", opt$df_input)) {
   data <- arrow::read_feather(paste0("output/", opt$df_input))
 }
 
