@@ -300,14 +300,14 @@ print(summary(data))
 print("Make binary variables logical")
 
 var_bin <- colnames(data)[grepl("_bin_", colnames(data))]
-data[, var_bin] <- lapply(data[, var_bin], as.logical)
+data[var_bin] <- lapply(data[var_bin], as.logical)
 
 # Make date variables dates ----------------------------------------------------
 print("Make date variables dates")
 
 var_date <- colnames(data)[grepl("_date", colnames(data))]
-data[, var_date] <- lapply(
-  data[, var_date],
+data[var_date] <- lapply(
+  data[var_date],
   function(x) as.Date(x, origin = "1970-01-01")
 )
 
@@ -315,13 +315,13 @@ data[, var_date] <- lapply(
 print("Make categorical variables factors")
 
 var_cat <- colnames(data)[grepl("_cat_", colnames(data))]
-data[, var_cat] <- lapply(data[, var_cat], as.factor)
+data[var_cat] <- lapply(data[var_cat], as.factor)
 
 # Make numerical variables numerical -------------------------------------------
 print(" Make numerical variables numerical")
 
 var_num <- colnames(data)[grepl("_num_", colnames(data))]
-data[, var_num] <- lapply(data[, var_num], as.numeric)
+data[var_num] <- lapply(data[var_num], as.numeric)
 
 # Restrict to core variables ---------------------------------------------------
 print("Restrict to core variables")
