@@ -490,14 +490,17 @@ if (nrow(data_surv[data_surv$outcome_status == 1, ]) > 0) {
   )
 
   print(episode_info)
+
+  n_postexp_events <- sum(
+    episode_info[episode_info$time_period != "days_pre", ]$N_events
+  )
+} else {
+  n_postexp_events <- 0
 }
 
 # STOP if the total number of events is insufficient ---------------------------
 
-if (
-  sum(episode_info[episode_info$time_period != "days_pre", ]$N_events) <
-    total_event_threshold
-) {
+if (n_postexp_events < total_event_threshold) {
   results <- data.frame(
     error = paste0(
       "The total number of post-exposure events is less than the prespecified limit (limit = ",
