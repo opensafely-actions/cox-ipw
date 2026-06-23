@@ -211,6 +211,7 @@ fit_model <- function(
   # Return results -------------------------------------------------------------
   print("Return results")
 
-  return(results)
   print(summary(results))
+
+  return(results)
 }
