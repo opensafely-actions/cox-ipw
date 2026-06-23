@@ -553,6 +553,7 @@ if (
 
   covariate_removed <- NULL
   covariate_collapsed <- NULL
+  strata_warning <- ""
 
   if (!is.null(covariate_other)) {
     # Add covariate information to data ----------------------------------------
