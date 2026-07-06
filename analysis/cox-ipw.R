@@ -644,15 +644,20 @@ if (n_postexp_events < total_event_threshold) {
     # Add dummy row for days_pre term --------------------------------------------
     print("Add dummy row for days_pre term")
 
+    # Only emit a days_pre row for models that were actually fitted; mdl_max_adj
+    # is absent when no additional covariates are specified
+    models_fitted <- unique(results$model)
+
     tmp <- data.frame(
       term = "days_pre",
       lnhr = NA,
       se_lnhr = NA,
-      model = c("mdl_age_sex", "mdl_max_adj"),
-      surv_formula = c(
-        results[results$model == "mdl_age_sex", ]$surv_formula[1],
-        results[results$model == "mdl_max_adj", ]$surv_formula[1]
-      ),
+      model = models_fitted,
+      surv_formula = unname(vapply(
+        models_fitted,
+        function(m) results[results$model == m, ]$surv_formula[1],
+        character(1)
+      )),
       covariate_removed = "",
       covariate_collapsed = "",
       obs_warning = "",
