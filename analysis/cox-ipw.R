@@ -189,7 +189,9 @@ print("Record input arguments")
 
 record_args <- data.frame(
   argument = names(opt),
-  value = unlist(opt),
+  # collapse per element so the column stays 1:1 with names(opt); unlist() would
+  # misalign if any option (e.g. via the YAML config) held more than one value
+  value = vapply(opt, function(x) paste(x, collapse = ";"), character(1)),
   stringsAsFactors = FALSE
 )
 
@@ -318,7 +320,10 @@ data[var_num] <- lapply(data[var_num], as.numeric)
 # Restrict to core variables ---------------------------------------------------
 print("Restrict to core variables")
 
-core <- c("patient_id", opt$exposure, opt$outcome, cox_start, cox_stop)
+# unique() guards against a variable appearing in more than one role (e.g. the
+# outcome also listed in cox_stop), which would otherwise carry a redundant
+# duplicate-named column through the pipeline
+core <- unique(c("patient_id", opt$exposure, opt$outcome, cox_start, cox_stop))
 input <- data[, core]
 print(paste0("Core variables: ", paste0(core, collapse = ", ")))
 
