@@ -123,13 +123,6 @@ option_list <- list(
     metavar = "integer"
   ),
   make_option(
-    "--episode_event_threshold",
-    type = "integer",
-    default = 5L,
-    help = "Number of events that must be present in a time period; if threshold is not met, time periods are collapsed [default %default]",
-    metavar = "integer"
-  ),
-  make_option(
     "--covariate_threshold",
     type = "integer",
     default = 5L,
@@ -276,7 +269,6 @@ print("Make numeric arguments numeric")
 cut_points <- as.numeric(cut_points)
 controls_per_case <- opt$controls_per_case
 total_event_threshold <- opt$total_event_threshold
-episode_event_threshold <- opt$episode_event_threshold
 covariate_threshold <- opt$covariate_threshold
 
 # Load data --------------------------------------------------------------------
