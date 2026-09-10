@@ -607,7 +607,9 @@ if (n_postexp_events < total_event_threshold) {
   if (opt$save_analysis_ready != "") {
     foreign::write.dta(data_surv, paste0("output/", opt$save_analysis_ready))
   } else {
-    analysis_ready_empty <- data.frame()
+    # write.dta() errors on a data frame with zero columns, so use a single
+    # placeholder column with no observations
+    analysis_ready_empty <- data.frame(analysis_ready = character(0))
     foreign::write.dta(analysis_ready_empty, "output/analysis_ready_empty.dta")
   }
 
