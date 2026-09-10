@@ -158,7 +158,7 @@ fit_model <- function(
         y = TRUE
       )
 
-      N_obs_out <- sum(fit_cox_model$n)
+      N_obs_out <- sum(fit_cox_model_adj$n)
     } else {
       N_obs_in <- nrow(df)
 
@@ -171,7 +171,7 @@ fit_model <- function(
         y = TRUE
       )
 
-      N_obs_out <- sum(fit_cox_model$n)
+      N_obs_out <- sum(fit_cox_model_adj$n)
     }
 
     print(fit_cox_model_adj)
@@ -211,6 +211,7 @@ fit_model <- function(
   # Return results -------------------------------------------------------------
   print("Return results")
 
-  return(results)
   print(summary(results))
+
+  return(results)
 }

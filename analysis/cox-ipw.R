@@ -123,13 +123,6 @@ option_list <- list(
     metavar = "integer"
   ),
   make_option(
-    "--episode_event_threshold",
-    type = "integer",
-    default = 5L,
-    help = "Number of events that must be present in a time period; if threshold is not met, time periods are collapsed [default %default]",
-    metavar = "integer"
-  ),
-  make_option(
     "--covariate_threshold",
     type = "integer",
     default = 5L,
@@ -196,7 +189,9 @@ print("Record input arguments")
 
 record_args <- data.frame(
   argument = names(opt),
-  value = unlist(opt),
+  # collapse per element so the column stays 1:1 with names(opt); unlist() would
+  # misalign if any option (e.g. via the YAML config) held more than one value
+  value = vapply(opt, function(x) paste(x, collapse = ";"), character(1)),
   stringsAsFactors = FALSE
 )
 
@@ -206,7 +201,7 @@ print(record_args)
 
 write.csv(
   record_args,
-  file = paste0("output/", gsub(".csv", "-args.csv", opt$df_output)),
+  file = paste0("output/", gsub("\\.csv$", "-args.csv", opt$df_output)),
   row.names = FALSE
 )
 
@@ -276,21 +271,20 @@ print("Make numeric arguments numeric")
 cut_points <- as.numeric(cut_points)
 controls_per_case <- opt$controls_per_case
 total_event_threshold <- opt$total_event_threshold
-episode_event_threshold <- opt$episode_event_threshold
 covariate_threshold <- opt$covariate_threshold
 
 # Load data --------------------------------------------------------------------
 print("Load data")
 
-if (grepl(".csv.gz", opt$df_input)) {
+if (grepl("\\.csv\\.gz$", opt$df_input)) {
   R.utils::gunzip(paste0("output/", opt$df_input), remove = FALSE)
   opt$df_input <- substr(opt$df_input, 1, nchar(opt$df_input) - 3)
 }
-if (grepl(".csv", opt$df_input)) {
+if (grepl("\\.csv$", opt$df_input)) {
   data <- readr::read_csv(paste0("output/", opt$df_input))
-} else if (grepl(".rds", opt$df_input)) {
+} else if (grepl("\\.rds$", opt$df_input)) {
   data <- readr::read_rds(paste0("output/", opt$df_input))
-} else if (grepl(".feather", opt$df_input) || grepl(".arrow", opt$df_input)) {
+} else if (grepl("\\.feather$", opt$df_input) || grepl("\\.arrow$", opt$df_input)) {
   data <- arrow::read_feather(paste0("output/", opt$df_input))
 }
 
@@ -300,14 +294,14 @@ print(summary(data))
 print("Make binary variables logical")
 
 var_bin <- colnames(data)[grepl("_bin_", colnames(data))]
-data[, var_bin] <- lapply(data[, var_bin], as.logical)
+data[var_bin] <- lapply(data[var_bin], as.logical)
 
 # Make date variables dates ----------------------------------------------------
 print("Make date variables dates")
 
 var_date <- colnames(data)[grepl("_date", colnames(data))]
-data[, var_date] <- lapply(
-  data[, var_date],
+data[var_date] <- lapply(
+  data[var_date],
   function(x) as.Date(x, origin = "1970-01-01")
 )
 
@@ -315,18 +309,21 @@ data[, var_date] <- lapply(
 print("Make categorical variables factors")
 
 var_cat <- colnames(data)[grepl("_cat_", colnames(data))]
-data[, var_cat] <- lapply(data[, var_cat], as.factor)
+data[var_cat] <- lapply(data[var_cat], as.factor)
 
 # Make numerical variables numerical -------------------------------------------
-print(" Make numerical variables numerical")
+print("Make numerical variables numerical")
 
 var_num <- colnames(data)[grepl("_num_", colnames(data))]
-data[, var_num] <- lapply(data[, var_num], as.numeric)
+data[var_num] <- lapply(data[var_num], as.numeric)
 
 # Restrict to core variables ---------------------------------------------------
 print("Restrict to core variables")
 
-core <- c("patient_id", opt$exposure, opt$outcome, cox_start, cox_stop)
+# unique() guards against a variable appearing in more than one role (e.g. the
+# outcome also listed in cox_stop), which would otherwise carry a redundant
+# duplicate-named column through the pipeline
+core <- unique(c("patient_id", opt$exposure, opt$outcome, cox_start, cox_stop))
 input <- data[, core]
 print(paste0("Core variables: ", paste0(core, collapse = ", ")))
 
@@ -490,14 +487,17 @@ if (nrow(data_surv[data_surv$outcome_status == 1, ]) > 0) {
   )
 
   print(episode_info)
+
+  n_postexp_events <- sum(
+    episode_info[episode_info$time_period != "days_pre", ]$N_events
+  )
+} else {
+  n_postexp_events <- 0
 }
 
 # STOP if the total number of events is insufficient ---------------------------
 
-if (
-  sum(episode_info[episode_info$time_period != "days_pre", ]$N_events) <
-    total_event_threshold
-) {
+if (n_postexp_events < total_event_threshold) {
   results <- data.frame(
     error = paste0(
       "The total number of post-exposure events is less than the prespecified limit (limit = ",
@@ -506,6 +506,20 @@ if (
     )
   )
   print(results$error)
+
+  # Still write an analysis-ready .dta so downstream Stata pipelines do not break
+  print("Save analysis ready dataset with error message")
+
+  analysis_ready_error <- data.frame(error = results$error)
+
+  if (opt$save_analysis_ready != "") {
+    foreign::write.dta(
+      analysis_ready_error,
+      paste0("output/", opt$save_analysis_ready)
+    )
+  } else {
+    foreign::write.dta(analysis_ready_error, "output/analysis_ready_empty.dta")
+  }
 } else {
   # Add strata information to data ---------------------------------------------
   print("Add strata information to data")
@@ -553,6 +567,7 @@ if (
 
   covariate_removed <- NULL
   covariate_collapsed <- NULL
+  strata_warning <- ""
 
   if (!is.null(covariate_other)) {
     # Add covariate information to data ----------------------------------------
@@ -592,7 +607,9 @@ if (
   if (opt$save_analysis_ready != "") {
     foreign::write.dta(data_surv, paste0("output/", opt$save_analysis_ready))
   } else {
-    analysis_ready_empty <- data.frame()
+    # write.dta() errors on a data frame with zero columns, so use a single
+    # placeholder column with no observations
+    analysis_ready_empty <- data.frame(analysis_ready = character(0))
     foreign::write.dta(analysis_ready_empty, "output/analysis_ready_empty.dta")
   }
 
@@ -634,15 +651,20 @@ if (
     # Add dummy row for days_pre term --------------------------------------------
     print("Add dummy row for days_pre term")
 
+    # Only emit a days_pre row for models that were actually fitted; mdl_max_adj
+    # is absent when no additional covariates are specified
+    models_fitted <- unique(results$model)
+
     tmp <- data.frame(
       term = "days_pre",
       lnhr = NA,
       se_lnhr = NA,
-      model = c("mdl_age_sex", "mdl_max_adj"),
-      surv_formula = c(
-        results[results$model == "mdl_age_sex", ]$surv_formula[1],
-        results[results$model == "mdl_max_adj", ]$surv_formula[1]
-      ),
+      model = models_fitted,
+      surv_formula = unname(vapply(
+        models_fitted,
+        function(m) results[results$model == m, ]$surv_formula[1],
+        character(1)
+      )),
       covariate_removed = "",
       covariate_collapsed = "",
       obs_warning = "",
@@ -679,7 +701,7 @@ if (
 
     results$strata_warning <- strata_warning
 
-    results$cox_ipw <- "v0.0.41"
+    results$cox_ipw <- "v0.0.42"
 
     results <- results[
       order(results$model),
