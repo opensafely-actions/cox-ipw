@@ -254,7 +254,7 @@ optlistargs <- c(
   "cox_start",
   "cox_stop"
 )
-for (i in seq_len(length(optlistargs))) {
+for (i in seq_along(optlistargs)) {
   tmp <- opt[optlistargs[i]]
   if (tmp[1] == "NULL") {
     assign(optlistargs[i], NULL)
