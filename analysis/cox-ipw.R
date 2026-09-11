@@ -209,7 +209,6 @@ write.csv(
 print("Import libraries")
 
 library(survival)
-library(magrittr)
 
 # Import functions -------------------------------------------------------------
 print("Import functions")
@@ -385,7 +384,7 @@ print(paste0(
   max(input$outcome, na.rm = TRUE)
 ))
 
-input <- input %>%
+input <- input |>
   dplyr::mutate(
     exposure = replace(
       exposure,

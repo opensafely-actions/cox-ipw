@@ -14,6 +14,7 @@
 - Write the placeholder analysis-ready `.dta` with a single empty column, as `foreign::write.dta()` errors on a data frame with zero columns under the `r:v3` image (R 4.6.1, foreign 0.8.91)
 - Remove _analysis/codelists.py_ and the _codelists/_ directory, which were left over from the deleted study definition and are not used by any action
 - Pass the `datadist` object itself to `options()` in `fit_model()` rather than assigning `dd`/`dd_adj` into the global environment with `<<-`
+- Replace the magrittr pipe `%>%` with the base R pipe `|>` and drop the now-unneeded `library(magrittr)` calls
 - Bump the R image to `r:v3`
 
 # [v0.0.41](https://github.com/opensafely-actions/cox-ipw/releases/tag/v0.0.41)
