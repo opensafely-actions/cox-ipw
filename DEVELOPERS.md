@@ -28,8 +28,8 @@ R -e "rmarkdown::render('README.Rmd')"
 
 This is an R reusable action, run within the R container created from the [r-docker repository](https://github.com/opensafely-core/r-docker). The key points about the R container are as follows.
 
-* Currently the `r:v2` image provides **R 4.4.3**.
-* The container provides the packages, with their respective version numbers, listed in [v2/packages.md](https://github.com/opensafely-core/r-docker/blob/main/v2/packages.md).
+* Currently the `r:v3` image provides **R 4.6.1**.
+* The container provides the packages, with their respective version numbers, listed in [v3/packages.md](https://github.com/opensafely-core/r-docker/blob/main/v3/packages.md).
 
 For more information about reusable actions see [here](https://docs.opensafely.org/actions-reusable/).
 
