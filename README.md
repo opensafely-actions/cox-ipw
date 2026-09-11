@@ -92,10 +92,6 @@ as follows:
     --total_event_threshold=INTEGER
     Number of events that must be present for any model to run [default 50]
     
-    --episode_event_threshold=INTEGER
-    Number of events that must be present in a time period; if threshold is not
-    met, time periods are collapsed [default 5]
-    
     --covariate_threshold=INTEGER
     Minimum number of individuals per covariate level for covariate to be retained
     [default 5]

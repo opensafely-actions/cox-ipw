@@ -1,6 +1,4 @@
 check_covariates <- function(df, covariate_threshold, strata) {
-  library(magrittr)
-
   # Identify non-numeric covariates to remove ----------------------------------
   print("Identify non-numeric covariates to remove")
 
@@ -53,7 +51,7 @@ check_covariates <- function(df, covariate_threshold, strata) {
   if ("cov_cat_region" %in% covariate_removed) {
     print("Collapsing region as special case")
 
-    df <- df %>%
+    df <- df |>
       dplyr::mutate(
         cov_cat_region = dplyr::case_when(
           cov_cat_region == "North East" ~ "Northern England",
@@ -80,7 +78,7 @@ check_covariates <- function(df, covariate_threshold, strata) {
   if ("cov_cat_deprivation" %in% covariate_removed) {
     print("Collapsing deprivation as special case")
 
-    df <- df %>%
+    df <- df |>
       dplyr::mutate(
         cov_cat_deprivation = dplyr::case_when(
           cov_cat_deprivation == "1-2 (most deprived)" ~ "1-4",
@@ -105,7 +103,7 @@ check_covariates <- function(df, covariate_threshold, strata) {
   if ("cov_cat_smoking_status" %in% covariate_removed) {
     print("Collapsing smoking status as special case")
 
-    df <- df %>%
+    df <- df |>
       dplyr::mutate(
         cov_cat_smoking_status = dplyr::case_when(
           cov_cat_smoking_status == "Never smoker" ~ "Never smoker",

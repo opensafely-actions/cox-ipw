@@ -55,10 +55,10 @@ fit_model <- function(
   # Fit Cox model ----------------------------------------------------------------
   print("Fit Cox model")
 
-  dd <<- rms::datadist(df)
+  dd <- rms::datadist(df)
 
   withr::local_options(list(
-    datadist = "dd",
+    datadist = dd,
     contrasts = c("contr.treatment", "contr.treatment")
   ))
 
@@ -138,10 +138,10 @@ fit_model <- function(
     # Fit Cox model ------------------------------------------------------------
     print("Fit Cox model with covariates")
 
-    dd_adj <<- rms::datadist(df)
+    dd_adj <- rms::datadist(df)
 
     withr::local_options(list(
-      datadist = "dd_adj",
+      datadist = dd_adj,
       contrasts = c("contr.treatment", "contr.treatment")
     ))
 
@@ -158,7 +158,7 @@ fit_model <- function(
         y = TRUE
       )
 
-      N_obs_out <- sum(fit_cox_model$n)
+      N_obs_out <- sum(fit_cox_model_adj$n)
     } else {
       N_obs_in <- nrow(df)
 
@@ -171,7 +171,7 @@ fit_model <- function(
         y = TRUE
       )
 
-      N_obs_out <- sum(fit_cox_model$n)
+      N_obs_out <- sum(fit_cox_model_adj$n)
     }
 
     print(fit_cox_model_adj)
@@ -211,6 +211,7 @@ fit_model <- function(
   # Return results -------------------------------------------------------------
   print("Return results")
 
-  return(results)
   print(summary(results))
+
+  return(results)
 }

@@ -3,7 +3,7 @@ version: '5.0'
 actions:
 
   generate-dataset_csv:
-    run: r:v2 analysis/move-test-data.R
+    run: r:v3 analysis/move-test-data.R
     outputs:
       highly_sensitive:
         cohort: output/input.csv
@@ -11,7 +11,7 @@ actions:
   cox-ipw_using-args_input-csv:
     # For user-facing documentation, call:
     # cox-ipw:[version]
-    run: r:v2 analysis/cox-ipw.R --df_input input.csv
+    run: r:v3 analysis/cox-ipw.R --df_input input.csv
     needs:
     - generate-dataset_csv
     outputs:
@@ -23,7 +23,7 @@ actions:
         estimates: output/results.csv
 
   cox-ipw_using_config-input_csv:
-    run: r:v2 analysis/cox-ipw.R
+    run: r:v3 analysis/cox-ipw.R
     config:
       df_output: results-2.csv
     needs:
@@ -34,13 +34,13 @@ actions:
         estimates: output/results-2.csv
 
   generate-dataset_csv-gz:
-    run: r:v2 analysis/move-test-data-csv-gz.R
+    run: r:v3 analysis/move-test-data-csv-gz.R
     outputs:
       highly_sensitive:
         cohort: output/input-3.csv.gz
 
   cox-ipw_using-args_input-csv-gz:
-    run: r:v2 analysis/cox-ipw.R --df_input input-3.csv.gz --df_output results-3.csv
+    run: r:v3 analysis/cox-ipw.R --df_input input-3.csv.gz --df_output results-3.csv
     needs:
     - generate-dataset_csv-gz
     outputs:
@@ -49,13 +49,13 @@ actions:
         estimates: output/results-3.csv
 
   generate-dataset_arrow:
-    run: r:v2 analysis/move-test-data-arrow.R
+    run: r:v3 analysis/move-test-data-arrow.R
     outputs:
       highly_sensitive:
         cohort: output/input-4.arrow
   
   cox-ipw_using-args_input-arrow:
-    run: r:v2 analysis/cox-ipw.R --df_input input-4.arrow --df_output results-4.csv
+    run: r:v3 analysis/cox-ipw.R --df_input input-4.arrow --df_output results-4.csv
     needs:
     - generate-dataset_arrow
     outputs:
@@ -64,13 +64,13 @@ actions:
         estimates: output/results-4.csv
 
   generate-dataset_arrow-subdir:
-    run: r:v2 analysis/move-test-data-arrow-subdir.R
+    run: r:v3 analysis/move-test-data-arrow-subdir.R
     outputs:
       highly_sensitive:
         cohort: output/subdir/input-5.arrow
   
   cox-ipw_using-args_input-arrow-subdir:
-    run: r:v2 analysis/cox-ipw.R --df_input subdir/input-5.arrow --df_output results-5.csv
+    run: r:v3 analysis/cox-ipw.R --df_input subdir/input-5.arrow --df_output results-5.csv
     needs:
     - generate-dataset_arrow-subdir
     outputs:
@@ -79,13 +79,13 @@ actions:
         estimates: output/results-5.csv
 
   cox-ipw_move-covariate-other-filename:
-    run: r:v2 analysis/move-covariate-other-txt.R
+    run: r:v3 analysis/move-covariate-other-txt.R
     outputs:
       moderately_sensitive:
         covariates: output/covariate-other.txt
 
   cox-ipw_covariate-other-filename:
-    run: r:v2 analysis/cox-ipw.R --df_input input.csv --covariate_other output/covariate-other.txt --df_output results-6.csv
+    run: r:v3 analysis/cox-ipw.R --df_input input.csv --covariate_other output/covariate-other.txt --df_output results-6.csv
     needs:
     - cox-ipw_move-covariate-other-filename
     - generate-dataset_csv
