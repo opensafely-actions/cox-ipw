@@ -1,6 +1,4 @@
 get_episode_info <- function(df, cut_points, episode_labels, ipw) {
-  library(magrittr)
-
   # Calculate number of events per episode -------------------------------------
   print("Calculate number of events per episode")
 
@@ -54,9 +52,9 @@ get_episode_info <- function(df, cut_points, episode_labels, ipw) {
 
   tmp$outcome_time <- tmp$tstop - tmp$tstart
 
-  tmp <- tmp %>%
-    dplyr::group_by(episode) %>%
-    dplyr::mutate(outcome_time_median = median(outcome_time)) %>%
+  tmp <- tmp |>
+    dplyr::group_by(episode) |>
+    dplyr::mutate(outcome_time_median = median(outcome_time)) |>
     dplyr::ungroup(episode)
 
   tmp <- unique(tmp[, c("episode", "outcome_time_median")])

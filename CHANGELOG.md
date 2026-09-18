@@ -1,3 +1,22 @@
+# [v0.0.42](https://github.com/opensafely-actions/cox-ipw/releases/tag/v0.0.42)
+
+- Bump actions/checkout to v7
+- Fix obs count for adjusted Cox model
+- Initialise `strata_warning` to avoid undefined object error
+- Handle zero outcome events without erroring
+- In `fit_model()` print `summary()` of results before `return()`
+- Anchor and escape file extension matching
+- Use drop-safe column indexing for type conversions
+- Write an error-message analysis-ready `.dta` when post-exposure events are below the threshold, so downstream Stata pipelines do not break (#68)
+- Remove the unimplemented `--episode_event_threshold` option, which was documented as collapsing sparse time periods but never had any effect
+- Only add a `days_pre` dummy row for models that were actually fitted, avoiding a spurious `mdl_max_adj` row when no additional covariates are specified
+- Wrap `core` variable selection in `unique()` and record argument values per element, hardening against a variable used in more than one role and against multi-value options
+- Write the placeholder analysis-ready `.dta` with a single empty column, as `foreign::write.dta()` errors on a data frame with zero columns under the `r:v3` image (R 4.6.1, foreign 0.8.91)
+- Remove _analysis/codelists.py_ and the _codelists/_ directory, which were left over from the deleted study definition and are not used by any action
+- Pass the `datadist` object itself to `options()` in `fit_model()` rather than assigning `dd`/`dd_adj` into the global environment with `<<-`
+- Replace the magrittr pipe `%>%` with the base R pipe `|>` and drop the now-unneeded `library(magrittr)` calls
+- Bump the R image to `r:v3`
+
 # [v0.0.41](https://github.com/opensafely-actions/cox-ipw/releases/tag/v0.0.41)
 
 - Amend `cov_num_consulation_rate` to `cov_num_consultation_rate`
