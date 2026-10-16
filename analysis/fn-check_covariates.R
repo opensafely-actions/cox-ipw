@@ -46,10 +46,48 @@ check_covariates <- function(df, covariate_threshold, strata) {
 
   covariate_collapsed <- NULL
 
+  # Stop with an informative error if a special case covariate has labels that
+  # the collapsing rules do not recognise (these would otherwise become NA)
+  check_labels <- function(df, covariate, accepted) {
+    observed <- unique(as.character(df[[covariate]]))
+    unexpected <- setdiff(observed[!is.na(observed)], accepted)
+    if (length(unexpected) > 0) {
+      stop(
+        paste0(
+          "Cannot collapse '",
+          covariate,
+          "' as it contains unrecognised categories: ",
+          paste0("\"", unexpected, "\"", collapse = ", "),
+          ". Accepted categories are: ",
+          paste0("\"", accepted, "\"", collapse = ", "),
+          "."
+        ),
+        call. = FALSE
+      )
+    }
+  }
+
   ## Region
 
   if ("cov_cat_region" %in% covariate_removed) {
     print("Collapsing region as special case")
+
+    check_labels(
+      df,
+      "cov_cat_region",
+      c(
+        "East",
+        "East Midlands",
+        "London",
+        "North East",
+        "North West",
+        "South East",
+        "South West",
+        "West Midlands",
+        "Yorkshire and The Humber",
+        "Missing"
+      )
+    )
 
     df <- df |>
       dplyr::mutate(
@@ -62,7 +100,8 @@ check_covariates <- function(df, covariate_threshold, strata) {
           cov_cat_region == "East Midlands" ~ "Midlands",
           cov_cat_region == "West Midlands" ~ "Midlands",
           cov_cat_region == "South West" ~ "Southern England",
-          cov_cat_region == "East" ~ "Southern England"
+          cov_cat_region == "East" ~ "Southern England",
+          cov_cat_region == "Missing" ~ "Missing"
         )
       )
 
@@ -78,6 +117,19 @@ check_covariates <- function(df, covariate_threshold, strata) {
   if ("cov_cat_deprivation" %in% covariate_removed) {
     print("Collapsing deprivation as special case")
 
+    check_labels(
+      df,
+      "cov_cat_deprivation",
+      c(
+        "1-2 (most deprived)",
+        "3-4",
+        "5-6",
+        "7-8",
+        "9-10 (least deprived)",
+        "Missing"
+      )
+    )
+
     df <- df |>
       dplyr::mutate(
         cov_cat_deprivation = dplyr::case_when(
@@ -85,13 +137,19 @@ check_covariates <- function(df, covariate_threshold, strata) {
           cov_cat_deprivation == "3-4" ~ "1-4",
           cov_cat_deprivation == "5-6" ~ "5-6",
           cov_cat_deprivation == "7-8" ~ "7-10",
-          cov_cat_deprivation == "9-10 (least deprived)" ~ "7-10"
+          cov_cat_deprivation == "9-10 (least deprived)" ~ "7-10",
+          cov_cat_deprivation == "Missing" ~ "Missing"
         )
       )
 
     df$cov_cat_deprivation <- ordered(
       df$cov_cat_deprivation,
-      levels = c("1-4", "5-6", "7-10")
+      levels = c(
+        "1-4",
+        "5-6",
+        "7-10",
+        if ("Missing" %in% df$cov_cat_deprivation) "Missing"
+      )
     )
 
     covariate_removed <- setdiff(covariate_removed, "cov_cat_deprivation")
@@ -102,6 +160,12 @@ check_covariates <- function(df, covariate_threshold, strata) {
 
   if ("cov_cat_smoking_status" %in% covariate_removed) {
     print("Collapsing smoking status as special case")
+
+    check_labels(
+      df,
+      "cov_cat_smoking_status",
+      c("Never smoker", "Ever smoker", "Current smoker", "Missing")
+    )
 
     df <- df |>
       dplyr::mutate(
