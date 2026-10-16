@@ -183,6 +183,7 @@ check_covariates <- function(df, covariate_threshold, strata) {
     )
 
     covariate_removed <- setdiff(covariate_removed, "cov_cat_smoking_status")
+    covariate_collapsed <- c(covariate_collapsed, "cov_cat_smoking_status")
   }
 
   # Check special case collapsed covariates ------------------------------------
