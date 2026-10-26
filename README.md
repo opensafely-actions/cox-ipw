@@ -194,11 +194,11 @@ output data file and the file of argument values should be listed as
 ### Collapsing of region, deprivation, and smoking status covariates
 
 If any of `cov_cat_region`, `cov_cat_deprivation`, or
-`cov_cat_smoking_status` are specified in `covariate_other` and do not
-meet the covariate threshold, the action attempts to collapse their
-categories before deciding whether to remove them. Collapsing relies on
-exact matches to the following category labels (`NA` values are left as
-`NA`):
+`cov_cat_smoking_status` are specified in `covariate_other` or `strata`
+and do not meet the covariate threshold, the action attempts to collapse
+their categories before deciding whether to remove them. Collapsing
+relies on exact matches to the following category labels (`NA` values
+are left as `NA`):
 
 | Covariate                | Accepted categories                                          | Collapsed categories |
 | ------------------------ | ------------------------------------------------------------ | -------------------- |
@@ -214,9 +214,12 @@ exact matches to the following category labels (`NA` values are left as
 |                          | `"Ever smoker"`, `"Current smoker"`                          | `"Ever smoker"`      |
 |                          | `"Missing"`                                                  | `"Missing"`          |
 
-If collapsing is required and the covariate contains any other category
+If any of these covariates are included and contain any other category
 labels, the action stops with an error listing the unrecognised and
-accepted categories.
+accepted categories. This check is applied whether or not collapsing
+turns out to be needed, so that whether the action runs does not depend
+on the case counts in the data (which may differ between dummy and real
+data).
 
 ## Notes for developers
 

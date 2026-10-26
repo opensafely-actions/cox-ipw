@@ -1,4 +1,62 @@
 check_covariates <- function(df, covariate_threshold, strata) {
+  # Check special case covariate labels ----------------------------------------
+  # Region, deprivation, and smoking status are collapsed if they do not meet
+  # the covariate threshold, which relies on exact category labels (any other
+  # labels would become NA). Check these upfront, regardless of whether
+  # collapsing turns out to be needed, so that the outcome does not depend on
+  # the case counts in the data
+  print("Check special case covariate labels")
+
+  accepted_labels <- list(
+    cov_cat_region = c(
+      "East",
+      "East Midlands",
+      "London",
+      "North East",
+      "North West",
+      "South East",
+      "South West",
+      "West Midlands",
+      "Yorkshire and The Humber",
+      "Missing"
+    ),
+    cov_cat_deprivation = c(
+      "1-2 (most deprived)",
+      "3-4",
+      "5-6",
+      "7-8",
+      "9-10 (least deprived)",
+      "Missing"
+    ),
+    cov_cat_smoking_status = c(
+      "Never smoker",
+      "Ever smoker",
+      "Current smoker",
+      "Missing"
+    )
+  )
+
+  for (i in intersect(names(accepted_labels), colnames(df))) {
+    observed <- unique(as.character(df[[i]]))
+    unexpected <- setdiff(observed[!is.na(observed)], accepted_labels[[i]])
+    if (length(unexpected) > 0) {
+      stop(
+        paste0(
+          "'",
+          i,
+          "' contains unrecognised categories: ",
+          paste0("\"", unexpected, "\"", collapse = ", "),
+          ". Accepted categories are: ",
+          paste0("\"", accepted_labels[[i]], "\"", collapse = ", "),
+          ". These labels are required so that '",
+          i,
+          "' can be collapsed if it does not meet the covariate threshold."
+        ),
+        call. = FALSE
+      )
+    }
+  }
+
   # Identify non-numeric covariates to remove ----------------------------------
   print("Identify non-numeric covariates to remove")
 
@@ -46,48 +104,10 @@ check_covariates <- function(df, covariate_threshold, strata) {
 
   covariate_collapsed <- NULL
 
-  # Stop with an informative error if a special case covariate has labels that
-  # the collapsing rules do not recognise (these would otherwise become NA)
-  check_labels <- function(df, covariate, accepted) {
-    observed <- unique(as.character(df[[covariate]]))
-    unexpected <- setdiff(observed[!is.na(observed)], accepted)
-    if (length(unexpected) > 0) {
-      stop(
-        paste0(
-          "Cannot collapse '",
-          covariate,
-          "' as it contains unrecognised categories: ",
-          paste0("\"", unexpected, "\"", collapse = ", "),
-          ". Accepted categories are: ",
-          paste0("\"", accepted, "\"", collapse = ", "),
-          "."
-        ),
-        call. = FALSE
-      )
-    }
-  }
-
   ## Region
 
   if ("cov_cat_region" %in% covariate_removed) {
     print("Collapsing region as special case")
-
-    check_labels(
-      df,
-      "cov_cat_region",
-      c(
-        "East",
-        "East Midlands",
-        "London",
-        "North East",
-        "North West",
-        "South East",
-        "South West",
-        "West Midlands",
-        "Yorkshire and The Humber",
-        "Missing"
-      )
-    )
 
     df <- df |>
       dplyr::mutate(
@@ -116,19 +136,6 @@ check_covariates <- function(df, covariate_threshold, strata) {
 
   if ("cov_cat_deprivation" %in% covariate_removed) {
     print("Collapsing deprivation as special case")
-
-    check_labels(
-      df,
-      "cov_cat_deprivation",
-      c(
-        "1-2 (most deprived)",
-        "3-4",
-        "5-6",
-        "7-8",
-        "9-10 (least deprived)",
-        "Missing"
-      )
-    )
 
     df <- df |>
       dplyr::mutate(
@@ -160,12 +167,6 @@ check_covariates <- function(df, covariate_threshold, strata) {
 
   if ("cov_cat_smoking_status" %in% covariate_removed) {
     print("Collapsing smoking status as special case")
-
-    check_labels(
-      df,
-      "cov_cat_smoking_status",
-      c("Never smoker", "Ever smoker", "Current smoker", "Missing")
-    )
 
     df <- df |>
       dplyr::mutate(
