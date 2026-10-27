@@ -1,4 +1,62 @@
 check_covariates <- function(df, covariate_threshold, strata) {
+  # Check special case covariate labels ----------------------------------------
+  # Region, deprivation, and smoking status are collapsed if they do not meet
+  # the covariate threshold, which relies on exact category labels (any other
+  # labels would become NA). Check these upfront, regardless of whether
+  # collapsing turns out to be needed, so that the outcome does not depend on
+  # the case counts in the data
+  print("Check special case covariate labels")
+
+  accepted_labels <- list(
+    cov_cat_region = c(
+      "East",
+      "East Midlands",
+      "London",
+      "North East",
+      "North West",
+      "South East",
+      "South West",
+      "West Midlands",
+      "Yorkshire and The Humber",
+      "Missing"
+    ),
+    cov_cat_deprivation = c(
+      "1-2 (most deprived)",
+      "3-4",
+      "5-6",
+      "7-8",
+      "9-10 (least deprived)",
+      "Missing"
+    ),
+    cov_cat_smoking_status = c(
+      "Never smoker",
+      "Ever smoker",
+      "Current smoker",
+      "Missing"
+    )
+  )
+
+  for (i in intersect(names(accepted_labels), colnames(df))) {
+    observed <- unique(as.character(df[[i]]))
+    unexpected <- setdiff(observed[!is.na(observed)], accepted_labels[[i]])
+    if (length(unexpected) > 0) {
+      stop(
+        paste0(
+          "'",
+          i,
+          "' contains unrecognised categories: ",
+          paste0("\"", unexpected, "\"", collapse = ", "),
+          ". Accepted categories are: ",
+          paste0("\"", accepted_labels[[i]], "\"", collapse = ", "),
+          ". These labels are required so that '",
+          i,
+          "' can be collapsed if it does not meet the covariate threshold."
+        ),
+        call. = FALSE
+      )
+    }
+  }
+
   # Identify non-numeric covariates to remove ----------------------------------
   print("Identify non-numeric covariates to remove")
 
@@ -62,7 +120,8 @@ check_covariates <- function(df, covariate_threshold, strata) {
           cov_cat_region == "East Midlands" ~ "Midlands",
           cov_cat_region == "West Midlands" ~ "Midlands",
           cov_cat_region == "South West" ~ "Southern England",
-          cov_cat_region == "East" ~ "Southern England"
+          cov_cat_region == "East" ~ "Southern England",
+          cov_cat_region == "Missing" ~ "Missing"
         )
       )
 
@@ -85,13 +144,19 @@ check_covariates <- function(df, covariate_threshold, strata) {
           cov_cat_deprivation == "3-4" ~ "1-4",
           cov_cat_deprivation == "5-6" ~ "5-6",
           cov_cat_deprivation == "7-8" ~ "7-10",
-          cov_cat_deprivation == "9-10 (least deprived)" ~ "7-10"
+          cov_cat_deprivation == "9-10 (least deprived)" ~ "7-10",
+          cov_cat_deprivation == "Missing" ~ "Missing"
         )
       )
 
     df$cov_cat_deprivation <- ordered(
       df$cov_cat_deprivation,
-      levels = c("1-4", "5-6", "7-10")
+      levels = c(
+        "1-4",
+        "5-6",
+        "7-10",
+        if ("Missing" %in% df$cov_cat_deprivation) "Missing"
+      )
     )
 
     covariate_removed <- setdiff(covariate_removed, "cov_cat_deprivation")
@@ -119,6 +184,7 @@ check_covariates <- function(df, covariate_threshold, strata) {
     )
 
     covariate_removed <- setdiff(covariate_removed, "cov_cat_smoking_status")
+    covariate_collapsed <- c(covariate_collapsed, "cov_cat_smoking_status")
   }
 
   # Check special case collapsed covariates ------------------------------------

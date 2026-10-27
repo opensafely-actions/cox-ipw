@@ -1,3 +1,10 @@
+# [v0.0.43](https://github.com/opensafely-actions/cox-ipw/releases/tag/v0.0.43)
+
+- `check_covariates()` now stops with an informative error, listing the unrecognised and accepted categories, if `cov_cat_region`, `cov_cat_deprivation`, or `cov_cat_smoking_status` are included and contain unrecognised category labels; previously these became `NA` silently when the covariate was collapsed (#78). The check is applied whether or not collapsing is needed, so datasets with non-standard labels for these covariates that previously ran without collapsing will now error
+- `"Missing"` is now retained as a category when collapsing `cov_cat_region` and `cov_cat_deprivation`; previously it became `NA`
+- `cov_cat_smoking_status` is now reported in the collapsed covariates output when it has been collapsed
+- Document the category labels required for collapsing region, deprivation, and smoking status in the README
+
 # [v0.0.42](https://github.com/opensafely-actions/cox-ipw/releases/tag/v0.0.42)
 
 - Bump actions/checkout to v7
